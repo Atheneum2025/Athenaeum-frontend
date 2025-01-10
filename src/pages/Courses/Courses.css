@@ -1,0 +1,47 @@
+.course{
+    display: grid;
+    /* grid-template-columns: repeat(auto-fit, minmax(10px, 1fr)); */
+    
+    gap: 20px;
+}
+/* .course-card{
+    width: 8rem;
+    height: 5rem;
+    background-color: grey;
+} */
+
+.course-card{
+    width: 400px;
+    height: 200px;
+    background-color: grey;
+}
+
+.title{
+    text-align: center;
+}
+
+.add-btn{
+    width: 200px;
+    height: 50px;
+}
+
+
+
+
+.form-for-adding{
+    background-color: rgb(119, 105, 105);
+    position: absolute;
+    z-index: 99;
+    width: 60%;
+    height: 55%;
+    border-radius: 50px;
+    margin: auto;
+    top: 50%;
+    bottom: 50%;
+    margin-inline: 10rem;
+    padding: 2rem;
+}
+
+.form-for-adding > form{
+    
+}

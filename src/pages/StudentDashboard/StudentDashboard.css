@@ -1,0 +1,36 @@
+.student-profile-options{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+
+.student-profile-options div{
+    padding-inline:4rem;
+    height: 2rem;
+    align-items: center;
+
+    
+}
+.student-profile-options div:hover{
+    background-color: grey;
+}
+
+.student-profile-options-display{
+    /* background-color: yellow; */
+    display: flex;
+    flex-direction: row;
+}
+.options-page{
+    width: 100vw;
+    display: none;
+    /* overflow-x: auto; */
+}
+
+.active{
+    display:block;
+}
+
+.deactive{
+    display: none;
+}

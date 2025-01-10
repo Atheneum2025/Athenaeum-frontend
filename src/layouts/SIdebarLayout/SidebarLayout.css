@@ -1,0 +1,4 @@
+.layout-with-sidebar{
+    display: grid;
+    grid-template-columns: minmax(25%, 50px) auto;
+}
