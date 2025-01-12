@@ -1,9 +1,10 @@
-.navigation-header{
+.navigation_header{
     width: 100%;
+    height: 90px;
     position: sticky;
     top: 0;
     z-index: 99;
-    background-color: rgba(0, 0, 0, 0.96);
+    background-color: rgba(90, 0, 0, 0.96);
     /* background-color: goldenrod; */
     display: grid;
     padding-inline: 20px;
@@ -11,7 +12,7 @@
     /* position: fixed; */
 }
 
-.middle-navigation{
+.middle_navigation{
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -19,20 +20,20 @@
     align-items: center;
 }
 
-.navigation-bar ul {
+.navigation_bar ul {
     display: flex;
     justify-content: center;
     height: 1.4rem;
 }
 
-.navigation-bar ul li {
+.navigation_bar ul li {
     height: 100%;
     list-style-type: none;
     /* background: green; */
     
 }
 
-.navigation-bar ul li a {
+.navigation_bar ul li a {
     height: 100%;
     text-decoration: none;
     color: white;
@@ -46,7 +47,7 @@
 }
 
 .btn{
-    background-color: black;
+    /* background-color: black; */
     border-radius: 50px;
     width: 100px;
     height: 40px;
@@ -54,14 +55,14 @@
     color: white;
 }
 
-.search-bar{
+.search_bar{
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     /* height: 3rem; */
 }
-.search-bar input{
+.search_bar input{
     width: 40%;
     border-radius: 30px;
     height: 1.6rem;
@@ -72,7 +73,7 @@
     border: none;
 }
 
-.search-bar-results{
+.search_bar_results{
     width: 40%;
     background-color: rgba(57, 57, 57,0.99);
     height: 500px;
@@ -85,20 +86,21 @@
     overflow-y:scroll;
     scrollbar-width:thin;
 
-    display: none;
+    display: block;
 }
 
-.search-bar-results ul {
+.search_bar_results ul {
     font-size: .8rem;
     padding-left: 10px;
 }
 
-.search-bar-results li{
+.search_bar_results li{
     list-style-type: none;
     font-size: 1rem;
     padding:2px 0px 2px 20px;
     margin-block: 2px;
     opacity: 0.99;
+    display: block;
     /* border: 2px solid black; */
     
     &:hover{
@@ -107,18 +109,19 @@
 }
 
 .logo{
-    padding-inline: 0;
+    display: flex;
+    align-items: center;
 }
 
 .logo img{
-    width: 3rem;
+    width: 2rem;
     height: auto;
     object-fit: contain;
     background-color: rgba(0, 0, 0, 0);
 }
 
-.auth-btn{
-    display: block;
+.auth_btn{
+    display: flex;
     align-items: center;
     gap: 10px;
 }
@@ -129,8 +132,9 @@
 } */
  
 /*890px width*/
+
 @media screen and (max-width: 890px) {
-    .navigation-bar{
+    .navigation_bar{
         display: none;
     }
 }

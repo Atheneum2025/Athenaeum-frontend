@@ -1,8 +1,16 @@
-.course{
+.course_page{
+
+}
+.course_cards_list{
     display: grid;
-    /* grid-template-columns: repeat(auto-fit, minmax(10px, 1fr)); */
     
     gap: 20px;
+}
+
+.course_card{
+    background-color: rgb(152, 57, 57);
+    display: grid;
+    grid-template-columns: auto auto;
 }
 /* .course-card{
     width: 8rem;
@@ -10,10 +18,37 @@
     background-color: grey;
 } */
 
-.course-card{
-    width: 400px;
+.course_avatar{
+    width: 200px;
     height: 200px;
+    border-radius: 100%;
     background-color: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.course_avatar >div{
+    font-family: cursive;
+    font-weight: 900;
+    font-size: 4.4rem;
+}
+
+.course_details{
+
+    align-content: space-around;
+}
+
+.course_details > div{
+    padding: 10px;
+}
+
+.course_name{
+    font-size: 1.5rem;
+}
+
+.course_ratings{
+    color: yellow;
 }
 
 .title{

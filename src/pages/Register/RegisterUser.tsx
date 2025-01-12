@@ -1,31 +1,58 @@
 
 import { useState } from 'react'
 import Button from '../../components/Button/Button'
+import axios from 'axios';
 
 export default function RegisterUser() {
 
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const handleSubmit = async (e: React.FormEvent) =>{
+    e.preventDefault();
+
+    try{
+      const response = await axios.post('http://localhost:3000/auth/signup',{username, password, role});
+      console.log("signup successful", response.data);
+    }
+    catch(err){
+      console.error("signup failed:", err);
+    }
+  }
   return (
-   <>
-    <h1>REGISTER</h1>
-    <form action="">
-        <label htmlFor="name">Name</label>
-        <input type="text" id="name" />
-        <label htmlFor="college">College</label>
-        <input type="text" id="college"/>
-        <label htmlFor="email">Name</label>
-        <input type="email" id="email" />
-        <label htmlFor="password">College</label>
-        <input type="password" id="password"/>
+    <>
+      <h1>REGISTER</h1>
+      <form action="" onSubmit={handleSubmit}>
+        <label htmlFor="username">Name</label>
+        <input
+          type="text"
+          value={username}
+          id="username"
+          onChange={(e) => setUsername(e.target.value)}
+        />
 
-        <Button name="REGISTER"></Button>
+        <label htmlFor="password">Password</label>
+        <input
+          type="text"
+          value={password}
+          id="password"
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-        <p>Already have an account ? LOG IN</p>
+        <label htmlFor="role">Role</label>
+        <input
+          type="text"
+          value={role}
+          id="role"
+          onChange={(e) => setRole(e.target.value)}
+        />
+        <button className='btn' type='submit'>Register</button>
+
+        <p>Already have an account ? <a href="/login">LOG IN</a></p>
         <p>OR</p>
         <p>Use As Guest</p>
-    </form>
-   </>
+      </form>
+    </>
   )
 }

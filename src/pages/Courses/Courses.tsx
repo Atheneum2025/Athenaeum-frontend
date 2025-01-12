@@ -33,35 +33,68 @@ export default function Courses() {
 
     return (
         <>
-            
-            <div>Courses</div>
+            <div className="course_page">
+                <div>Courses</div>
 
-            {/* <div>
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                <ul>
-                    {data.map((item, index) => (
-                        <>
-                            <li key={index}>{item.coursename}
-                                <p>{item.description}</p>
-                            </li>
+                {/* <div>
+{loading ? (
+    <p>Loading...</p>
+) : (
+    <ul>
+        {data.map((item, index) => (
+            <>
+                <li key={index}>{item.coursename}
+                    <p>{item.description}</p>
+                </li>
 
-                        </>
-                    ))}
+            </>
+        ))}
 
-                </ul>
-            )}
-        </div> */}
-            <div className="course">
-                <div className="course-card"></div>
-                <div className="course-card"></div>
-                <div className="course-card"></div>
-                <div className="course-card"></div>
-                <div className="course-card"></div>
-                <div className="course-card"></div>
-                <div className="course-card"></div>
+    </ul>
+)}
+</div> */}
+                <div className="course_cards_list">
+                    <div className="course_card">
+                        <div className="course_avatar">
+                            <div>BCA</div>
+                        </div>
+                        <div className="course_details">
+                            <div className='course_name'>Course Name: BCA</div>
+                            <div className='course_description'>Description: Bachelor of computer application</div>
+                            <div className='course_ratings'>star star star star star</div>
+                            <div>Subjects no.: 78</div>
+                        </div>
+                    </div>
+
+                    <div className="course_card">
+                        <div className="course_avatar">
+                            <div>BCA</div>
+                        </div>
+                        <div className="course_details">
+                            <div className='course_name'>BCA</div>
+                            <div className='course_description'>Bachelor of computer application</div>
+                            <div className='course_ratings'>star star star star star</div>
+                        </div>
+                    </div>
+
+                    <div className="course_card">
+                        <div className="course_avatar">
+                            <div>BCA</div>
+                        </div>
+                        <div className="course_details">
+                            <div className='course_name'>BCA</div>
+                            <div className='course_description'>Bachelor of computer application</div>
+                        </div>
+                    </div>
+                    <div className="course-card">BSC</div>
+                    <div className="course-card"></div>
+                    <div className="course-card"></div>
+                    <div className="course-card"></div>
+                    <div className="course-card"></div>
+                    <div className="course-card"></div>
+                </div>
             </div>
+
         </>
     )
 }

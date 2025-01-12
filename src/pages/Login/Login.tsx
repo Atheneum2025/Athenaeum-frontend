@@ -48,7 +48,7 @@ function Login() {
               LOG IN
             </button>
           </form>
-          <p>Don't have an account? Sign Up</p>
+          <p>Don't have an account? <a href="/register">Sign Up</a></p>
           <p><a style={{color:"black", textDecoration:"none"}} href="/home">Continue as guest</a></p>
         </div>
         <div className="login-text">
