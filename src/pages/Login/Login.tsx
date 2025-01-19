@@ -2,10 +2,12 @@ import React, { useState } from "react";
 // import Button from '../../components/Button/Button'
 import "./Login.css";
 import axios from "axios";
-import { useUserContext } from "../../context/UserContext.tsx";
+// import { useAuth } from "../../context/AuthContext";
+
 
 function Login() {
-  const {isLoggedIn ,login} = useUserContext();
+
+  
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -15,8 +17,13 @@ function Login() {
     try{
       const response = await axios.post('http://localhost:3000/auth/login',{username, password});
       console.log("login successful", response.data);
-      console.log(isLoggedIn)
-      login();
+      if(response){
+        // console.log(response.data.user)
+        localStorage.setItem("authToken", JSON.stringify(response.data));
+      }
+      else{
+        console.error("login failed");
+      }
     }
     catch(err){
       console.error("Login failed:", err);
@@ -45,7 +52,7 @@ function Login() {
             />
 
             <button type="submit" className="login-btn">
-              LOG IN
+              <a href="/home">LOG IN</a>
             </button>
           </form>
           <p>Don't have an account? <a href="/register">Sign Up</a></p>

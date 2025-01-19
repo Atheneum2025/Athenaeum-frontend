@@ -1,3 +1,27 @@
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.student_profile{
+  padding: 2rem;
+  background-color: rgb(87, 52, 52);
+  display: grid;
+  grid-template-columns: repeat(3, 33%);
+  place-items: center;
+}
+
+.student_avatar{
+  place-items: center;
+}
+.student_avatar > img{
+  width: 100px;
+  height: 100px;
+  border-radius: 100%;
+  background-color: grey;
+}
+
 .student-profile-options{
     display: flex;
     flex-direction: row;
@@ -13,13 +37,18 @@
     
 }
 .student-profile-options div:hover{
-    background-color: grey;
+    background-color: rgba(90, 0, 0, 0.96);
 }
 
 .student-profile-options-display{
-    /* background-color: yellow; */
+    background-color: grey;
     display: flex;
     flex-direction: row;
+    color: rgba(90, 0, 0, 0.96);
+    font-size: 1.4rem;
+    font-family: cursive;
+    font-weight: 600;
+    padding: 2rem 4rem;
 }
 .options-page{
     width: 100vw;
@@ -40,6 +69,79 @@
   
   .options.active {
     font-weight: bold;
-    color: blue;
+    color: white;
   }
   
+
+.liked_materials{
+  padding: 2rem;
+  
+}
+
+.liked_material_card{
+  border: 2px solid black;
+  margin-block: 1rem;
+}
+
+.liked_material_details, .grid_layout {
+  display: grid;
+  place-items: center;
+  grid-template-columns: auto auto auto auto;
+}
+
+.grid_layout{
+
+}
+
+.form-for-adding{
+  display: none;
+}
+
+@media screen and (max-width: 910px){
+  
+  .student_profile{
+    font-size: .7rem;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .student_avatar{
+    grid-column-start: 2;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 1;
+    position: relative;
+    top: 50%
+  }
+
+  .student-profile-options{
+    flex-direction: column;
+    justify-content: center;
+    padding-inline: 2rem;
+    width: 40%;
+    min-width: 200px;
+  }
+
+  .student-profile-options >div{
+   
+    padding-inline: .5rem;
+    align-content: center;
+  }
+
+  .student-profile-options-display{
+    padding: .5rem;
+  }
+
+  .options-page{
+    font-size: 1rem;
+    padding: 0;
+  }
+
+  .liked_materials{
+    padding-inline: 0;
+  }
+
+  .grid_layout{
+    font-size: 1rem;
+  }
+}

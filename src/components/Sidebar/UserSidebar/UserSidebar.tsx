@@ -12,7 +12,7 @@ export default function UserSidebar() {
         
         <>
             <div id='sidebar' className="sidebar">
-                <div>UserSidebar
+                <div>UserSidebar 
                     <div> Back button</div>
                 </div>
                 <div>Courses

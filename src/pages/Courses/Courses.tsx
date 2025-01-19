@@ -1,97 +1,62 @@
 import './Courses.css'
 import '../Subjects/Subjects.css'
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
+
+
+type CourseType = {
+    _id: string;
+    coursename: string;
+    description: string;
+};
+
 export default function Courses() {
 
-    // const [data, setData] = useState({});
-    // const [loading, setLoading] = useState(true)
+    const navigate = useNavigate();
+    const [courseDetail, setCourseDetail] = useState<CourseType[]>([]);
 
-    // useEffect(() => {
-    //     fetch("http://localhost:3000/api/v1/courses")
-    //       .then((res) => res.json())
-    //       .then((data) => setData(data));
+    useEffect(() => {
 
-    // const fetchdata = async () => {
-    //     try {
-    //         const Courseresponse = await fetch("http://localhost:3000/api/v1/courses/");
-    //         const Courseresult = await Courseresponse.json();
-    //         setData(Courseresult.courses);
-    //     }
-    //     catch (error) {
-    //         console.error(error);    
-    //     }
-    //     finally {
-    //         setLoading(false);
-    //     }
-    // }
+        const fetchdata = async () => {
+            try {
+                const Courseresponse = await fetch("http://localhost:3000/api/v1/course/");
+                const Courseresult = await Courseresponse.json();
+                setCourseDetail(Courseresult.courses);
+            }
+            catch (error) {
+                console.error(error);
+            }
+        }
 
-    // fetchdata();
-    // }, []);
-    // console.log(data)
+        fetchdata();
+    }, []);
+    console.log(courseDetail)
 
+    const sendData = (coursename: string) => {
+        navigate(`/course/${coursename}/subject`, { state: { courseName: coursename } });
+        console.log(coursename)
+    }
 
     return (
         <>
             <div className="course_page">
-                <div>Courses</div>
+                    
+                <h1>Courses :</h1>
 
-                {/* <div>
-{loading ? (
-    <p>Loading...</p>
-) : (
-    <ul>
-        {data.map((item, index) => (
-            <>
-                <li key={index}>{item.coursename}
-                    <p>{item.description}</p>
-                </li>
-
-            </>
-        ))}
-
-    </ul>
-)}
-</div> */}
                 <div className="course_cards_list">
-                    <div className="course_card">
-                        <div className="course_avatar">
-                            <div>BCA</div>
+                    {courseDetail.map((course: CourseType) => (
+                        <div key={course._id} className="course_card" onClick={()=>sendData(course.coursename)}>
+                            <div className="course_avatar">
+                                <div>{course.coursename}</div>
+                            </div>
+                            <div className="course_details">
+                                <div className='course_name'>Course Name: {course.coursename}</div>
+                                <div className='course_description'>Description: {course.description}</div>
+                                <div className='course_ratings'>star star star star star</div>
+                                <div>Subjects no.: 45</div>
+                            </div>
                         </div>
-                        <div className="course_details">
-                            <div className='course_name'>Course Name: BCA</div>
-                            <div className='course_description'>Description: Bachelor of computer application</div>
-                            <div className='course_ratings'>star star star star star</div>
-                            <div>Subjects no.: 78</div>
-                        </div>
-                    </div>
-
-                    <div className="course_card">
-                        <div className="course_avatar">
-                            <div>BCA</div>
-                        </div>
-                        <div className="course_details">
-                            <div className='course_name'>BCA</div>
-                            <div className='course_description'>Bachelor of computer application</div>
-                            <div className='course_ratings'>star star star star star</div>
-                        </div>
-                    </div>
-
-                    <div className="course_card">
-                        <div className="course_avatar">
-                            <div>BCA</div>
-                        </div>
-                        <div className="course_details">
-                            <div className='course_name'>BCA</div>
-                            <div className='course_description'>Bachelor of computer application</div>
-                        </div>
-                    </div>
-                    <div className="course-card">BSC</div>
-                    <div className="course-card"></div>
-                    <div className="course-card"></div>
-                    <div className="course-card"></div>
-                    <div className="course-card"></div>
-                    <div className="course-card"></div>
+                    ))}                
                 </div>
             </div>
 

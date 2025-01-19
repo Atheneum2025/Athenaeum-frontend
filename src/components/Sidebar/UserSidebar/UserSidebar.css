@@ -1,5 +1,8 @@
 .sidebar{
     background-color: rgb(26, 26, 26);
-    display: block;
+    /* display: none; */
     height: 85vh;
+    position: fixed;
+    left: 0;
+    width: 25%;
 }

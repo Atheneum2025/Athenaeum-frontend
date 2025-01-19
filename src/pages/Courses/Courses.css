@@ -1,5 +1,5 @@
 .course_page{
-
+    padding: 2rem;
 }
 .course_cards_list{
     display: grid;
@@ -8,9 +8,10 @@
 }
 
 .course_card{
-    background-color: rgb(152, 57, 57);
+    background-color: rgba(90, 0, 0, 0.96);
     display: grid;
     grid-template-columns: auto auto;
+    padding: 1.2rem 1.2rem;
 }
 /* .course-card{
     width: 8rem;
@@ -63,7 +64,7 @@
 
 
 
-.form-for-adding{
+.form-for-adding-new{
     background-color: rgb(119, 105, 105);
     position: absolute;
     z-index: 99;
@@ -75,6 +76,7 @@
     bottom: 50%;
     margin-inline: 10rem;
     padding: 2rem;
+    
 }
 
 .form-for-adding > form{

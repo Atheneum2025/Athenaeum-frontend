@@ -1,7 +1,4 @@
-import Button from "../../components/Button/Button";
-import { Link } from "react-router-dom";
-import RegisterUser from "../Register/RegisterUser";
-
+import React from 'react';
 import "./Landing.css";
 export default function Landing() {
   return (
@@ -10,14 +7,14 @@ export default function Landing() {
         <div className="logo">LOGO</div>
         <div className="hero-section">
           <div>
-            <h1 className="head-title">ATHENAEUM</h1>
+            <h1 className="head-title">Wish On An Eyelash Pt. 2</h1>
             <p className="para">
-              "Unlock the power of wisdom and strategy - Learn like Athena"
+              Lost and Found
             </p>
           </div>
 
           <button className="btn btn-start">
-            <a href="/login">Start Studying!</a>
+            <a href="/login">Make a Wish</a>
           </button>
         </div>
       </section>

@@ -7,9 +7,11 @@ function SidebarLayout() {
     return (
         <>
             <main className='layout-with-sidebar'>
+
                 <UserSidebar />
 
                 <Outlet />
+
             </main>
         </>
     )

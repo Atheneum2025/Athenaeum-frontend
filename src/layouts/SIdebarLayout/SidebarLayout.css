@@ -1,4 +1,6 @@
 .layout-with-sidebar{
     display: grid;
-    grid-template-columns: minmax(25%, 50px) auto;
+    /* grid-template-columns: minmax(25%, 50px) auto; */
+    padding-left: 25%;
+
 }
