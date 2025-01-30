@@ -1,0 +1,33 @@
+.leaderboard{
+    background: linear-gradient(to bottom right, black , rgb(45, 45, 45), black);
+    width: 75%;
+    margin: auto;
+    padding: 20px;
+    height: 500px;
+    color: black;
+}
+.leaderboard_grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    place-items: center;
+    box-sizing:border-box;
+}
+.leaderboard_grid > div {
+    border: 2px solid black;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    text-align: center;
+}
+
+.header{
+    background-color: yellow;
+    color: black;
+    font-weight: 600;
+    font-variant:small-caps;
+    
+}
+
+.score{
+    background-color: orange;
+}

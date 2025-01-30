@@ -2,6 +2,7 @@ import './Subjects.css'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
+import { getAuthenticatedUser } from '../../utils/authUtils';
 
 type SubjectType = {
   _id: string;
@@ -10,10 +11,8 @@ type SubjectType = {
 };
 
 export default function Subject() {
-  const authToken = localStorage.getItem("authToken");
-  let parsedToken
-  authToken ? parsedToken = JSON.parse(authToken) : parsedToken = null;
-  const user = parsedToken?.user;
+  const { user, isAuthenticated } = getAuthenticatedUser();
+
 
   const location = useLocation();
   const courseName = location.state?.courseName;
@@ -25,8 +24,9 @@ export default function Subject() {
 
   // for making new subject
   const [formIsVisible, setFormIsVisible] = useState<boolean>(false);
-  const [subjectname, setSubjectname] = useState<string>("")
+  const [subjectname, setSubjectname] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [keywords, setKeywords] = useState<string>("");
 
   // for url params
   let courseIdParameter;
@@ -58,7 +58,7 @@ export default function Subject() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject`, { subjectname, description });
+      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject`, { subjectname, description, keywords }, { withCredentials: true});
       console.log("subject created", response.data);
       setFormIsVisible(false)
     }
@@ -81,24 +81,28 @@ export default function Subject() {
 
         {/* form for making a new subject */}
         {
-          user.role === "admin" && (
-            <>
-              <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Subject</button>
-              {
-                formIsVisible && (
-                  <div className="form-for-adding-new">
-                    <form action="" onSubmit={handleSubmit}>
-                      <label htmlFor="file">Enter a Subject Name</label>
+          isAuthenticated && (
+            user.role === "admin" && (
+              <>
+                <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Subject</button>
+                {
+                  formIsVisible && (
+                    <div className="form-for-adding-new">
+                      <form action="" onSubmit={handleSubmit}>
+                        <label htmlFor="file">Enter a Subject Name</label>
                       <input type="text" id='file-name' value={subjectname} onChange={(e) => setSubjectname(e.target.value)} />
-                      <label htmlFor="file">ENter Description</label>
-                      <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                      <button type='submit'>Save</button>
-                      <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                    </form>
-                  </div>
-                )
-              }
-            </>
+                        <label htmlFor="file">ENter Description</label>
+                        <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <label htmlFor="keywords">Enter Keywords</label>
+                        <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                        <button type='submit'>Save</button>
+                        <button onClick={() => setFormIsVisible(false)}>Cancel</button>
+                      </form>
+                    </div>
+                  )
+                }
+              </>
+            )
           )
         }
         {/* Display all the subjects in a course */}

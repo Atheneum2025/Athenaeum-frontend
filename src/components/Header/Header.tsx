@@ -1,6 +1,7 @@
 import header from "./Header.module.css";
 import '../../../public/globals.css';
 import AuthContext from "../../context/AuthContext.tsx";
+import { getAuthenticatedUser } from "../../utils/authUtils.ts";
 import { useContext, useState } from "react";
 import SearchBar from "../SearchComponent/SearchBar.tsx";
 
@@ -9,13 +10,15 @@ import SearchBar from "../SearchComponent/SearchBar.tsx";
 // }
 export default function Header() {
 
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const {logout} = useContext(AuthContext);
+  const {user, isAuthenticated} = getAuthenticatedUser();
+  // const { isAuthenticated, logout } = useContext(AuthContext);
   // console.log(isAuthenticated);
-  const authToken = localStorage.getItem("authToken");
-  let parsedToken
-  authToken ? parsedToken = JSON.parse(authToken) : parsedToken = null;
-  const user = parsedToken?.user;
-  console.log(user?.username);
+  // const authToken = localStorage.getItem("authToken");
+  // let parsedToken
+  // authToken ? parsedToken = JSON.parse(authToken) : parsedToken = null;
+  // const user = parsedToken?.user;
+  // console.log(user?.username);
 
   const [sidebarIsVisible, setSidebarIsVisible] = useState<boolean>(false);
   const [profileOptionsVisible, setProfileOptionsVisible] = useState<boolean>(false);
@@ -83,6 +86,9 @@ export default function Header() {
               <div>Hello {user?.role}</div>
               <div>
                 <a href="/profile">My Profile</a>
+              </div>
+              <div>
+                <a href="/settings">Settings</a>
               </div>
               {!isAuthenticated ? (
                 <div>

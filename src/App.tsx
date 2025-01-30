@@ -5,6 +5,7 @@ import Home from "./pages/Home/Home.tsx";
 import RegisterUser from "./pages/Register/RegisterUser";
 import Courses from "./pages/Courses/Courses";
 import Login from "./pages/Login/Login.tsx";
+import NewLogin from "./pages/Login/NewLogin.tsx"
 import MainLayout from "./layouts/MainLayout/MainLayout.tsx";
 import Subject from "./pages/Subjects/Subject.tsx";
 import Unit from "./pages/Units/Unit.tsx";
@@ -21,6 +22,10 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage.tsx";
 import Quiz from "./pages/Quiz/Quiz.tsx";
 import Notifications from "./pages/Notifications/Notifications.tsx";
 import Questions from "./pages/Quiz/Questions.tsx";
+import Leaderboard from "./pages/Leaderboard/Leaderboard.tsx";
+import VideoPlayer from "./pages/VideoDisplay/VideoDisplay.tsx";
+import VideoDisplay from "./pages/VideoDisplay/VideoDisplay.tsx";
+import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
 function App() {
   // const [resourseType, setResourseType] = useState('posts');
   // const [items, setItems] = useState([]);
@@ -36,7 +41,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Landing />}></Route>
-          <Route path="/login" element={<Login />}></Route>
+          <Route path="/login" element={<NewLogin />}></Route>
           <Route path="/dashboard" element={<Dashboard />}>
             <Route path="admin" element={<AdminsPage />} />
           </Route>
@@ -44,14 +49,16 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/register" element={<RegisterUser />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
 
             <Route path="/student-dashboard" element={<StudentDashboard />} />
             {/* <Route path="/professor-dashboard" element={<ProfessorDashboard />} /> */}
             <Route path="/admin-dashboard" element={<AdminsDashboard />} />
             <Route path="/upload" element={<UploadsPage />} />
-            <Route path="/quizzes" element={<Quiz/>}/>
-            <Route path="/quizzes/:quizId/questions" element={<Questions/>} />
-            <Route path="/notifications" element={<Notifications/>} />
+            <Route path="/quizzes" element={<Quiz />} />
+            <Route path="/quizzes/:quizId/questions" element={<Questions />} />
+            <Route path="/quizzes/:quizId/leaderboard" element={<Leaderboard />} />
+            <Route path="/notifications" element={<Notifications />} />
             <Route element={<SidebarLayout />}>
               <Route path="/course" element={<Courses />} />
               <Route path="/course/:courseId/subject" element={<Subject />} />
@@ -62,6 +69,7 @@ function App() {
               {/* <Route path="/unit" element={<Unit />} /> */}
               {/* <Route path="/material" element={<Material />} /> */}
             </Route>
+              <Route path="/course/:courseId/subject/:subjectId/unit/:unitId/material/:materialName/" element={<VideoDisplay />} />
           </Route>
           <Route path="*" element={<ErrorPage />}></Route>
         </Routes>

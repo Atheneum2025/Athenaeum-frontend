@@ -1,9 +1,24 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect } from 'react'
 
 export default function LikedVideos() {
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      try {
+        const response = await axios.get(`http://localhost:3000/api/v1/users/save`)
+        console.log(response)
+      }
+      catch (error) {
+        console.error(error)
+      }
+    }
+    fetchData();
+  }, [])
   return (
     <>
-      <div>Liked Materials</div>
+      <div>All User Saved Materials</div>
       <div>
         <div className='grid_layout'>
           <div>Material Name</div>

@@ -14,6 +14,7 @@ type SubjectType = {
   subjectname: string;
   description: string;
   course: string;
+  keywords: string;
 };
 
 type UnitType = {
@@ -22,6 +23,7 @@ type UnitType = {
   description: string;
   course: string;
   subject: string;
+  keywords: string;
 };
 
 type MaterialType = {
@@ -31,6 +33,7 @@ type MaterialType = {
   course: string;
   subject: string;
   unit: string;
+  keywords: string;
 };
 
 export default function SearchBar() {
@@ -177,20 +180,27 @@ export default function SearchBar() {
         {
           isVisible && (
             <div className={header.search_bar_results}>
-              Recents :
-              {recentSearches.length > 0 && (
-                <ul style={{ listStyleType: "none", padding: 0, margin: "8px 0", border: "1px solid #ccc", borderRadius: "4px" }}>
-                  {recentSearches.map((term, index) => (
-                    <li
-                      key={index}
-                      onClick={() => putToRecents(term)}
-                      style={{ padding: "8px", cursor: "pointer", borderBottom: index !== recentSearches.length - 1 ? "1px solid #ccc" : "none" }}
-                    >
-                      {term}
-                    </li>
-                  ))}
-                </ul>
-              )}
+              {
+                search == "" && (
+                  <>
+
+                    Recents :
+                    {recentSearches.length > 0 && (
+                      <ul style={{ listStyleType: "none", padding: 0, margin: "8px 0", border: "1px solid #ccc", borderRadius: "4px" }}>
+                        {recentSearches.map((term, index) => (
+                          <li
+                            key={index}
+                            onClick={() => putToRecents(term)}
+                            style={{ padding: "8px", cursor: "pointer", borderBottom: index !== recentSearches.length - 1 ? "1px solid #ccc" : "none" }}
+                          >
+                            {term}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </>
+                )
+              }
               Results :
               Courses :
               {
@@ -214,38 +224,40 @@ export default function SearchBar() {
                     </a>
                     <pre style={{ display: 'none' }}>{subject.description}</pre>
                     <pre style={{ display: 'inline', color: 'red' }}>{subject.course}</pre>
+                    <pre style={{ display: 'none' }}>{subject.keywords}</pre>
                   </li>
                 ))
               }
               Units :
               {
                 unitSearchData.map((unit) => (
-                  <li key={unit._id}>
+                  <li key={unit._id} onClick={() => putToRecents(unit.unitname)}>
                     <a href={`/course/${unit.course.toUpperCase()}/subject/${unit.subject.toUpperCase()}/unit/${unit.unitname}/material`}>
                       {unit.unitname}
                     </a>
                     <pre style={{ display: 'none' }}>{unit.description}</pre>
                     <pre style={{ display: 'none' }}>{unit.course}</pre>
                     <pre style={{ display: 'none' }}>{unit.subject}</pre>
+                    <pre style={{ display: 'none' }}>{unit.keywords}</pre>
                   </li>
                 ))
               }
               Materials :
               {
                 materialSearchData.map((material) => (
-                  <li key={material._id}>
-                    <a href={`/course/${material.course.toUpperCase()}/subject/${material.subject.toUpperCase()}/unit/${material.unit}/material/${material.materialname}`}>
+                  <li key={material._id} onClick={() => putToRecents(material.materialname)}>
+                    <a href={`/course/${material.course.toUpperCase()}/subject/${material.subject.toUpperCase()}/unit/${material.unit}/material/${material._id}`}>
                       {material.materialname}
                     </a>
-                    <pre style={{ display: 'none' }}>{material.description}</pre>
-                    <pre style={{ display: 'inline', color: 'red' }}>{material.course}</pre>/
+                    <pre style={{ display: 'inline' }}>{material._id}</pre>
+                    <pre style={{ display: 'none' }}>{material.course}</pre>/
                     <pre style={{ display: 'none' }}>{material.subject}</pre>
                     <pre style={{ display: 'none' }}>{material.subject}</pre>
-
+                    <pre style={{ display: 'none' }}>{material.keywords}</pre>
                   </li>
                 ))
               }
-
+              {/* http://localhost:5173/course/BCA/subject/TWS/unit/Unit%20Three/material/6797db3f403af229c5aae083 */}
             </div>
           )
         }

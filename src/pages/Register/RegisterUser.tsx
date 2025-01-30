@@ -7,16 +7,19 @@ export default function RegisterUser() {
 
   const [role, setRole] = useState<string>("");
   const [username, setUsername] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent) =>{
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try{
-      const response = await axios.post('http://localhost:3000/auth/signup',{username, password, role});
+    try {
+      const response = await axios.post('http://localhost:3000/auth/signup', { username, password, role, email });
+      console.log(email)
       console.log("signup successful", response.data);
     }
-    catch(err){
+    catch (err) {
       console.error("signup failed:", err);
     }
   }
@@ -31,6 +34,21 @@ export default function RegisterUser() {
           id="username"
           onChange={(e) => setUsername(e.target.value)}
         />
+        <label htmlFor="email">Email</label>
+        <input
+          type="text"
+          value={email}
+          id="email"
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
+        <label htmlFor="role">Role</label>
+        <input
+          type="text"
+          value={role}
+          id="role"
+          onChange={(e) => setRole(e.target.value)}
+        />
 
         <label htmlFor="password">Password</label>
         <input
@@ -40,12 +58,12 @@ export default function RegisterUser() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <label htmlFor="role">Role</label>
+        <label htmlFor="confirm-password">Confirm Password</label>
         <input
           type="text"
-          value={role}
-          id="role"
-          onChange={(e) => setRole(e.target.value)}
+          value={confirmPassword}
+          id="confirm-password"
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button className='btn' type='submit'>Register</button>
 

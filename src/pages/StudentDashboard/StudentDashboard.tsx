@@ -88,7 +88,7 @@ function StudentDashboard() {
                     <PdfViewer />
                 </div>
                 <div id='2' className={`options-page ${activePage === 2 ? "active" : ""}`}>
-                    <VideoDisplay />
+                    {/* <VideoDisplay /> */}
                 </div>
                 <div id='3' className={`options-page ${activePage === 3 ? "active" : ""}`}>
                     <HistoryVideos />

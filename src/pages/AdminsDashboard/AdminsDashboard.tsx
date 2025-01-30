@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import LikedVideos from "../StudentDashboard/LikedVideos/LikedVideos";
 import HistoryVideos from "../StudentDashboard/History/HistoryVideos";
 import MyMaterial from "../StudentDashboard/MyMaterial/MyMaterial";
+import AllUsers from "../../components/AllUsers/AllUsers";
 
 function AdminsDashboard() {
 
@@ -46,12 +47,15 @@ function AdminsDashboard() {
       </ul>
       <div className='student-profile-options-display'>
         <div id='1' className={`options-page ${activePage === 1 ? "active" : ""}`}>
-          <LikedVideos />
+          {/* list of professors */}
+          {/* <AllUsers users={undefined} /> */}
         </div>
         <div id='2' className={`options-page ${activePage === 2 ? "active" : ""}`}>
-          <LikedVideos />
+          {/* list of students */}
+          {/* AllUsers students */}
         </div>
         <div id='3' className={`options-page ${activePage === 3 ? "active" : ""}`}>
+          {/* list of all materials */}
           <HistoryVideos />
         </div>
         <div id='4' className={`options-page ${activePage === 4 ? "active" : ""}`}>

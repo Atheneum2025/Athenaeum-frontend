@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import "./Login.css";
 import axios from "axios";
 // import { useAuth } from "../../context/AuthContext";
+import Cookies from "js-cookie"
 
 
 function Login() {
@@ -11,15 +12,16 @@ function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent) =>{
+  const handleSignIn = async (e: React.FormEvent) =>{
     e.preventDefault();
 
     try{
-      const response = await axios.post('http://localhost:3000/auth/login',{username, password});
-      console.log("login successful", response.data);
+      const response = await axios.post('http://localhost:3000/auth/login',{username, password}, {withCredentials: true});
+      console.log("login successful");
       if(response){
-        // console.log(response.data.user)
+        console.log(response.data)
         localStorage.setItem("authToken", JSON.stringify(response.data));
+        Cookies.set("authToken", response.data.accessToken)
       }
       else{
         console.error("login failed");
@@ -35,7 +37,7 @@ function Login() {
       <div className="login-background">
         <div className="login-form">
           <div>LOG IN</div>
-          <form action="" onSubmit={handleSubmit}>
+          <form action="" onSubmit={handleSignIn}>
             <label htmlFor="username">EMAIL</label>
             <input
               type="text"

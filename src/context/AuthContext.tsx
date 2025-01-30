@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import Cookies from "js-cookie"
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -27,6 +28,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem("authToken");
+    Cookies.remove("authToken")
     setIsAuthenticated(false);
   }
 
@@ -38,7 +40,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 // export const useAuth = (): AuthContextType => {
-//   const context = useContext(AuthContext);
+//   const context = useContext(AuthContext); 
 //   if (!context) {
 //     throw new Error("useAuth must be used within an AuthProvider");
 //   }

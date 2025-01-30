@@ -7,14 +7,14 @@ export default function Landing() {
         <div className="logo">LOGO</div>
         <div className="hero-section">
           <div>
-            <h1 className="head-title">Wish On An Eyelash Pt. 2</h1>
+            <h1 className="head-title" style={{fontVariant: "small-caps"}} >What Should Be Worn Tomorrow ?</h1>
             <p className="para">
-              Lost and Found
+              For Traditional Day In College 31/01/2025
             </p>
           </div>
 
           <button className="btn btn-start">
-            <a href="/login">Make a Wish</a>
+            <a href="/login">Reply Something</a>
           </button>
         </div>
       </section>

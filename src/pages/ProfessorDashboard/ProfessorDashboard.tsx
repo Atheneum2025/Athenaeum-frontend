@@ -82,12 +82,24 @@ export default function ProfessorDashboard({user}: StudentDashboardProps) {
                     isVisible && (
                         <div className="form-for-adding-new">
                             <form action="" onSubmit={handleSubmit}>
-                                {/* <label htmlFor="">Course</label>
-                                <input type="text" />
-                                <label htmlFor="">Subject</label>
-                                <input type="text" />
-                                <label htmlFor="">Unit</label>
-                                <input type="text" /> */}
+                                <select name="" id="">
+                                    <option value="">Course</option>
+                                    <option value="">BCA</option>
+                                    <option value="">BBA</option>
+                                    <option value="">BA</option>
+                                </select>
+                                <select name="" id="">
+                                    <option value="">Subject</option>
+                                    <option value="">PSPC</option>
+                                    <option value="">DSA</option>
+                                    <option value="">DM</option>
+                                </select>
+                                <select name="" id="">
+                                    <option value="">Unit</option>
+                                    <option value="">Unit 1</option>
+                                    <option value="">Unit 2</option>
+                                    <option value="">Unit 3</option>
+                                </select>
                                 <label htmlFor="file">ENter a Material Name</label>
                                 <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
                                 <label htmlFor="file">ENter Description</label>
@@ -105,15 +117,14 @@ export default function ProfessorDashboard({user}: StudentDashboardProps) {
             </div>
 
             <ul className='student-profile-options' id='demo'>
-                <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Liked Material</div>
+                <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Analytics</div>
                 <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Saved Material</div>
                 <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>Your History</div>
                 <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>My Material</div>
-                <div className={`options ${activePage === 5 ? "active" : ""}`} onClick={show(5)}>Analytics</div>
             </ul>
             <div className='student-profile-options-display'>
                 <div id='1' className={`options-page ${activePage === 1 ? "active" : ""}`}>
-                    <LikedVideos />
+                    <ProfessorAnalytics />
                 </div>
                 <div id='2' className={`options-page ${activePage === 2 ? "active" : ""}`}>
                     <LikedVideos />
@@ -123,9 +134,6 @@ export default function ProfessorDashboard({user}: StudentDashboardProps) {
                 </div>
                 <div id='4' className={`options-page ${activePage === 4 ? "active" : ""}`}>
                     <MyMaterial />
-                </div>
-                <div id='5' className={`options-page ${activePage === 5 ? "active" : ""}`}>
-                    <ProfessorAnalytics />
                 </div>
             </div>
         </>
