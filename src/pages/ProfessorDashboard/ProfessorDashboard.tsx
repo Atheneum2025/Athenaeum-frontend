@@ -30,25 +30,9 @@ export default function ProfessorDashboard({user}: StudentDashboardProps) {
         setActivePage(id);
     }
 
-    const [isVisible, setIsVisible] = useState<boolean>(false);
-    const [materialname, setMaterialname] = useState<string>("")
-    const [description, setDescription] = useState<string>("");
+    
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        let courseId = 'BCA'
-        let subjectId = 'DSA'
-        let unitId = 'Unit One'
-        try {
-            const response = await axios.post(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${unitId}/material`, { materialname, description });
-            console.log("material created", response.data);
-            setIsVisible(false);
-        }
-        catch (err) {
-            console.error("failed:", err);
-            setIsVisible(false);
-        }
-    }
+    
     return (
 
         <>
@@ -76,45 +60,7 @@ export default function ProfessorDashboard({user}: StudentDashboardProps) {
                 </form>
             </div>
             <div>ProfessorDashboard</div>
-            <div>
-                <button className='add-btn' id='btn' onClick={() => setIsVisible(true)}>Add New Material</button>
-                {
-                    isVisible && (
-                        <div className="form-for-adding-new">
-                            <form action="" onSubmit={handleSubmit}>
-                                <select name="" id="">
-                                    <option value="">Course</option>
-                                    <option value="">BCA</option>
-                                    <option value="">BBA</option>
-                                    <option value="">BA</option>
-                                </select>
-                                <select name="" id="">
-                                    <option value="">Subject</option>
-                                    <option value="">PSPC</option>
-                                    <option value="">DSA</option>
-                                    <option value="">DM</option>
-                                </select>
-                                <select name="" id="">
-                                    <option value="">Unit</option>
-                                    <option value="">Unit 1</option>
-                                    <option value="">Unit 2</option>
-                                    <option value="">Unit 3</option>
-                                </select>
-                                <label htmlFor="file">ENter a Material Name</label>
-                                <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
-                                <label htmlFor="file">ENter Description</label>
-                                <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                                <label htmlFor="file">Upload a file</label>
-                                <input type="file" />
-
-                                <button type='submit'>Save</button>
-                                <button onClick={() => setIsVisible(false)}>Cancel</button>
-                            </form>
-                        </div>
-                    )
-                }
-                
-            </div>
+            
 
             <ul className='student-profile-options' id='demo'>
                 <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Analytics</div>

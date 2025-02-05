@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { getAuthenticatedUser } from '../../utils/authUtils';
 
 type NotificationType = {
     _id: string;
@@ -9,46 +10,47 @@ type NotificationType = {
 };
 export default function Notifications() {
 
-        const [courseDetail, setCourseDetail] = useState<NotificationType[]>([]);
-    
+    const { user, isAuthenticated } = getAuthenticatedUser();
+    const [courseDetail, setCourseDetail] = useState<NotificationType[]>([]);
+
     // get all notifications
-     useEffect(() => {
+    useEffect(() => {
 
-            const fetchdata = async () => {
-                try {
-                    const Courseresponse = await fetch("http://localhost:3000/api/v1/users/notifications");
-                    const Courseresult = await Courseresponse.json();
-                    setCourseDetail(Courseresult.notifications);
-                }
-                catch (error) {
-                    console.error(error);
-                }
-            }
-
-            fetchdata();
-        }, []);
-        console.log(courseDetail)
-
-        const handlePublish = async (notificationId : string) => {
-            console.log(notificationId)
-            
+        const fetchdata = async () => {
             try {
-                const response = await axios.patch(`http://localhost:3000/api/v1/users/notification/${notificationId}/publish`)
-                if(response.status === 200){
-                    console.log("Material publish status toggled successfully:", response.data);
-
-                    setCourseDetail((prevNotifications) =>
-                        prevNotifications.filter((notification) => notification._id !== notificationId)
-                    );
-                }
-                else{
-                    console.log(response.data.message);
-                    
-                }
-            } catch (error) {
-                console.error(error)
+                const Courseresponse = await fetch("http://localhost:3000/api/v1/users/notifications");
+                const Courseresult = await Courseresponse.json();
+                setCourseDetail(Courseresult.notifications);
+            }
+            catch (error) {
+                console.error(error);
             }
         }
+
+        fetchdata();
+    }, []);
+    console.log(courseDetail)
+
+    const handlePublish = async (notificationId: string) => {
+        console.log(notificationId)
+
+        try {
+            const response = await axios.patch(`http://localhost:3000/api/v1/users/notification/${notificationId}/publish`)
+            if (response.status === 200) {
+                console.log("Material publish status toggled successfully:", response.data);
+
+                setCourseDetail((prevNotifications) =>
+                    prevNotifications.filter((notification) => notification._id !== notificationId)
+                );
+            }
+            else {
+                console.log(response.data.message);
+
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
     return (
         <>
             <div>Notifications</div>
@@ -57,7 +59,7 @@ export default function Notifications() {
             <div>material : Link</div>
             <button>Publish</button>
 
-            
+
             <div>
                 <div className='grid_layout'>
                     <div>Professor</div>
@@ -66,19 +68,26 @@ export default function Notifications() {
                     <div>Publish Status</div>
                 </div>
             </div>
-            {courseDetail.map((notification: NotificationType) => (
-                        <div key={notification._id} className="course_card">
-                            <div>
-                                <div>{notification.messageBy}</div>
+            {
+                user.role === "admin" && (
+                    <>
+
+                        {courseDetail.map((notification: NotificationType) => (
+                            <div key={notification._id} className="course_card">
+                                <div>
+                                    <div>{notification.messageBy}</div>
+                                </div>
+                                <div className="course_details">
+                                    <div className='course_name'>Course Name: {notification.message}</div>
+                                    <div className='course_description'>Description: {notification.material}</div>
+                                    <button className='course_ratings' onClick={() => handlePublish(notification._id)} >Publish</button>
+                                    <div>Subjects no.: 45</div>
+                                </div>
                             </div>
-                            <div className="course_details">
-                                <div className='course_name'>Course Name: {notification.message}</div>
-                                <div className='course_description'>Description: {notification.material}</div>
-                                <button className='course_ratings' onClick={()=>handlePublish(notification._id)} >Publish</button>
-                                <div>Subjects no.: 45</div>
-                            </div>
-                        </div>
-                    ))}      
+                        ))}
+                    </>
+                )
+            }
         </>
     )
 }

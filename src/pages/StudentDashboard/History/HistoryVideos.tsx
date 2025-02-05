@@ -1,59 +1,59 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
+type HistoryType = {
+  MaterialName: string;
+  course: string;
+  subject: string;
+  unit: string;
+  user: string;
+  _id: string;
+}
 export default function HistoryVideos() {
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3000/api/v1/users/history`);
-        console.log(response)
-      } catch (error) {
-        console.error(error)
-      }
+  const [history, setHistory] = useState<HistoryType[]>([])
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/api/v1/users/history`, { withCredentials: true });
+      // console.log(response.data.history)
+      setHistory(response.data.history)
+    } catch (error) {
+      console.error(error)
     }
+  }
+  useEffect(() => {
     fetchData();
   }, []);
 
-  const deleteHistory = async () =>{
-    try{
-      const response = await axios.delete(`http://localhost:3000/api/v1/users/delete-history`);
-      console.log('history deleted')
+  console.log(history)
+  const deleteHistory = async () => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/v1/users/delete-history`, {withCredentials: true});
+      console.log('history deleted', response)
+      fetchData();
     }
-    catch(error){
-      console.log(error)
+    catch (error) {
+      console.error(error)
     }
   }
 
   return (
     <>
       <div>All User History Material</div>
-      <button onClick={()=>deleteHistory} >Delete History</button>
+      <button onClick={() => deleteHistory()} >Delete History</button>
       <div className='liked_materials'>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-          </div>
-        </div>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-          </div>
-        </div>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-          </div>
-        </div>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-          </div>
-        </div>
+        {
+          history.map((history: HistoryType, index) => (
+            <div className="liked_material_card" key={index}>
+              <div className="liked_material_details">
+                <div className="liked_material_name">{history.MaterialName}</div>
+                <div className='uploaded_by'>{history.user}</div>
+              </div>
+            </div>
+
+          ))
+        }
+        
       </div>
     </>
   )

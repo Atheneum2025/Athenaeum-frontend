@@ -17,6 +17,7 @@ const LoginPage = () => {
     const [password, setPassword] = useState<string>("");
     const [role, setRole] = useState<string>("");
     const [email, setEmail] = useState<string>("");
+    const [error, setError] = useState<string>("")
     const [isActive, setIsActive] = useState(false);
     // const [formData, setFormData] = useState({
     //     name: "",
@@ -58,6 +59,11 @@ const LoginPage = () => {
         // navigate("/dashboard");
 
     }
+    // const validateEmail = (email: string): boolean => {
+    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    //     console.log(email)
+    //     return emailRegex.test(email);
+    // }
 
     return (
         <div
@@ -95,7 +101,7 @@ const LoginPage = () => {
                         name="email"
                         value={email}
                         placeholder="Email"
-                        onChange={(e) => setEmail(e.target.value)}
+                        onChange={(e) => {setEmail(e.target.value)}}
                     />
                     <input
                         type="password"

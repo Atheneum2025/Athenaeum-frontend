@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import "./Leaderboard.css"
 import axios from 'axios'
 import { useParams } from 'react-router-dom';
+import { getAuthenticatedUser } from '../../utils/authUtils';
 
 type LeaderboardType = {
   _id: string;
@@ -10,11 +11,12 @@ type LeaderboardType = {
   student: string;
 }
 export default function Leaderboard() {
+  const { user, isAuthenticated } = getAuthenticatedUser();
 
   const { quizId } = useParams<{ quizId: string }>();
   const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([])
   // const [sortedLeaderboard, setSortedLeaderboard] = useState<LeaderboardType[]>([])
-  
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,10 +34,14 @@ export default function Leaderboard() {
     fetchData();
   }, [])
 
-  let sortedLeaderboard = leaderboard.sort((a,b) => b.score - a.score)
+  let sortedLeaderboard = leaderboard.sort((a, b) => b.score - a.score)
 
   return (
     <>
+    {
+      isAuthenticated ? (
+        <>
+        
       <div>Leaderboard</div>
       {/* <div>{ }</div> */}
       <div className='leaderboard'>
@@ -47,13 +53,18 @@ export default function Leaderboard() {
         {
           sortedLeaderboard.map((leaderboard: LeaderboardType, index) => (
             <div className='leaderboard_grid score' key={leaderboard._id}>
-              <div>{index+1}</div>
+              <div>{index + 1}</div>
               <div>{leaderboard.student}</div>
               <div>{leaderboard.score}</div>
             </div>
           ))
         }
       </div>
+        </>
+      ):(
+        <div>please Login</div>
+      )
+    }
 
     </>
   )

@@ -1,12 +1,10 @@
 import './Courses.css'
 import '../Subjects/Subjects.css'
-import { useContext, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
-import AuthContext from '../../context/AuthContext';
+import axiosInstance from '../../utils/axios.js';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
-import Cookies from 'js-cookie'
 
 
 type CourseType = {
@@ -17,7 +15,7 @@ type CourseType = {
 
 export default function Courses() {
 
-    const { user, parsedToken, isAuthenticated } = getAuthenticatedUser();
+    const { user, isAuthenticated } = getAuthenticatedUser();
     const navigate = useNavigate();
     const [courseDetail, setCourseDetail] = useState<CourseType[]>([]);
     const [formIsVisible, setFormIsVisible] = useState<boolean>(false);
@@ -26,22 +24,22 @@ export default function Courses() {
     const [description, setDescription] = useState<string>("");
     const [keywords, setKeywords] = useState<string>("");
 
+    const fetchData = async () => {
+        setLoading(true)
+        try {
+            const CourseResponse = await axiosInstance.get("/api/v1/course/", { withCredentials: true });
+
+            setCourseDetail(CourseResponse.data.courses);
+            setLoading(false)
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
     useEffect(() => {
 
-        const fetchdata = async () => {
-            setLoading(true)
-            try {
-                const CourseResponse = await axios.get("http://localhost:3000/api/v1/course/" , {withCredentials: true});
-                
-                setCourseDetail(CourseResponse.data.courses);
-                setLoading(false)
-            }
-            catch (error) {
-                console.error(error);
-            }
-        }
 
-        fetchdata();
+        fetchData();
     }, []);
     console.log(courseDetail)
 
@@ -54,15 +52,17 @@ export default function Courses() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3000/api/v1/course/', { coursename, description, keywords }, {withCredentials: true});
+            const response = await axiosInstance.post('/api/v1/course/', { coursename, description, keywords }, { withCredentials: true });
             console.log("course created", response.data);
-            setFormIsVisible(false)
+            setFormIsVisible(false);
+            fetchData();
         }
         catch (err) {
             console.error("failed:", err);
             setFormIsVisible(false)
         }
     }
+
     return (
         <>
             <div className="course_page">
@@ -99,19 +99,25 @@ export default function Courses() {
                         loading ? <Loader /> :
                             <>
 
-                                {courseDetail.map((course: CourseType) => (
-                                    <div key={course._id} className="course_card" onClick={() => sendData(course.coursename)} draggable={true}>
-                                        <div className="course_avatar">
-                                            <div>{course.coursename}</div>
+                                {courseDetail.length === 0 ? (
+                                    <div>No Courses Available</div>
+                                ) : (
+                                    courseDetail.map((course: CourseType) => (
+                                        <div key={course._id} className="course_card" draggable={true}>
+                                            <div className="course_avatar">
+                                                <div>{course.coursename}</div>
+                                            </div>
+                                            <div className="course_details" onClick={() => sendData(course.coursename)} >
+                                                <div className='course_name'>Course Name: {course.coursename}</div>
+                                                <div className='course_description'>Description: {course.description}</div>
+                                                <div className='course_ratings'>star star star star star</div>
+                                                <div>Subjects no.: 45</div>
+                                            </div>
+                                            
                                         </div>
-                                        <div className="course_details">
-                                            <div className='course_name'>Course Name: {course.coursename}</div>
-                                            <div className='course_description'>Description: {course.description}</div>
-                                            <div className='course_ratings'>star star star star star</div>
-                                            <div>Subjects no.: 45</div>
-                                        </div>
-                                    </div>
-                                ))}
+                                    ))
+                                )}
+
                             </>
                     }
                 </div>

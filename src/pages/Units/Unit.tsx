@@ -3,6 +3,7 @@ import '../Subjects/Subjects.css'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { getAuthenticatedUser } from '../../utils/authUtils';
+import Loader from '../../components/Loader/Loader';
 // import '../Courses/Courses.css';
 
 type UnitType = {
@@ -22,6 +23,7 @@ export default function Unit() {
 
   const { courseId, subjectId } = useParams<{ courseId: string, subjectId: string }>();
 
+  const [loading, setLoading] = useState<boolean>(false)
   // for making new unit
   const [formIsVisible, setFormIsVisible] = useState<boolean>(false);
   const [unitname, setUnitname] = useState<string>("")
@@ -37,20 +39,20 @@ export default function Unit() {
   const [UnitDetails, setUnitDetails] = useState<UnitType[]>([]);
 
   // get all units from a subject and display
-  useEffect(() => {
-
-    const fetchdata = async () => {
-      try {
-        const unitResponse = await fetch(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`);
-        const unitResult = await unitResponse.json();
-        setUnitDetails(unitResult.units);
-      }
-      catch (error) {
-        console.error(error);
-      }
+  const fetchData = async () => {
+    setLoading(true)
+    try {
+      const unitResponse = await fetch(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`);
+      const unitResult = await unitResponse.json();
+      setUnitDetails(unitResult.units);
+      setLoading(false)
     }
-
-    fetchdata();
+    catch (error) {
+      console.error(error);
+    }
+  }
+  useEffect(() => {
+    fetchData();
   }, []);
 
   // function for creating a new unit in that subject
@@ -58,9 +60,10 @@ export default function Unit() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`, { unitname, description, keywords }, {withCredentials: true});
+      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`, { unitname, description, keywords }, { withCredentials: true });
       console.log("unit created", response.data);
       setFormIsVisible(false);
+      fetchData();
     }
     catch (err) {
       console.error("failed:", err);
@@ -109,19 +112,30 @@ export default function Unit() {
         {/* Display all the units in a subject */}
         <div>Units</div>
         <div>
-          {UnitDetails.map((unit: UnitType) => (
-            <div key={unit._id} onClick={() => sendData(unit.unitname)}>
-              <div>
-                <div>{unit.unitname}</div>
-              </div>
-              <div className="course_details">
-                <div className='course_name'>Unit Name: {unit.unitname}</div>
-                <div className='course_description'>Description: {unit.description}</div>
-                <div className='course_ratings'>star star star star star</div>
-                <div>Subjects no.: 45</div>
-              </div>
-            </div>
-          ))}
+          {
+            loading ? <Loader /> :
+              <>
+                {
+                  UnitDetails.length === 0 ? (
+                    <div>No Units Found</div>
+                  ) : (
+                    UnitDetails.map((unit: UnitType) => (
+                      <div key={unit._id} onClick={() => sendData(unit.unitname)}>
+                        <div>
+                          <div>{unit.unitname}</div>
+                        </div>
+                        <div className="course_details">
+                          <div className='course_name'>Unit Name: {unit.unitname}</div>
+                          <div className='course_description'>Description: {unit.description}</div>
+                          <div className='course_ratings'>star star star star star</div>
+                          <div>Subjects no.: 45</div>
+                        </div>
+                      </div>
+                    ))
+                  )
+                }
+              </>
+          }
         </div>
       </div>
     </>

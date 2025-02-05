@@ -3,17 +3,11 @@ import AuthContext from '../../context/AuthContext';
 import AdminsDashboard from '../AdminsDashboard/AdminsDashboard';
 import ProfessorDashboard from '../ProfessorDashboard/ProfessorDashboard';
 import StudentDashboard from '../StudentDashboard/StudentDashboard';
+import { getAuthenticatedUser } from '../../utils/authUtils';
 
 export default function ProfilePage() {
 
-    const { isAuthenticated, logout } = useContext(AuthContext);
-    console.log(isAuthenticated);
-    const authToken = localStorage.getItem("authToken");
-    let parsedToken
-    authToken ? parsedToken = JSON.parse(authToken) : parsedToken = null;
-    const user = parsedToken?.user;
-
-
+      const {user, isAuthenticated} = getAuthenticatedUser();
     
     return (
         <>

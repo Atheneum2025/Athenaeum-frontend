@@ -2,16 +2,17 @@ import header from "./Header.module.css";
 import '../../../public/globals.css';
 import AuthContext from "../../context/AuthContext.tsx";
 import { getAuthenticatedUser } from "../../utils/authUtils.ts";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import SearchBar from "../SearchComponent/SearchBar.tsx";
+import { Link } from "react-router-dom";
 
 // type User = {
 //   user: string;
 // }
 export default function Header() {
 
-  const {logout} = useContext(AuthContext);
-  const {user, isAuthenticated} = getAuthenticatedUser();
+  const { logout } = useContext(AuthContext);
+  const { user, isAuthenticated } = getAuthenticatedUser();
   // const { isAuthenticated, logout } = useContext(AuthContext);
   // console.log(isAuthenticated);
   // const authToken = localStorage.getItem("authToken");
@@ -22,10 +23,17 @@ export default function Header() {
 
   const [sidebarIsVisible, setSidebarIsVisible] = useState<boolean>(false);
   const [profileOptionsVisible, setProfileOptionsVisible] = useState<boolean>(false);
+  const profileButtonRef = useRef<HTMLDivElement>(null)
+
+  // document.addEventListener("mousedown", (event: MouseEvent) => {
+  //   if (profileButtonRef.current && !profileButtonRef.current.contains(event.target as Node)) {
+  //     setProfileOptionsVisible(!profileOptionsVisible);
+  //   }
+  // })
   return (
 
     <>
-      <header className={header.navigation_header}>
+      <header className={header.navigation_header} >
         <div className={header.logo}>
           <img src="e3de8db1-a6da-45b8-8547-008b5effa859 1@2x.png" alt="" />
           {/* logo */}
@@ -37,19 +45,19 @@ export default function Header() {
 
             <ul className={header.ul_lists}>
               <li>
-                <a href="/home">Home</a>
+                <Link to={'/home'}>Home</Link>
               </li>
               <li>
-                <a href="/">Landing</a>
+                <Link to={'/'}>Landing</Link>
               </li>
               <li>
-                <a href="/contact">Contact</a>
+                <Link to={'/contact'}>Contact</Link>
               </li>
               <li>
-                <a href="/register">Register</a>
+                <Link to={'/register'}>Register</Link>
               </li>
               <li>
-                <a href="/course">Course</a>
+                <Link to={'/course'}>Course</Link>
               </li>
             </ul>
           </nav>
@@ -57,19 +65,19 @@ export default function Header() {
 
             <ul className={header.ul_lists}>
               <li>
-                <a href="/home">Home</a>
+                <Link to={'/home'}>Home</Link>
               </li>
               <li>
-                <a href="/">Landing</a>
+                <Link to={'/'}>Landing</Link>
               </li>
               <li>
-                <a href="/contact">Contact</a>
+                <Link to={'/contact'}>Contact</Link>
               </li>
               <li>
-                <a href="/register">Register</a>
+                <Link to={'/register'}>Register</Link>
               </li>
               <li>
-                <a href="/course">Course</a>
+                <Link to={'/course'}>Course</Link>
               </li>
             </ul>
           </nav>
@@ -79,34 +87,40 @@ export default function Header() {
         <div className={header.auth_btn}>
 
 
+          {/* <div  className="profileSide"> */}
 
-          <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)}>P</div>
-          {profileOptionsVisible &&
-            <div className={header.profile_avatar_options}>
-              <div>Hello {user?.role}</div>
-              <div>
-                <a href="/profile">My Profile</a>
-              </div>
-              <div>
-                <a href="/settings">Settings</a>
-              </div>
-              {!isAuthenticated ? (
-                <div>
-                  <button><a href="/login">LOGIN</a></button>
-                </div>
-              ) : (
-                <>
-                  <div>
-                    <button onClick={logout}><a href="/login">LOGOUT</a></button>
-                  </div>
-                  <div>
-                    <button><a href="/notifications">Notifications</a></button>
-                  </div>
-                </>
+            {/* <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)} ref={profileButtonRef}> */}
+          <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)} >
 
-              )}
+              <img src="User.png" alt="" />
             </div>
-          }
+            {profileOptionsVisible &&
+              <div className={header.profile_avatar_options} >
+                <div>Hello {user?.role}</div>
+                <div>
+                  <Link to={'/profile'}>Profile</Link>
+                </div>
+                <div>
+                  <Link to={'/settings'}>Settings</Link>
+
+                </div>
+                {!isAuthenticated ? (
+                  <Link to={'/login'}>Login</Link>
+                ) : (
+                  <>
+                    <div>
+                      <Link onClick={logout} to={'/login'}>Logout</Link>
+                    </div>
+                    <div>
+                      <Link to={'/notifications'}>Notifications</Link>
+                    </div>
+                  </>
+
+                )}
+              </div>
+            }
+
+          {/* </div> */}
         </div>
         {/* <div className="auth">
           <a href="/student-dashboard">

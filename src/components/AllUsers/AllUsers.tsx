@@ -7,11 +7,8 @@ type User = {
     role: 'professor' | 'student';
 };
 
-type AllUsersProps = {
-    users: User[];
-}
-export default function AllUsers({users}): React.FC<AllUsersProps> {
-    console.log(users)
+export default function AllUsers({ role }: User) {
+    // console.log(users)
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -23,6 +20,7 @@ export default function AllUsers({users}): React.FC<AllUsersProps> {
         }
         fetchData();
     }, [])
+
     return (
         <>
 

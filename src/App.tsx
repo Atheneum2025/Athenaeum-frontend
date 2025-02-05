@@ -26,6 +26,7 @@ import Leaderboard from "./pages/Leaderboard/Leaderboard.tsx";
 import VideoPlayer from "./pages/VideoDisplay/VideoDisplay.tsx";
 import VideoDisplay from "./pages/VideoDisplay/VideoDisplay.tsx";
 import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
+import Calendar from "./pages/Calendar/Calendar.tsx";
 function App() {
   // const [resourseType, setResourseType] = useState('posts');
   // const [items, setItems] = useState([]);
@@ -50,6 +51,7 @@ function App() {
             <Route path="/register" element={<RegisterUser />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/calendar" element={<Calendar/>} />
 
             <Route path="/student-dashboard" element={<StudentDashboard />} />
             {/* <Route path="/professor-dashboard" element={<ProfessorDashboard />} /> */}
@@ -59,7 +61,7 @@ function App() {
             <Route path="/quizzes/:quizId/questions" element={<Questions />} />
             <Route path="/quizzes/:quizId/leaderboard" element={<Leaderboard />} />
             <Route path="/notifications" element={<Notifications />} />
-            <Route element={<SidebarLayout />}>
+            {/* <Route element={<SidebarLayout />}> */}
               <Route path="/course" element={<Courses />} />
               <Route path="/course/:courseId/subject" element={<Subject />} />
               <Route path="/course/:courseId/subject/:subjectId/unit" element={<Unit />} />
@@ -68,7 +70,7 @@ function App() {
               {/* <Route path="/subject" element={<Subject />} /> */}
               {/* <Route path="/unit" element={<Unit />} /> */}
               {/* <Route path="/material" element={<Material />} /> */}
-            </Route>
+            {/* </Route> */}
               <Route path="/course/:courseId/subject/:subjectId/unit/:unitId/material/:materialName/" element={<VideoDisplay />} />
           </Route>
           <Route path="*" element={<ErrorPage />}></Route>

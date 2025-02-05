@@ -1,8 +1,11 @@
+.material_main_layout{
+    display: grid;
+    grid-template-columns: 25% 3fr;
+}
 .sidebar{
     background-color: rgb(26, 26, 26);
     /* display: none; */
     height: 85vh;
-    position: fixed;
+    /* position: fixed; */
     left: 0;
-    width: 25%;
-}
+} 

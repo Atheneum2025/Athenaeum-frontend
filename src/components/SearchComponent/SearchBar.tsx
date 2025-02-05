@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import header from '../Header/Header.module.css';
 import Unit from '../../pages/Units/Unit';
@@ -88,19 +89,18 @@ export default function SearchBar() {
 
         try {
 
-          const [courseResponse, subjectResponse, unitResponse, materialResponse] = await Promise.all([
-            fetch('http://localhost:3000/api/v1/course'),
-            fetch('http://localhost:3000/api/v1/subject'),
-            fetch('http://localhost:3000/api/v1/unit'),
-            fetch('http://localhost:3000/api/v1/material')
-          ]);
 
-          const [courseData, subjectData, unitData, materialData] = await Promise.all([
-            courseResponse.json(),
-            subjectResponse.json(),
-            unitResponse.json(),
-            materialResponse.json(),
-          ]);
+            const [courseResponse, subjectResponse, unitResponse, materialResponse] = await Promise.all([
+            axios.get('http://localhost:3000/api/v1/course', {withCredentials: true}),
+            axios.get('http://localhost:3000/api/v1/subject', {withCredentials: true}),
+            axios.get('http://localhost:3000/api/v1/unit', {withCredentials: true}),
+            axios.get('http://localhost:3000/api/v1/material', {withCredentials: true})
+            ]);
+
+            const courseData = courseResponse.data;
+            const subjectData = subjectResponse.data;
+            const unitData = unitResponse.data;
+            const materialData = materialResponse.data;
 
           setCourseSearchData(
             courseData.courses.filter((course: CourseType) =>

@@ -1,0 +1,12 @@
+:root{
+    --bg-color: black;
+    --accent-color: white;
+}
+
+/* red */
+
+.red_theme{
+    background-color: black;
+    color: white;
+    
+}

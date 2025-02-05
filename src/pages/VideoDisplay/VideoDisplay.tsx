@@ -11,6 +11,7 @@ type VideoType = {
   _id: string;
   materialName: string;
   url: string;
+  fileType: string;
 }
 const VideoPlayer = () => {
   const location = useLocation();
@@ -33,7 +34,7 @@ const VideoPlayer = () => {
 
     const fetchdata = async () => {
       try {
-        const url = await axios.get<VideoType>(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialIdParameter}/`);
+        const url = await axios.get<VideoType>(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialIdParameter}/`, { withCredentials: true });
 
         setMaterialUrl(url.data);
         console.log(url.data.material._id)
@@ -48,7 +49,7 @@ const VideoPlayer = () => {
 
   const saveMaterial = async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialIdParameter}/save/`, { withCredentials: true});
+      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialIdParameter}/save/`, {}, { withCredentials: true });
       console.log(response)
     } catch (error) {
       console.error(error)
@@ -58,27 +59,44 @@ const VideoPlayer = () => {
   // console.log(materialUrl)
   return (
     <>
+      {
+        materialUrl?.material.fileType === 'raw' ? (
+          <>
+            <div>Material Name : {materialUrl?.material.materialname}</div>
+            <div>{materialUrl?.material._id}</div>
+            <div>Description : {materialUrl?.material.description}</div>
+            <div>Uploaded By : {materialUrl?.material.owner}</div>
+            <div>{materialUrl?.material.fileType}</div>
+            <button onClick={() => saveMaterial()} >Save Material</button>
 
-      <div>
-        <div>video player</div>
-        <div className='video-display' >
-          {/* <img src={`${materialUrl?.material.materialURL}`} alt="" width="200px" height="200px" /> */}
-          <ReactPlayer url={`${materialUrl?.material.materialURL}`}
-            // width="1080px"
-            // height="720px"
-            width="600px"
-            height="300px"
-            controls={true}
-          />
-          <div>{materialUrl?.material.materialname}</div>
-          <div>{materialUrl?.material._id}</div>
-          <div>{materialUrl?.material.description}</div>
-          <div>{materialUrl?.material.owner}</div>
-          <div>{materialUrl?.material.views}</div>
+            <iframe src="http://res.cloudinary.com/dcfvkgo4a/raw/upload/v1738350576/xskqm6cko6fqkrwktikp.pdf" width="100%" height="600px"></iframe>
+            {/* <iframe src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe> */}
 
-          <button onClick={()=>saveMaterial()} >Save Material</button>
-        </div>
-      </div>
+          </>
+
+        ) : (
+          <div>
+            <div>video player</div>
+            <div className='video-display' >
+              {/* <img src={`${materialUrl?.material.materialURL}`} alt="" width="200px" height="200px" /> */}
+              <ReactPlayer url={`${materialUrl?.material.materialURL}`}
+                // width="1080px"
+                // height="720px"
+                width="600px"
+                height="300px"
+                controls={true}
+              />
+                <div>Material Name : {materialUrl?.material.materialname}</div>
+                <div>{materialUrl?.material._id}</div>
+                <div>Description : {materialUrl?.material.description}</div>
+                <div>Uploaded By : {materialUrl?.material.owner}</div>
+                <div>{materialUrl?.material.fileType}</div>
+
+              <button onClick={() => saveMaterial()} >Save Material</button>
+            </div>
+          </div>
+        )
+      }
       <div>View More Material</div>
     </>
   );

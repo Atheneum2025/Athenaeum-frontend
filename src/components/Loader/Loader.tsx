@@ -11,6 +11,7 @@ export default function Loader() {
         <div className="dash two"></div>
         <div className="dash three"></div>
         <div className="dash four"></div>
+        
       </div>
     </>
   )

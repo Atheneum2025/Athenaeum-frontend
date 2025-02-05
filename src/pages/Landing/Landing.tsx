@@ -7,14 +7,14 @@ export default function Landing() {
         <div className="logo">LOGO</div>
         <div className="hero-section">
           <div>
-            <h1 className="head-title" style={{fontVariant: "small-caps"}} >What Should Be Worn Tomorrow ?</h1>
+            <h1 className="head-title" style={{fontVariant: "small-caps"}} >Planning to Stay For A Million Days</h1>
             <p className="para">
-              For Traditional Day In College 31/01/2025
+              till tomorrow
             </p>
           </div>
 
           <button className="btn btn-start">
-            <a href="/login">Reply Something</a>
+            <a href="/login"></a>
           </button>
         </div>
       </section>
