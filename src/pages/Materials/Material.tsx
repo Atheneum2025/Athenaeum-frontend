@@ -74,6 +74,10 @@ export default function Material() {
     }
   };
 
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [message, setMessage] = useState<string>("");
+
   // function for creating a new material in that unit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,7 +95,18 @@ export default function Material() {
     formData.append("file", file); // Append the file
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`, formData, { withCredentials: true });
+      setUploading(true);
+      setMessage("");
+      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`, formData, {
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(percentCompleted);
+          }
+        },
+        withCredentials: true
+      });
+      setMessage("Upload successful!");
       console.log("material created", response.data);
       setFormIsVisible(false);
       fetchData();
@@ -99,6 +114,7 @@ export default function Material() {
     catch (err) {
       console.error("failed:", err);
       setFormIsVisible(false);
+      setMessage("Upload failed. Please try again.");
     }
   }
 
@@ -115,7 +131,7 @@ export default function Material() {
   const saveToViewLater = async (vLMaterialName: string) => {
 
     try {
-      const response = await axiosInstance.post(`http://localhost:3000/api/v1/viewLater/` , {vLMaterialName}, {withCredentials: true})
+      const response = await axiosInstance.post(`http://localhost:3000/api/v1/viewLater/`, { vLMaterialName }, { withCredentials: true })
       setSidebarKey(prevKey => prevKey + 1);
       console.log(response)
       // setDroppedItems((prev) => [...prev, droppedItem]);
@@ -135,87 +151,95 @@ export default function Material() {
 
   return (
     <>
-    <div className='material_main_layout'>
+      <div className='material_main_layout'>
 
-      <div className='new' onDragOver={(e) => e.preventDefault()}
-        onDrop={handleDrop}>
+        <div className='new' onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}>
           <UserSidebar key={sidebarKey} />
-      </div>
-      <div>
-        <div className='title'>Course Name - {courseIdParameter}</div>
-        <div className='title'>Subject Name - {subjectIdParameter}</div>
-        <div className='title'>Unit Name - {unitIdParameter}</div>
-
-        {/* form for making a new material */}
-        {
-          isAuthenticated && (
-            user.role === "admin" && (
-              <>
-                <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Material</button>
-                {
-                  formIsVisible && (
-                    <div className="form-for-adding-new">
-                      <form action="" onSubmit={handleSubmit}>
-                        <label htmlFor="file">ENter a Material Name</label>
-                        <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
-                        <label htmlFor="file">ENter Description</label>
-                        <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                        <select name="" id="">
-                          <option value="document">Document</option>
-                          <option value="video">Video</option>
-                        </select>
-                        <label htmlFor="keywords">Enter Keywords</label>
-                        <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
-                        <label htmlFor="file">Upload a file</label>
-                        <input type="file" onChange={handleFileChange} />
-
-                        <button type='submit'>Save</button>
-                        <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                      </form>
-                    </div>
-                  )
-                }
-              </>
-            )
-          )
-        }
-        {/* Display all the materials in a unit */}
-        <div>Materials</div>
-        <div>
-          {
-            loading ? <Loader /> :
-              <>
-                {
-                  materialDetails.length === 0 ? (
-                    <div>No Materials Found</div>
-                  ) : (
-                    materialDetails
-                      .filter((material: MaterialType) => material.isPublished === true)
-                      .map((material: MaterialType) => (
-                        <div key={material._id} onClick={() => sendData(material._id)} draggable={true} onDragStart={(e) => handleDragStart(e, material)}>
-                          <div>
-                            <div>{material.materialname}</div>
-                          </div>
-                          <div className="course_details">
-                            <div className='course_name'>Material Name: {material.materialname}</div>
-                            <div className='course_description'>Description: {material.description}</div>
-                            <div className='course_ratings'>star star star star star</div>
-                            <div className="course_like">Liked</div>
-                            <div>Subjects no.: 45</div>
-                          </div>
-                          <div onClick={(e: React.MouseEvent<HTMLDivElement>) => {saveToViewLater(material._id); e.stopPropagation()}} >Options</div>
-                        </div>
-                      ))
-                  )
-                }
-              </>
-          }
         </div>
-      </div>
-      
+        <div>
+          <div className='title'>Course Name - {courseIdParameter}</div>
+          <div className='title'>Subject Name - {subjectIdParameter}</div>
+          <div className='title'>Unit Name - {unitIdParameter}</div>
+
+          {/* form for making a new material */}
+          {
+            isAuthenticated && (
+              user.role === "admin" && (
+                <>
+                  <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Material</button>
+                  {
+                    formIsVisible && (
+                      <div className="form-for-adding-new">
+                        <form action="" onSubmit={handleSubmit}>
+                          <label htmlFor="file">ENter a Material Name</label>
+                          <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
+                          <label htmlFor="file">ENter Description</label>
+                          <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                          <select name="" id="">
+                            <option value="document">Document</option>
+                            <option value="video">Video</option>
+                          </select>
+                          <label htmlFor="keywords">Enter Keywords</label>
+                          <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                          <label htmlFor="file">Upload a file</label>
+                          <input type="file" onChange={handleFileChange} />
+
+                          <button type='submit'>Save</button>
+                          <button onClick={() => setFormIsVisible(false)}>Cancel</button>
+                          {uploading && (
+                            <div className="progress-bar-container">
+                              <div className="progress-bar" style={{ width: `${uploadProgress}%` }}>
+                                {uploadProgress}%
+                              </div>
+                            </div>
+                          )}
+                          {message && <p>{message}</p>}
+                        </form>
+                      </div>
+                    )
+                  }
+                </>
+              )
+            )
+          }
+          {/* Display all the materials in a unit */}
+          <div>Materials</div>
+          <div>
+            {
+              loading ? <Loader /> :
+                <>
+                  {
+                    materialDetails.length === 0 ? (
+                      <div>No Materials Found</div>
+                    ) : (
+                      materialDetails
+                        .filter((material: MaterialType) => material.isPublished === true)
+                        .map((material: MaterialType) => (
+                          <div key={material._id} onClick={() => sendData(material._id)} draggable={true} onDragStart={(e) => handleDragStart(e, material)}>
+                            <div>
+                              <div>{material.materialname}</div>
+                            </div>
+                            <div className="course_details">
+                              <div className='course_name'>Material Name: {material.materialname}</div>
+                              <div className='course_description'>Description: {material.description}</div>
+                              <div className='course_ratings'>star star star star star</div>
+                              <div className="course_like">Liked</div>
+                              <div>Subjects no.: 45</div>
+                            </div>
+                            <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >Options</div>
+                          </div>
+                        ))
+                    )
+                  }
+                </>
+            }
+          </div>
+        </div>
+
         <div>Browse More Materials</div>
-      
-    </div>
+
+      </div>
     </>
   )
 }

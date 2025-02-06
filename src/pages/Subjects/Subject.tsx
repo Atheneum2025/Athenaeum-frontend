@@ -130,7 +130,14 @@ export default function Subject() {
         }
         {/* Display all the subjects in a course */}
         <div>Subjects</div>
-        <div>Filters -_-</div>
+        <select name="" id=""> 
+          <option value="">Filter By</option>
+          <option value="">A - Z</option>
+          <option value="">Z - A</option>
+          <option value="">Newest</option>
+        </select>
+        
+
         {
           confirmIsVisible && (
             user.role === "admin" && (

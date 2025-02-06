@@ -5,12 +5,19 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../utils/axios.js';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
+import axios from 'axios';
 
 
 type CourseType = {
     _id: string;
     coursename: string;
     description: string;
+};
+
+type CourseFormProps = {
+    course: CourseType;
+    onUpdate: () => void;
+    onDelete: () => void;
 };
 
 export default function Courses() {
@@ -23,6 +30,13 @@ export default function Courses() {
     const [coursename, setCoursename] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [keywords, setKeywords] = useState<string>("");
+    const [selectedCourse, setSelectedCourse] = useState<CourseType | null>(null);
+    const [upCoursename, setupCoursename] = useState<string>("");
+    const [upDescription, setupDescription] = useState<string>("");
+    const [upKeywords, setupKeywords] = useState<string>("");
+
+
+    
 
     const fetchData = async () => {
         setLoading(true)
@@ -37,8 +51,6 @@ export default function Courses() {
         }
     }
     useEffect(() => {
-
-
         fetchData();
     }, []);
     console.log(courseDetail)
@@ -62,12 +74,40 @@ export default function Courses() {
             setFormIsVisible(false)
         }
     }
+    const handleUpdate = async () => {
+        try {
+            console.log(selectedCourse?._id)
+            const update = await axios.patch(`http://localhost:3000/api/v1/course/${selectedCourse?.coursename}`, { coursename, description, keywords }, {withCredentials: true});
+            console.log(update.data)
+            alert("Course updated successfully!");
+            // onUpdate(); // Refresh courses
+        } catch (error) {
+            console.error(error);
+            alert("Failed to update course.");
+        }
+    };
+
+    // Delete course
+    const handleDelete = async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+        if (confirmDelete) {
+            try {
+                await axios.delete(`http://localhost:3000/api/v1/course/${course._id}`);
+                alert("Course deleted successfully!");
+                onDelete(); // Refresh courses
+            } catch (error) {
+                console.error(error);
+                alert("Failed to delete course.");
+            }
+        }
+    };
 
     return (
         <>
             <div className="course_page">
 
                 <h1>Courses :</h1>
+                {/* Get List of all Courses */}
                 {
                     isAuthenticated && (
                         user.role === "admin" && (
@@ -112,12 +152,40 @@ export default function Courses() {
                                                 <div className='course_description'>Description: {course.description}</div>
                                                 <div className='course_ratings'>star star star star star</div>
                                                 <div>Subjects no.: 45</div>
+                                                <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >Edit</div>
                                             </div>
-                                            
+
                                         </div>
                                     ))
                                 )}
-
+                                {selectedCourse && (
+                                    <div className="course_form">
+                                        <h3>Edit Course</h3>
+                                        <input
+                                            type="text"
+                                            name="coursename"
+                                            value={coursename}
+                                            onChange={(e)=>setCoursename(e.target.value)}
+                                            placeholder="Course Name"
+                                        />
+                                        <input
+                                            name="description"
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            placeholder="Course Description"
+                                        ></input>
+                                        <input
+                                            name="keywords"
+                                            value={keywords}
+                                            onChange={(e) => setKeywords(e.target.value)}
+                                            placeholder="Course Keywords"
+                                        ></input>
+                                        <button onClick={handleUpdate}>Update</button>
+                                        <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
                             </>
                     }
                 </div>
