@@ -1,0 +1,12 @@
+
+.questions_page{
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+}
+
+.question_list{
+    width: 50%;
+    padding: 2rem;
+    background-color: var(--secondary-color);
+}

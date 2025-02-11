@@ -29,22 +29,28 @@ export default function Unit() {
   const [unitname, setUnitname] = useState<string>("")
   const [description, setDescription] = useState<string>("");
   const [keywords, setKeywords] = useState<string>("");
+  const [selectedUnit, setSelectedUnit] = useState<UnitType | null>(null);
+
 
   // for url params
   let courseIdParameter, subjectIdParameter;
   courseId ? courseIdParameter = courseId.toUpperCase() : courseIdParameter = courseName;
-  subjectId ? subjectIdParameter = subjectId.toUpperCase() : subjectIdParameter = subjectName;
+  subjectId ? subjectIdParameter = subjectId : subjectIdParameter = subjectName;
 
   // for displaying all units
   const [UnitDetails, setUnitDetails] = useState<UnitType[]>([]);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("unitname");
+  const [SortType, setSortType] = useState("-1");
   // get all units from a subject and display
   const fetchData = async () => {
     setLoading(true)
     try {
-      const unitResponse = await fetch(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`);
-      const unitResult = await unitResponse.json();
-      setUnitDetails(unitResult.units);
+      const unitResponse = await axios(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`, { params: { page, limit: 5, sortBy, SortType } });
+      setUnitDetails(unitResponse.data.units);
+      setTotalPages(unitResponse.data.totalPages)
       setLoading(false)
     }
     catch (error) {
@@ -53,7 +59,7 @@ export default function Unit() {
   }
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page, sortBy, SortType]);
 
   // function for creating a new unit in that subject
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,6 +77,36 @@ export default function Unit() {
     }
   }
 
+  const handleUpdate = async () => {
+    try {
+      console.log(selectedUnit?._id)
+      const update = await axios.patch(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { unitname, description, keywords }, { withCredentials: true });
+      console.log(update.data)
+      alert("Unit updated successfully!");
+      fetchData()
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update course.");
+    }
+    setUnitname(" ");
+    setDescription(" ");
+    setKeywords(" ");
+  };
+
+  // Delete course
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { withCredentials: true });
+        alert("Course deleted successfully!");
+        fetchData();
+      } catch (error) {
+        console.error(error);
+        alert("Failed to delete course.");
+      }
+    }
+  };
 
   const sendData = (unitname: string) => {
     navigate(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitname}/material`, { state: { courseName, subjectName, unitName: unitname } });
@@ -79,38 +115,53 @@ export default function Unit() {
   return (
     <>
 
-      <div>
-        <div className='title'>Course Name - {courseIdParameter}</div>
-        <div className='title'>Subject Name - {subjectIdParameter}</div>
+      <div className='title'>Course : {courseIdParameter}</div>
+      <div className='title'>Subject : {subjectIdParameter}</div>
+      <div className='items_display_page'>
+        <div className='items_display_header'>
 
-        {/* form for making a new unit */}
-        {
-          isAuthenticated && (
-            user.role === "admin" && (
-              <>
-                <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Unit</button>
-                {
-                  formIsVisible && (
-                    <div className="form-for-adding-new">
-                      <form action="" onSubmit={handleSubmit}>
-                        <label htmlFor="file">ENter a Unit Name</label>
-                        <input type="text" id='file-name' value={unitname} onChange={(e) => setUnitname(e.target.value)} />
-                        <label htmlFor="file">ENter Description</label>
-                        <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                        <label htmlFor="keywords">Enter Keywords</label>
-                        <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
-                        <button type='submit' >Save</button>
-                        <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                      </form>
-                    </div>
-                  )
-                }
-              </>
+          <h1>Units :</h1>
+          {/* form for making a new unit */}
+          {
+            isAuthenticated && (
+              user.role === "admin" && (
+                <>
+                  <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Unit</button>
+                  {
+                    formIsVisible && (
+                      <div className="form-for-adding-new">
+                        <form action="" onSubmit={handleSubmit}>
+                          <label htmlFor="file">ENter a Unit Name</label>
+                          <input type="text" id='file-name' value={unitname} onChange={(e) => setUnitname(e.target.value)} />
+                          <label htmlFor="file">ENter Description</label>
+                          <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                          <label htmlFor="keywords">Enter Keywords</label>
+                          <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                          <button type='submit' >Save</button>
+                          <button onClick={() => setFormIsVisible(false)}>Cancel</button>
+                        </form>
+                      </div>
+                    )
+                  }
+                </>
+              )
             )
-          )
-        }
+          }
+          <div className='item_filters'>
+            <div>Filter  </div>
+            <div>
+              <select onChange={(e) => setSortBy(e.target.value)}>
+                <option value="createdAt">Newest First</option>
+                <option value="unitname">Unit Name</option>
+              </select>
+              <select onChange={(e) => setSortType(e.target.value)}>
+                <option value="-1">Descending</option>
+                <option value="1">Ascending</option>
+              </select>
+            </div>
+          </div>
+        </div>
         {/* Display all the units in a subject */}
-        <div>Units</div>
         <div>
           {
             loading ? <Loader /> :
@@ -127,13 +178,55 @@ export default function Unit() {
                         <div className="course_details">
                           <div className='course_name'>Unit Name: {unit.unitname}</div>
                           <div className='course_description'>Description: {unit.description}</div>
-                          <div className='course_ratings'>star star star star star</div>
-                          <div>Subjects no.: 45</div>
                         </div>
+                        {
+                          user.role === "admin" && (
+                            <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedUnit(unit); e.stopPropagation() }} >Edit</div>
+                          )
+                        }
                       </div>
                     ))
                   )
                 }
+                {/* Pagination */}
+                <div className='pagination'>
+                  <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                    Prev
+                  </button>
+                  <span> Page {page} of {totalPages} </span>
+                  <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
+                    Next
+                  </button>
+                </div>
+                {selectedUnit && (
+                  <div className="course_form">
+                    <h3>Edit Course</h3>
+                    <input
+                      type="text"
+                      name="coursename"
+                      value={unitname}
+                      onChange={(e) => setUnitname(e.target.value)}
+                      placeholder="Course Name"
+                    />
+                    <input
+                      name="description"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Course Description"
+                    ></input>
+                    <input
+                      name="keywords"
+                      value={keywords}
+                      onChange={(e) => setKeywords(e.target.value)}
+                      placeholder="Course Keywords"
+                    ></input>
+                    <button onClick={handleUpdate}>Update</button>
+                    <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
+                      Delete
+                    </button>
+                  </div>
+                )}
+                <div>hello</div>
               </>
           }
         </div>

@@ -27,6 +27,8 @@ import VideoPlayer from "./pages/VideoDisplay/VideoDisplay.tsx";
 import VideoDisplay from "./pages/VideoDisplay/VideoDisplay.tsx";
 import SettingsPage from "./pages/SettingsPage/SettingsPage.tsx";
 import Calendar from "./pages/Calendar/Calendar.tsx";
+import UserDetails from "./pages/UserDetails/UserDetails.tsx";
+import ContactUs from "./pages/ContactUs/ContactUs.tsx";
 function App() {
   // const [resourseType, setResourseType] = useState('posts');
   // const [items, setItems] = useState([]);
@@ -43,19 +45,20 @@ function App() {
         <Routes>
           <Route path="/" element={<Landing />}></Route>
           <Route path="/login" element={<NewLogin />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}>
+          {/* <Route path="/dashboard" element={<Dashboard />}>
             <Route path="admin" element={<AdminsPage />} />
-          </Route>
+          </Route> */}
           <Route element={<MainLayout />}>
             <Route path="/home" element={<Home />} />
             <Route path="/register" element={<RegisterUser />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/calendar" element={<Calendar/>} />
-
-            <Route path="/student-dashboard" element={<StudentDashboard />} />
+            <Route path="/contact" element={<ContactUs/>} />
+            <Route path="/user/:userId" element={<UserDetails/>} />
+            {/* <Route path="/student-dashboard" element={<StudentDashboard />} /> */}
             {/* <Route path="/professor-dashboard" element={<ProfessorDashboard />} /> */}
-            <Route path="/admin-dashboard" element={<AdminsDashboard />} />
+            {/* <Route path="/admin-dashboard" element={<AdminsDashboard />} /> */}
             <Route path="/upload" element={<UploadsPage />} />
             <Route path="/quizzes" element={<Quiz />} />
             <Route path="/quizzes/:quizId/questions" element={<Questions />} />

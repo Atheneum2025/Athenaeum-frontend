@@ -56,6 +56,7 @@ const VideoPlayer = () => {
     }
   }
 
+  
   // console.log(materialUrl)
   return (
     <>
@@ -69,7 +70,7 @@ const VideoPlayer = () => {
             <div>{materialUrl?.material.fileType}</div>
             <button onClick={() => saveMaterial()} >Save Material</button>
 
-            <iframe src="http://res.cloudinary.com/dcfvkgo4a/raw/upload/v1738350576/xskqm6cko6fqkrwktikp.pdf" width="100%" height="600px"></iframe>
+            <iframe src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe>
             {/* <iframe src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe> */}
 
           </>

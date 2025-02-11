@@ -1,11 +1,30 @@
 .material_main_layout{
     display: grid;
-    grid-template-columns: 25% 3fr;
+    grid-template-columns: 232px 3fr;
 }
 .sidebar{
     background-color: rgb(26, 26, 26);
     /* display: none; */
     height: 85vh;
-    /* position: fixed; */
-    left: 0;
-} 
+    width: 200px;
+    position: fixed;
+}
+
+.viewLaterSidebar{
+    padding-left: 2rem;
+}
+
+.viewLater_card{
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    place-items: center;
+    background-color: var(--secondary-color);
+    font-size: .8rem;
+    width: 100%;
+    margin-bottom: 10px;
+    height: 70px;
+}
+
+.sidebar_details{
+    background-color: blue;
+}

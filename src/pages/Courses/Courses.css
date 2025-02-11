@@ -1,17 +1,15 @@
-.course_page{
-    padding: 2rem;
-}
+
 .course_cards_list{
-    display: grid;
-    
-    gap: 20px;
+    padding-block: 2rem;
 }
 
 .course_card{
-    background-color: rgba(90, 0, 0, 0.96);
+    /* background-color: rgba(90, 0, 0, 0.96); */
+    background-color: var(--secondary-color);
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 2fr 3fr auto auto;
     padding: 1.2rem 1.2rem;
+    margin-block-end: 2rem;
 }
 /* .course-card{
     width: 8rem;
@@ -82,3 +80,17 @@
 .form-for-adding > form{
     
 }
+
+.add-btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 2rem;
+    font-weight: 500;
+    /* background-color:var(--secondary-color); */
+}
+.add-btn > div:first-child {
+    font-size: 2rem;
+}
+
+/* styles for all */

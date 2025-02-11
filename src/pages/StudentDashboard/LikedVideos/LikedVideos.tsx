@@ -1,14 +1,20 @@
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
-export default function LikedVideos() {
+type SavedMaterialType = {
+  _id: string;
+  materialId: string;
+}
+export default function LikedVideos() {as
+
+  const [savedMaterials, setSavedMaterials] = useState<SavedMaterialType[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
 
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/users/save`)
-        console.log(response)
+        const response = await axios.get(`http://localhost:3000/api/v1/users/save`, {withCredentials: true})
+        setSavedMaterials(response.data.savedMaterials);
       }
       catch (error) {
         console.error(error)
@@ -28,38 +34,17 @@ export default function LikedVideos() {
         </div>
       </div>
       <div className='liked_materials'>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-            <div>PDF</div>
-            <div>BCA</div>
-          </div>
-        </div>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-            <div>Video</div>
-            <div>BSC</div>
-          </div>
-        </div>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-            <div>PPT</div>
-            <div>BBA</div>
-          </div>
-        </div>
-        <div className="liked_material_card">
-          <div className="liked_material_details">
-            <div className="liked_material_name">Family Pic</div>
-            <div className='uploaded_by'>Rishon</div>
-            <div>PPT</div>
-            <div>BBA</div>
-          </div>
-        </div>
+        {
+          savedMaterials.map((material: SavedMaterialType, index) => (
+            <div className="liked_material_card" key={index}>
+              <div className="liked_material_details">
+                <div className="liked_material_name">{material.materialId}</div>
+              </div>
+            </div>
+
+          ))
+        }
+        
       </div>
     </>
   )

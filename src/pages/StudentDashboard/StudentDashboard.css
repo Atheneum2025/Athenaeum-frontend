@@ -4,43 +4,46 @@
   box-sizing: border-box;
 }
 
-.student_profile{
+.user_profile{
   padding: 2rem;
-  background-color: rgb(87, 52, 52);
+  background-color: var(--secondary-color);
   display: grid;
   grid-template-columns: repeat(3, 33%);
   place-items: center;
 }
 
-.student_avatar{
+.user_avatar{
   place-items: center;
 }
-.student_avatar > img{
+.user_avatar > img{
   width: 100px;
   height: 100px;
   border-radius: 100%;
   background-color: grey;
 }
 
-.student-profile-options{
+.user_profile_options{
     display: flex;
     flex-direction: row;
     justify-content: center;
-    
+    /* height: 1rem; */
+    /* min-height: 100px; */
+    border-top: 3px solid var(--secondary-color);
+    background-color: var(--primary-color);
 }
 
-.student-profile-options div{
-    padding-inline:4rem;
-    height: 2rem;
-    align-items: center;
-
+.user_profile_options div{
+   padding:.7rem 3rem;
     
+   &:hover{
+    background-color: var(--secondary-color);
+   }
 }
-.student-profile-options div:hover{
+/* .user_profile_options div:hover{
     background-color: rgba(90, 0, 0, 0.96);
-}
+} */
 
-.student-profile-options-display{
+.user_profile_options_display{
     background-color: grey;
     display: flex;
     flex-direction: row;
@@ -50,16 +53,16 @@
     font-weight: 600;
     padding: 2rem 4rem;
 }
-.options-page{
+.options_page{
     width: 100vw;
     display: none;
     /* overflow-x: auto; */
 }
 
-.options-page {
+.options_page {
     display: none;
   }
-  .options-page.active {
+  .options_page.active {
     display: block;
   }
   
@@ -99,13 +102,13 @@
 
 @media screen and (max-width: 910px){
   
-  .student_profile{
+  .user_profile{
     font-size: .7rem;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
   }
 
-  .student_avatar{
+  .user_avatar{
     grid-column-start: 2;
     grid-column-end: 2;
     grid-row-start: 2;
@@ -114,7 +117,7 @@
     top: 50%
   }
 
-  .student-profile-options{
+  .user_profile_options{
     flex-direction: column;
     justify-content: center;
     padding-inline: 2rem;
@@ -122,17 +125,17 @@
     min-width: 200px;
   }
 
-  .student-profile-options >div{
+  .user_profile_options >div{
    
     padding-inline: .5rem;
     align-content: center;
   }
 
-  .student-profile-options-display{
+  .user_profile_options_display{
     padding: .5rem;
   }
 
-  .options-page{
+  .options_page{
     font-size: 1rem;
     padding: 0;
   }

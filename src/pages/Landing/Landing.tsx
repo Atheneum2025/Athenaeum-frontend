@@ -7,9 +7,9 @@ export default function Landing() {
         <div className="logo">LOGO</div>
         <div className="hero-section">
           <div>
-            <h1 className="head-title" style={{fontVariant: "small-caps"}} >Planning to Stay For A Million Days</h1>
+            <h1 className="head-title" style={{ fontVariant: "small-caps" }} >ATHENAEUM</h1>
             <p className="para">
-              till tomorrow
+              "Unlock the power of wisdom and strategy - Learn like Athena".
             </p>
           </div>
 

@@ -39,10 +39,7 @@ export default function Header() {
           {/* logo */}
         </div>
         <div className={header.middle_navigation}>
-
-          {/* <nav className={(header.navigation_bar)} > */}
           <nav className={header.navigation_bar}  >
-
             <ul className={header.ul_lists}>
               <li>
                 <Link to={'/home'}>Home</Link>
@@ -62,7 +59,6 @@ export default function Header() {
             </ul>
           </nav>
           <nav className={sidebarIsVisible ? (header.navigation_bar_sidebar) : (header.hidden)}  >
-
             <ul className={header.ul_lists}>
               <li>
                 <Link to={'/home'}>Home</Link>
@@ -85,40 +81,37 @@ export default function Header() {
           <SearchBar />
         </div>
         <div className={header.auth_btn}>
-
-
           {/* <div  className="profileSide"> */}
 
-            {/* <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)} ref={profileButtonRef}> */}
+          {/* <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)} ref={profileButtonRef}> */}
           <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)} >
-
-              <img src="User.png" alt="" />
-            </div>
-            {profileOptionsVisible &&
-              <div className={header.profile_avatar_options} >
-                <div>Hello {user?.role}</div>
-                <div>
-                  <Link to={'/profile'}>Profile</Link>
-                </div>
-                <div>
-                  <Link to={'/settings'}>Settings</Link>
-
-                </div>
-                {!isAuthenticated ? (
-                  <Link to={'/login'}>Login</Link>
-                ) : (
-                  <>
-                    <div>
-                      <Link onClick={logout} to={'/login'}>Logout</Link>
-                    </div>
-                    <div>
-                      <Link to={'/notifications'}>Notifications</Link>
-                    </div>
-                  </>
-
-                )}
+            <img src="User.png" alt="" />
+          </div>
+          {profileOptionsVisible &&
+            <div className={header.profile_avatar_options} >
+              <div>HELLO {user?.role.toUpperCase()}</div>
+              <div>
+                <Link to={'/profile'}>Profile</Link>
               </div>
-            }
+              <div>
+                <Link to={'/settings'}>Settings</Link>
+
+              </div>
+              {!isAuthenticated ? (
+                <Link to={'/login'}>Login</Link>
+              ) : (
+                <>
+                  <div>
+                    <Link to={'/notifications'}>Notifications</Link>
+                  </div>
+                  <div>
+                    <Link onClick={logout} to={'/login'}>Logout</Link>
+                  </div>
+                </>
+
+              )}
+            </div>
+          }
 
           {/* </div> */}
         </div>

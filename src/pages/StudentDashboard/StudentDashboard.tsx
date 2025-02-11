@@ -6,8 +6,20 @@ import MyMaterial from './MyMaterial/MyMaterial';
 import axios from 'axios';
 import VideoDisplay from '../VideoDisplay/VideoDisplay';
 import PdfViewer from '../PdfViewer/PdfViewer';
-function StudentDashboard() {
+import { getAuthenticatedUser } from '../../utils/authUtils';
 
+interface StudentDashboardProps {
+    user: {
+        _id: string;
+        id: string;
+        username: string;
+        email: string;
+        role: string;
+    };
+}
+export default function StudentDashboard({ user }: StudentDashboardProps) {
+
+    // const { user, isAuthenticated } = getAuthenticatedUser();
     const [activePage, setActivePage] = useState<number>(1);
 
     const show = (id: number) => () => {
@@ -32,14 +44,14 @@ function StudentDashboard() {
     }
     return (
         <>
-            <div className="student_profile">
-                <h1>Welcome Rishon</h1>
-                <div className='student_avatar'>
+            <div className="user_profile">
+                <h1>Welcome Student</h1>
+                <div className='user_avatar'>
                     <img src="" alt="" />
-                    <div>Rishon Valentino Fernandes</div>
+                    <div>{user.username}</div>
                 </div>
-                <div className="student_details">
-                    <div>student email : athenaeum@gmail.com</div>
+                <div className="user_details">
+                    <div>student email : {user.email}</div>
                     <div>college info : St. Xavier's College Mapusa</div>
                 </div>
             </div>
@@ -76,33 +88,27 @@ function StudentDashboard() {
                     )
                 }
             </div>
-            <ul className='student-profile-options' id='demo'>
-                <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Liked Material</div>
-                <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Saved Material</div>
-                <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>Your History</div>
-                <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>My Material</div>
-                <div className={`options ${activePage === 5 ? "active" : ""}`} onClick={show(5)}>Analytics</div>
+            <ul className='user_profile_options' id='demo'>
+                <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Saved Material</div>
+                <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Your History</div>
+                <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>My Material</div>
+                <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Analytics</div>
             </ul>
-            <div className='student-profile-options-display'>
-                <div id='1' className={`options-page ${activePage === 1 ? "active" : ""}`}>
-                    <PdfViewer />
+            <div className='user_profile_options_display'>
+                <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
+                    <LikedVideos/>
                 </div>
-                <div id='2' className={`options-page ${activePage === 2 ? "active" : ""}`}>
-                    {/* <VideoDisplay /> */}
-                </div>
-                <div id='3' className={`options-page ${activePage === 3 ? "active" : ""}`}>
+                <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
                     <HistoryVideos />
                 </div>
-                <div id='4' className={`options-page ${activePage === 4 ? "active" : ""}`}>
-                    <MyMaterial />
+                <div id='3' className={`options_page ${activePage === 3 ? "active" : ""}`}>
+                    <MyMaterial _id={user._id} />
                 </div>
-                <div id='5' className={`options-page ${activePage === 5 ? "active" : ""}`}>
-                    <MyMaterial />
+                <div id='4' className={`options_page ${activePage === 4 ? "active" : ""}`}>
+                    {/* <MyMaterial /> */}
                 </div>
             </div>
 
         </>
     )
 }
-
-export default StudentDashboard

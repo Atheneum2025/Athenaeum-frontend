@@ -35,6 +35,7 @@ export default function Material() {
   const [description, setDescription] = useState<string>("");
   const [keywords, setKeywords] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
+  const [selectedMaterial, setSelectedMaterial] = useState<MaterialType | null>(null);
 
   // for url params
   let courseIdParameter, subjectIdParameter, unitIdParameter;
@@ -51,12 +52,18 @@ export default function Material() {
   // console.log(subjectIdParameter)
   // console.log(unitIdParameter)
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("materialname");
+  const [SortType, setSortType] = useState("-1");
+
   const fetchData = async () => {
     setLoading(true)
     try {
-      const materialResponse = await fetch(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`);
-      const materialResult = await materialResponse.json();
-      setMaterialDetails(materialResult.materials);
+      const MaterialResponse = await axios(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`, { params: { page, limit: 5, sortBy, SortType } });
+
+      setMaterialDetails(MaterialResponse.data.materials);
+      setTotalPages(MaterialResponse.data.totalPages);
       setLoading(false)
     }
     catch (error) {
@@ -65,7 +72,7 @@ export default function Material() {
   }
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [page, sortBy, SortType]);
   // console.log(materialDetails)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,13 +125,43 @@ export default function Material() {
     }
   }
 
+  const handleUpdate = async () => {
+    try {
+      console.log(selectedMaterial?._id)
+      const update = await axios.patch(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { materialname, description, keywords }, { withCredentials: true });
+      console.log(update.data)
+      alert("Unit updated successfully!");
+      fetchData()
+    } catch (error) {
+      console.error(error);
+      alert("Failed to update course.");
+    }
+    setMaterialname(" ");
+    setDescription(" ");
+    setKeywords(" ");
+  };
+
+  // Delete course
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this course?");
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { withCredentials: true });
+        alert("Course deleted successfully!");
+        fetchData();
+      } catch (error) {
+        console.error(error);
+        alert("Failed to delete course.");
+      }
+    }
+  };
+
   const sendData = (materialname: string) => {
     navigate(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialname}`, { state: { courseName, subjectName, unitName, materialName: materialname } });
     // console.log(material)
   }
 
   // drag feature
-  const [droppedItems, setDroppedItems] = useState<MaterialType[]>([]);
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, material: MaterialType) => {
     event.dataTransfer.setData('application/json', JSON.stringify(material));
   }
@@ -149,62 +186,79 @@ export default function Material() {
     // console.log(droppedItems)
   }
 
+
   return (
     <>
+      <div className='title'>Course Name - {courseIdParameter}</div>
+      <div className='title'>Subject Name - {subjectIdParameter}</div>
+      <div className='title'>Unit Name - {unitIdParameter}</div>
       <div className='material_main_layout'>
 
-        <div className='new' onDragOver={(e) => e.preventDefault()}
+        <div className='viewLaterSidebar' onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}>
           <UserSidebar key={sidebarKey} />
         </div>
-        <div>
-          <div className='title'>Course Name - {courseIdParameter}</div>
-          <div className='title'>Subject Name - {subjectIdParameter}</div>
-          <div className='title'>Unit Name - {unitIdParameter}</div>
 
-          {/* form for making a new material */}
-          {
-            isAuthenticated && (
-              user.role === "admin" && (
-                <>
-                  <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Material</button>
-                  {
-                    formIsVisible && (
-                      <div className="form-for-adding-new">
-                        <form action="" onSubmit={handleSubmit}>
-                          <label htmlFor="file">ENter a Material Name</label>
-                          <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
-                          <label htmlFor="file">ENter Description</label>
-                          <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                          <select name="" id="">
-                            <option value="document">Document</option>
-                            <option value="video">Video</option>
-                          </select>
-                          <label htmlFor="keywords">Enter Keywords</label>
-                          <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
-                          <label htmlFor="file">Upload a file</label>
-                          <input type="file" onChange={handleFileChange} />
+        <div className='items_display_page'>
+          <div className="items_display_header">
+            <h1>Materials :</h1>
+            {/* form for making a new material */}
+            {
+              isAuthenticated && (
+                user.role === "admin" && (
+                  <>
+                    <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Material</button>
+                    {
+                      formIsVisible && (
+                        <div className="form-for-adding-new">
+                          <form action="" onSubmit={handleSubmit}>
+                            <label htmlFor="file">ENter a Material Name</label>
+                            <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
+                            <label htmlFor="file">ENter Description</label>
+                            <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                            <select name="" id="">
+                              <option value="document">Document</option>
+                              <option value="video">Video</option>
+                            </select>
+                            <label htmlFor="keywords">Enter Keywords</label>
+                            <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                            <label htmlFor="file">Upload a file</label>
+                            <input type="file" onChange={handleFileChange} />
 
-                          <button type='submit'>Save</button>
-                          <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                          {uploading && (
-                            <div className="progress-bar-container">
-                              <div className="progress-bar" style={{ width: `${uploadProgress}%` }}>
-                                {uploadProgress}%
+                            <button type='submit'>Save</button>
+                            <button onClick={() => setFormIsVisible(false)}>Cancel</button>
+                            {uploading && (
+                              <div className="progress-bar-container">
+                                <div className="progress-bar" style={{ width: `${uploadProgress}%` }}>
+                                  {uploadProgress}%
+                                </div>
                               </div>
-                            </div>
-                          )}
-                          {message && <p>{message}</p>}
-                        </form>
-                      </div>
-                    )
-                  }
-                </>
+                            )}
+                            {message && <p>{message}</p>}
+                          </form>
+                        </div>
+                      )
+                    }
+                  </>
+                )
               )
-            )
-          }
+            }
+            <div className='item_filters'>
+              <div>Filter  </div>
+              <div>
+                <select onChange={(e) => setSortBy(e.target.value)}>
+                  <option value="createdAt">Newest First</option>
+                  <option value="materialname">Material Name</option>
+                </select>
+                <select onChange={(e) => setSortType(e.target.value)}>
+                  <option value="-1">Descending</option>
+                  <option value="1">Ascending</option>
+                </select>
+              </div>
+            </div>
+          </div>
           {/* Display all the materials in a unit */}
-          <div>Materials</div>
+
           <div>
             {
               loading ? <Loader /> :
@@ -223,21 +277,67 @@ export default function Material() {
                             <div className="course_details">
                               <div className='course_name'>Material Name: {material.materialname}</div>
                               <div className='course_description'>Description: {material.description}</div>
-                              <div className='course_ratings'>star star star star star</div>
                               <div className="course_like">Liked</div>
-                              <div>Subjects no.: 45</div>
                             </div>
-                            <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >Options</div>
+                            {
+                              user && (
+                                <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >Save</div>
+                              )
+                            }
+                            {
+                              user.role === "admin" && (
+                                <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedMaterial(material); e.stopPropagation() }} >Edit</div>
+                              )
+                            }
                           </div>
                         ))
                     )
                   }
+                  {/* Pagination */}
+                  <div className='pagination'>
+                    <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                      Prev
+                    </button>
+                    <span> Page {page} of {totalPages} </span>
+                    <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
+                      Next
+                    </button>
+                  </div>
+                  {selectedMaterial && (
+                    <div className="course_form">
+                      <h3>Edit Course</h3>
+                      <input
+                        type="text"
+                        name="coursename"
+                        value={materialname}
+                        onChange={(e) => setMaterialname(e.target.value)}
+                        placeholder="Course Name"
+                      />
+                      <input
+                        name="description"
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        placeholder="Course Description"
+                      ></input>
+                      <input
+                        name="keywords"
+                        value={keywords}
+                        onChange={(e) => setKeywords(e.target.value)}
+                        placeholder="Course Keywords"
+                      ></input>
+                      <button onClick={handleUpdate}>Update</button>
+                      <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                  <div>Hello</div>
                 </>
             }
           </div>
         </div>
 
-        <div>Browse More Materials</div>
+        {/* <div>Browse More Materials</div> */}
 
       </div>
     </>

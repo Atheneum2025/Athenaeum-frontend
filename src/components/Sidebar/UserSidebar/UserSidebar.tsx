@@ -44,7 +44,7 @@ export default function UserSidebar() {
 
     const removeFromViewLater = async (materialId: string) => {
         console.log(materialId);
-        
+
         try {
             const response = await axios.delete(`http://localhost:3000/api/v1/viewLater/${materialId}`, {
                 withCredentials: true,
@@ -68,12 +68,12 @@ export default function UserSidebar() {
                         <>
 
                             {viewLater.map((viewLater: ViewLaterType) => (
-                                <div key={viewLater._id} className="course_card" >
-
-                                    <div className="course_details">
-                                        <div className='course_name'>Course Name: {viewLater.materialName}</div>
-                                        <div onClick={() => { removeFromViewLater(viewLater.materialName)}}>remove</div>
+                                <div key={viewLater._id} className="viewLater_card" >
+                                    <div>
+                                        <div className='viewLater_name'>Material Name: {viewLater.materialName}</div>
+                                        <div>/course/subject/unit</div>
                                     </div>
+                                    <div onClick={() => { removeFromViewLater(viewLater.materialName) }}>D</div>
                                 </div>
                             ))}
                         </>

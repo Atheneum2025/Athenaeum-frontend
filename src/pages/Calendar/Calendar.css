@@ -1,0 +1,40 @@
+.calendar_page > h1{
+    margin: 20px;
+}
+
+.fc {
+    background-color: var(--secondary-color);
+    color: var(--font-color);
+}
+
+.fc-event {
+    background-color: #007bff !important;
+    border: none !important;
+    color: white !important;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.fc-daygrid-day:hover {
+    background-color: #ffcccb !important;
+}
+
+/* Header customization */
+.fc-toolbar-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--font-color);
+}
+
+.fc-header-toolbar{
+    
+}
+
+.fc-button{
+    background-color: red;
+}
+
+.fc-view-harness{
+
+}

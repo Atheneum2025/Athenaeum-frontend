@@ -4,8 +4,17 @@ import HistoryVideos from "../StudentDashboard/History/HistoryVideos";
 import MyMaterial from "../StudentDashboard/MyMaterial/MyMaterial";
 import AllUsers from "../../components/AllUsers/AllUsers";
 import axios from "axios";
+import AdminAnalytics from "../../components/Analytics/AdminAnalytics";
 
-function AdminsDashboard() {
+interface AdmintDashboardProps {
+  user: {
+    _id: string;
+    username: string;
+    email: string;
+    role: string;
+  };
+}
+function AdminsDashboard({user}: AdmintDashboardProps) {
 
   const [activePage, setActivePage] = useState<number>(1);
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -34,15 +43,15 @@ function AdminsDashboard() {
   }
   return (
     <>
-      <div className="student_profile">
-        <h1>Welcome Admin</h1>
-        <div className='student_avatar'>
+      <div className="user_profile">
+        <h1>Welcome {user.role}</h1>
+        <div className='user_avatar'>
           <img src="" alt="" />
-          <div>Rishon Valentino Fernandes</div>
+          <div>{user.username}</div>
         </div>
-        <div className="student_details">
-          <div>student email : athenaeum@gmail.com</div>
-          <div>college info : St. Xavier's College Mapusa</div>
+        <div className="user_details">
+          <div>Email : {user.email}</div>
+          <div>Id : {user._id}</div>
         </div>
       </div>
 
@@ -96,31 +105,33 @@ function AdminsDashboard() {
         }
 
       </div>
-      <ul className='student-profile-options' id='demo'>
+      <ul className='user_profile_options'>
         <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Professors</div>
         <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Students</div>
-        <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>All Material</div>
+        <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>My History</div>
         <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>My Material</div>
         <div className={`options ${activePage === 5 ? "active" : ""}`} onClick={show(5)}>Analytics</div>
       </ul>
-      <div className='student-profile-options-display'>
-        <div id='1' className={`options-page ${activePage === 1 ? "active" : ""}`}>
+      <div className='user_profile_options_display'>
+        <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
           {/* list of professors */}
-          <AllUsers role={"professor"} _id={0} username={""} />
+          <AllUsers role={"professors"} />
         </div>
-        <div id='2' className={`options-page ${activePage === 2 ? "active" : ""}`}>
+        <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
           {/* list of students */}
-          AllUsers students
+          <AllUsers role={"students"} />
+
         </div>
-        <div id='3' className={`options-page ${activePage === 3 ? "active" : ""}`}>
+        <div id='3' className={`options_page ${activePage === 3 ? "active" : ""}`}>
           {/* list of all materials */}
           <HistoryVideos />
         </div>
-        <div id='4' className={`options-page ${activePage === 4 ? "active" : ""}`}>
-          <MyMaterial />
+        <div id='4' className={`options_page ${activePage === 4 ? "active" : ""}`}>
+          <MyMaterial _id={user._id} />
         </div>
-        <div id='5' className={`options-page ${activePage === 5 ? "active" : ""}`}>
-          <MyMaterial />
+        <div id='5' className={`options_page ${activePage === 5 ? "active" : ""}`}>
+          {/* <MyMaterial /> */}
+          <AdminAnalytics/>
         </div>
       </div>
     </>

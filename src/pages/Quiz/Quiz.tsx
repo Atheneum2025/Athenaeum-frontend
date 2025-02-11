@@ -29,20 +29,19 @@ export default function Quiz() {
 
     const { user, isAuthenticated } = getAuthenticatedUser();
 
-    useEffect(() => {
-
-        const fetchdata = async () => {
-            try {
-                const quizResponse = await fetch("http://localhost:3000/api/v1/quiz/");
-                const quizResult = await quizResponse.json();
-                setQuizDetails(quizResult.quizes);
-            }
-            catch (error) {
-                console.error(error);
-            }
+    const fetchData = async () => {
+        try {
+            const quizResponse = await fetch("http://localhost:3000/api/v1/quiz/");
+            const quizResult = await quizResponse.json();
+            setQuizDetails(quizResult.quizes);
         }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
-        fetchdata();
+    useEffect(() => {
+        fetchData();
     }, []);
     console.log(quizDetails)
     function sendData(quizId: string) {
@@ -56,8 +55,9 @@ export default function Quiz() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3000/api/v1/quiz/', { quizName, questionOne, answerOne, questionTwo, answerTwo, questionThree, answerThree, questionFour, answerFour, questionFive, answerFive });
+            const response = await axios.post('http://localhost:3000/api/v1/quiz/', { quizName, questionOne, answerOne, questionTwo, answerTwo, questionThree, answerThree, questionFour, answerFour, questionFive, answerFive }, { withCredentials: true });
             console.log("course created", response.data);
+            fetchData();
             setFormIsVisible(false)
         }
         catch (err) {
@@ -68,61 +68,61 @@ export default function Quiz() {
 
     return (
         <>
-
-
-
-            <div>Quiz</div>
             {
                 isAuthenticated ? (
                     <>
-                        {
-                            user.role === "professor" && (
-                                <>
-                                    <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Quiz</button>
-                                    {
-                                        formIsVisible && (
-                                            <div className="form-for-adding-new">
-                                                <form action="" onSubmit={handleSubmit}>
-                                                    <label htmlFor="quizName">Enter Quiz Name</label>
-                                                    <input type="text" id='quizName' value={quizName} onChange={(e) => setQuizName(e.target.value)} />
+                        <div className="items_display_header">
 
-                                                    <label htmlFor="questionOne">Question One : </label>
-                                                    <input type="text" id='questionOne' value={questionOne} onChange={(e) => setQuestionOne(e.target.value)} />
+                            <h1>Quizzes</h1>
+                            {
+                                user.role !== "student" && (
+                                    <>
+                                        <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Quiz</button>
+                                        {
+                                            formIsVisible && (
+                                                <div className="form-for-adding-new">
+                                                    <form action="" onSubmit={handleSubmit}>
+                                                        <label htmlFor="quizName">Enter Quiz Name</label>
+                                                        <input type="text" id='quizName' value={quizName} onChange={(e) => setQuizName(e.target.value)} />
 
-                                                    {/* <label htmlFor="correctAnswerOne">Correct Answer : </label> */}
-                                                    <input type="button" value={"true"} onClick={() => setAnswerOne(true)} />
-                                                    <input type="button" value={"false"} onClick={() => setAnswerOne(false)} />
+                                                        <label htmlFor="questionOne">Question One : </label>
+                                                        <input type="text" id='questionOne' value={questionOne} onChange={(e) => setQuestionOne(e.target.value)} />
+
+                                                        {/* <label htmlFor="correctAnswerOne">Correct Answer : </label> */}
+                                                        <input type="button" value={"true"} onClick={() => setAnswerOne(true)} />
+                                                        <input type="button" value={"false"} onClick={() => setAnswerOne(false)} />
 
 
-                                                    <label htmlFor="questionTwo">Question Two : </label>
-                                                    <input type="text" id='questionTwo' value={questionTwo} onChange={(e) => setQuestionTwo(e.target.value)} />
-                                                    <input type="button" value={"true"} onClick={() => setAnswerTwo(true)} />
-                                                    <input type="button" value={"false"} onClick={() => setAnswerTwo(false)} />
+                                                        <label htmlFor="questionTwo">Question Two : </label>
+                                                        <input type="text" id='questionTwo' value={questionTwo} onChange={(e) => setQuestionTwo(e.target.value)} />
+                                                        <input type="button" value={"true"} onClick={() => setAnswerTwo(true)} />
+                                                        <input type="button" value={"false"} onClick={() => setAnswerTwo(false)} />
 
-                                                    <label htmlFor="questionThree">Question Three : </label>
-                                                    <input type="text" id='questionThree' value={questionThree} onChange={(e) => setQuestionThree(e.target.value)} />
-                                                    <input type="button" value={"true"} onClick={() => setAnswerThree(true)} />
-                                                    <input type="button" value={"false"} onClick={() => setAnswerThree(false)} />
+                                                        <label htmlFor="questionThree">Question Three : </label>
+                                                        <input type="text" id='questionThree' value={questionThree} onChange={(e) => setQuestionThree(e.target.value)} />
+                                                        <input type="button" value={"true"} onClick={() => setAnswerThree(true)} />
+                                                        <input type="button" value={"false"} onClick={() => setAnswerThree(false)} />
 
-                                                    <label htmlFor="questionFour">Question Four : </label>
-                                                    <input type="text" id='questionFour' value={questionFour} onChange={(e) => setQuestionFour(e.target.value)} />
-                                                    <input type="button" value={"true"} onClick={() => setAnswerFour(true)} />
-                                                    <input type="button" value={"false"} onClick={() => setAnswerFour(false)} />
+                                                        <label htmlFor="questionFour">Question Four : </label>
+                                                        <input type="text" id='questionFour' value={questionFour} onChange={(e) => setQuestionFour(e.target.value)} />
+                                                        <input type="button" value={"true"} onClick={() => setAnswerFour(true)} />
+                                                        <input type="button" value={"false"} onClick={() => setAnswerFour(false)} />
 
-                                                    <label htmlFor="questionFive">Question Five : </label>
-                                                    <input type="text" id='questionFive' value={questionFive} onChange={(e) => setQuestionFive(e.target.value)} />
-                                                    <input type="button" value={"true"} onClick={() => setAnswerFive(true)} />
-                                                    <input type="button" value={"false"} onClick={() => setAnswerFive(false)} />
+                                                        <label htmlFor="questionFive">Question Five : </label>
+                                                        <input type="text" id='questionFive' value={questionFive} onChange={(e) => setQuestionFive(e.target.value)} />
+                                                        <input type="button" value={"true"} onClick={() => setAnswerFive(true)} />
+                                                        <input type="button" value={"false"} onClick={() => setAnswerFive(false)} />
 
-                                                    <button type='submit'>Save</button>
-                                                    <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                                                </form>
-                                            </div>
-                                        )
-                                    }
-                                </>
-                            )
-                        }
+                                                        <button type='submit'>Save</button>
+                                                        <button onClick={() => setFormIsVisible(false)}>Cancel</button>
+                                                    </form>
+                                                </div>
+                                            )
+                                        }
+                                    </>
+                                )
+                            }
+                        </div>
                         < div className="course_cards_list">
                             {quizDetails.map((quiz: QuizType) => (
                                 <div key={quiz._id}>
@@ -143,6 +143,8 @@ export default function Quiz() {
                     <div>please login </div>
                 )
             }
+
         </>
     )
 }
+

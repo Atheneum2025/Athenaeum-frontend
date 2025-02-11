@@ -1,34 +1,47 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 
-export default function MyMaterial() {
+type User = { 
+    _id: string;
+}
+type MaterialType = {
+    _id: string;
+    materialname: string;
+    views: number;
+}
+export default function MyMaterial({_id}: User) {
+
+    const [materialDetails, setMaterialDetails] = useState<MaterialType[]>([]);
+
+    const fetchData = async () => {
+        try {
+            const response = await axios.get(`http://localhost:3000/api/v1/material/${_id}`, {withCredentials: true})
+            setMaterialDetails(response.data.materials)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    useEffect(() =>{
+        fetchData();
+    }, [])
+    console.log(materialDetails);
     return (
         <>
             <div>MyMaterial</div>
             <div className='liked_materials'>
-                <div className="liked_material_card">
-                    <div className="liked_material_details">
-                        <div className="liked_material_name">Family Pic</div>
-                        <div className='uploaded_by'>Rishon</div>
-                    </div>
-                </div>
-                <div className="liked_material_card">
-                    <div className="liked_material_details">
-                        <div className="liked_material_name">Family Pic</div>
-                        <div className='uploaded_by'>Rishon</div>
-                    </div>
-                </div>
-                <div className="liked_material_card">
-                    <div className="liked_material_details">
-                        <div className="liked_material_name">Family Pic</div>
-                        <div className='uploaded_by'>Rishon</div>
-                    </div>
-                </div>
-                <div className="liked_material_card">
-                    <div className="liked_material_details">
-                        <div className="liked_material_name">Family Pic</div>
-                        <div className='uploaded_by'>Rishon</div>
-                    </div>
-                </div>
+                {
+                    materialDetails.map((materials: MaterialType, index) => (
+                        <div className="liked_material_card" key={index}>
+                            <div className="liked_material_details">
+                                <div className="liked_material_name">{materials.materialname}</div>
+                                <div className='uploaded_by'>{materials._id}</div>
+                                <div>{materials.views}</div>
+                            </div>
+                        </div>
+
+                    ))
+                }
+                
             </div>
         </>
     )

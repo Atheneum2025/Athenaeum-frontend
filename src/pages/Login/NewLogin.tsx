@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios"
 import Cookies from "js-cookie"
@@ -15,9 +15,11 @@ const LoginPage = () => {
 
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
     const [role, setRole] = useState<string>("");
     const [email, setEmail] = useState<string>("");
-    const [error, setError] = useState<string>("")
+    const [emailError, setEmailError] = useState<string>("");
+    const [passwordError, setPasswordError] = useState<string>("")
     const [isActive, setIsActive] = useState(false);
     // const [formData, setFormData] = useState({
     //     name: "",
@@ -33,160 +35,201 @@ const LoginPage = () => {
     //     });
     // };
 
+    // if(password.length < 6){
+    //     setPasswordError("Password  must be atleast 6 characters")
+    // }
+
+    const [loginMessage, setResMessage] = useState<string>("");
+    const [signupMessage, setSignupMessage] = useState<string>("");
+
+
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
         // Add authentication logic
         try {
-            const response = await axios.post(`http://localhost:3000/auth/login`, { username, password }, { withCredentials: true })
-            console.log(response);
-            navigate("/home");
-            localStorage.setItem("authToken", JSON.stringify(response.data));
-            Cookies.set("authToken", response.data.accessToken)
+            if (!(username && password)) {
+                setResMessage("Please fill in all the fields")
+            }
+            else {
+                const response = await axios.post(`http://localhost:3000/auth/login`, { username, password }, { withCredentials: true })
+                console.log(response);
+                navigate("/home");
+                localStorage.setItem("authToken", JSON.stringify(response.data));
+                Cookies.set("authToken", response.data.accessToken)
+            }
         }
         catch (error) {
             console.error(error);
+            setResMessage("Invalid User Credentials");
         }
     };
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
+
         try {
-            const response = await axios.post('http://localhost:3000/auth/signup', { username, password, role, email });
-            console.log(response.data)
+            if (!(username && password)) {
+                setSignupMessage("Please fill in all the fields")
+            }
+            if (validateEmail(email)) {
+                const response = await axios.post('http://localhost:3000/auth/signup', { username, password, role, email });
+                setSignupMessage("Registration Successful")
+                setEmail("")
+                console.log(response.data)
+            }
+            else {
+                setEmailError("Invalid email error")
+
+            }
         } catch (error) {
             console.error(error)
+            setSignupMessage("Email already exists")
         }
-        // navigate("/dashboard");
 
+        // navigate("/dashboard");
     }
-    // const validateEmail = (email: string): boolean => {
-    //     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    //     console.log(email)
-    //     return emailRegex.test(email);
-    // }
+
+    const validateEmail = (email: string): boolean => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        console.log(email)
+        return emailRegex.test(email);
+    }
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+        if (password.length + 1 <= 5) {
+            setPasswordError(`password must be atleast ${password.length + 1} characters`)
+            return
+        }
+        else {
+            setPasswordError("");
+        }
+    }
+
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setConfirmPassword(e.target.value);
+        if (password !== confirmPassword) {
+            setPasswordError("Passwords do not match")
+            return
+        }
+        else {
+            setPasswordError(" ")
+        }
+    }
+
 
     return (
-        <div
-            className={`${styles.container} ${isActive ? styles.active : ""}`}
-            id="container"
-        >
-            {/* Sign Up Form */}
-            <div className={`${styles["form-container"]} ${styles["sign-up"]}`}>
-                <form onSubmit={handleSignUp}>
-                    <h1>Create Account</h1>
-                    <div className={styles["social-icons"]}>
-                        {/* <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faGoogle} />
-            </a>
-            <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faFacebookF} />
-            </a>
-            <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faGithub} />
-            </a>
-            <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faLinkedinIn} />
-            </a> */}
-                    </div>
-                    <span>or use your email for registration</span>
-                    <input
-                        type="text"
-                        name="name"
-                        value={username}
-                        placeholder="Name"
-                        onChange={(e)=> setUsername(e.target.value)}
-                    />
-                    <input
-                        type="email"
-                        name="email"
-                        value={email}
-                        placeholder="Email"
-                        onChange={(e) => {setEmail(e.target.value)}}
-                    />
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        onChange={(e)=> setPassword(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        name="name"
-                        value={role}
-                        placeholder="Role"
-                        onChange={(e) => setRole(e.target.value)}
-                    />
-                    <button type="submit">Sign Up</button>
-                </form>
-            </div>
+        <>
+            <div className={styles["login_page"]}>
 
-            {/* Sign In Form */}
-            <div className={`${styles["form-container"]} ${styles["sign-in"]}`}>
-                <form onSubmit={handleSignIn}>
-                    <h1>Sign In</h1>
-                    <div className={styles["social-icons"]}>
-                        {/* <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faGoogle} />
-            </a>
-            <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faFacebookF} />
-            </a>
-            <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faGithub} />
-            </a>
-            <a href="#" className={styles.icon}>
-              <FontAwesomeIcon icon={faLinkedinIn} />
-            </a> */}
-                    </div>
-                    <span>or use your email password</span>
-                    <input
-                        type="text"
-                        name="username"
-                        value={username}
-                        placeholder="Email"
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        name="password"
-                        value={password}
-                        placeholder="Password"
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <Link to="/forgot-password">Forget Your Password?</Link>
-                    <button type="submit">Sign In</button>
-                </form>
-            </div>
+                <div
+                    className={`${styles.container} ${isActive ? styles.active : ""}`}
+                    id="container"
+                >
+                    {/* Sign Up Form */}
+                    <div className={`${styles["form_container"]} ${styles["sign_up"]}`}>
+                        <form onSubmit={handleSignUp}>
+                            <h2>Create Account</h2>
+                            <input
+                                type="text"
+                                name="name"
+                                value={username}
+                                placeholder="Name"
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                name="email"
+                                value={email}
+                                placeholder="Email"
+                                onChange={(e) => { setEmail(e.target.value) }}
+                            />
+                            <input
+                                type="text"
+                                name="password"
+                                placeholder="Password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                            />
+                            <input
+                                type="text"
+                                name="confirmPassword"
+                                placeholder="Confirm Password"
+                                onChange={handleConfirmPasswordChange}
+                            />
+                            <input
+                                type="text"
+                                name="name"
+                                value={role}
+                                placeholder="Role"
+                                onChange={(e) => setRole(e.target.value)}
+                            />
+                            <button type="submit">Sign Up</button>
+                            <div className={styles["error_message"]}>
 
-            {/* Toggle Container */}
-            <div className={styles["toggle-container"]}>
-                <div className={styles.toggle}>
-                    <div className={`${styles["toggle-panel"]} ${styles["toggle-left"]}`}>
-                        <h1>Hello, Friend!</h1>
-                        <p>
-                            Register with your personal details to use all of site features
-                        </p>
-                        <button
-                            className={styles.hidden}
-                            onClick={() => setIsActive(false)}
-                        >
-                            Sign In
-                        </button>
+                                {emailError && <pre>{emailError}</pre>}
+                                {passwordError && <pre>{passwordError}</pre>}
+                                {signupMessage && (
+                                    <pre className={styles["error_message"]}>{signupMessage}</pre>
+                                )}
+                            </div>
+                        </form>
                     </div>
-                    <div
-                        className={`${styles["toggle-panel"]} ${styles["toggle-right"]}`}
-                    >
-                        <h1>Welcome Back!</h1>
-                        <p>
-                            Enter your personal details to use all of site features
-                        </p>
-                        <button className={styles.hidden} onClick={() => setIsActive(true)}>
-                            Sign Up
-                        </button>
+
+                    {/* Sign In Form */}
+                    <div className={`${styles["form_container"]} ${styles["sign_in"]}`}>
+                        <form onSubmit={handleSignIn}>
+                            <h2>Sign In</h2>
+                            <input
+                                type="text"
+                                name="username"
+                                value={username}
+                                placeholder="Email"
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                name="password"
+                                value={password}
+                                placeholder="Password"
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <button type="submit">Sign In</button>
+                            {loginMessage && (
+                                <pre className={styles["error_message"]}>{loginMessage}</pre>
+                            )}
+                        </form>
+                    </div>
+
+                    {/* Toggle Container */}
+                    <div className={styles["toggle_container"]}>
+                        <div className={styles.toggle}>
+                            <div className={`${styles["toggle_panel"]} ${styles["toggle_left"]}`}>
+                                <h1>Hello, Friend!</h1>
+                                <p>
+                                    Register with your personal details to use all of site features
+                                </p>
+                                <button
+                                    className={styles.hidden}
+                                    onClick={() => setIsActive(false)}
+                                >
+                                    Sign In
+                                </button>
+                            </div>
+                            <div className={`${styles["toggle_panel"]} ${styles["toggle_right"]}`}>
+                                <h1>Welcome Back!</h1>
+                                <p>
+                                    Enter your personal details to use all of site features
+                                </p>
+                                <button className={styles.hidden} onClick={() => setIsActive(true)}>
+                                    Sign Up
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

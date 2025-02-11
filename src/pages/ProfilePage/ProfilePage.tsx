@@ -15,11 +15,11 @@ export default function ProfilePage() {
                 isAuthenticated ? (
                     <div>
                         {user.role === "admin" ? (
-                            <AdminsDashboard/>
+                            <AdminsDashboard user = {user} />
                         ) : user.role === "professor" ? (
                             <ProfessorDashboard user = {user}/>
                         ) : user.role === "student" ? (
-                            <StudentDashboard/>
+                            <StudentDashboard user = {user} />
                         ) : null}
                     </div>
                 ) : (

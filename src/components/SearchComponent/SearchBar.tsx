@@ -90,17 +90,17 @@ export default function SearchBar() {
         try {
 
 
-            const [courseResponse, subjectResponse, unitResponse, materialResponse] = await Promise.all([
-            axios.get('http://localhost:3000/api/v1/course', {withCredentials: true}),
-            axios.get('http://localhost:3000/api/v1/subject', {withCredentials: true}),
-            axios.get('http://localhost:3000/api/v1/unit', {withCredentials: true}),
-            axios.get('http://localhost:3000/api/v1/material', {withCredentials: true})
-            ]);
+          const [courseResponse, subjectResponse, unitResponse, materialResponse] = await Promise.all([
+            axios.get('http://localhost:3000/api/v1/course/c', { withCredentials: true }),
+            axios.get('http://localhost:3000/api/v1/subject', { withCredentials: true }),
+            axios.get('http://localhost:3000/api/v1/unit', { withCredentials: true }),
+            axios.get('http://localhost:3000/api/v1/material', { withCredentials: true })
+          ]);
 
-            const courseData = courseResponse.data;
-            const subjectData = subjectResponse.data;
-            const unitData = unitResponse.data;
-            const materialData = materialResponse.data;
+          const courseData = courseResponse.data;
+          const subjectData = subjectResponse.data;
+          const unitData = unitResponse.data;
+          const materialData = materialResponse.data;
 
           setCourseSearchData(
             courseData.courses.filter((course: CourseType) =>
@@ -169,13 +169,14 @@ export default function SearchBar() {
         <div className={header.search_bar}>
           <input
             type="search"
-            placeholder="search here.."
+            placeholder="search here..."
             value={search}
+            maxLength={100}
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => setIsVisible(true)}
           // onKeyDown={handleKeyDown}
           />
-          <div onClick={handleVisibility} className={header.cancel_btn}>x</div>
+          <button onClick={handleVisibility} className={header.cancel_btn}>x</button>
         </div>
         {
           isVisible && (
@@ -183,15 +184,14 @@ export default function SearchBar() {
               {
                 search == "" && (
                   <>
-
                     Recents :
                     {recentSearches.length > 0 && (
-                      <ul style={{ listStyleType: "none", padding: 0, margin: "8px 0", border: "1px solid #ccc", borderRadius: "4px" }}>
+                      <ul >
                         {recentSearches.map((term, index) => (
                           <li
                             key={index}
                             onClick={() => putToRecents(term)}
-                            style={{ padding: "8px", cursor: "pointer", borderBottom: index !== recentSearches.length - 1 ? "1px solid #ccc" : "none" }}
+                            style={{ borderBottom: index !== recentSearches.length - 1 ? "1px solid #ccc" : "none" }}
                           >
                             {term}
                           </li>
@@ -201,59 +201,64 @@ export default function SearchBar() {
                   </>
                 )
               }
-              Results :
-              Courses :
+              <div className={header.results}>Results :</div>
+              <div className={header.results}>Courses :</div>
               {
                 courseSearchData.map((course) => (
                   <li key={course._id} onClick={() => putToRecents(course.coursename)}>
                     <a href={`/course/${course.coursename.toUpperCase()}/subject`}>
                       {course.coursename}
                     </a>
-                    <pre style={{ display: 'none' }}>{course.description}</pre>
-                    <pre style={{ display: 'none' }}>{course.keywords}</pre>
+                    <pre className={header.hidden_keywords}>{course.description}</pre>
+                    <pre className={header.hidden_keywords}>{course.keywords}</pre>
                   </li>
-
                 ))
               }
-              Subjects :
+              <div className={header.results}>Subjects :</div>
               {
                 subjectSearchData.map((subject) => (
                   <li key={subject._id} onClick={() => putToRecents(subject.subjectname)}>
                     <a href={`/course/${subject.course.toUpperCase()}/subject/${subject.subjectname.toUpperCase()}/unit`}>
                       {subject.subjectname}
+                      <div>
+                        <pre className={header.hidden_keywords}>{subject.description}</pre>
+                        <pre className={header.insights}>/{subject.course} </pre>
+                        <pre className={header.hidden_keywords}>{subject.keywords}</pre>
+                      </div>
                     </a>
-                    <pre style={{ display: 'none' }}>{subject.description}</pre>
-                    <pre style={{ display: 'inline', color: 'red' }}>{subject.course}</pre>
-                    <pre style={{ display: 'none' }}>{subject.keywords}</pre>
                   </li>
                 ))
               }
-              Units :
+              <div className={header.results}>Units :</div>
               {
                 unitSearchData.map((unit) => (
                   <li key={unit._id} onClick={() => putToRecents(unit.unitname)}>
                     <a href={`/course/${unit.course.toUpperCase()}/subject/${unit.subject.toUpperCase()}/unit/${unit.unitname}/material`}>
                       {unit.unitname}
+                      <div>
+                        <pre className={header.hidden_keywords}>{unit.description}</pre>
+                        <pre className={header.insights}>/{unit.course} </pre>
+                        <pre className={header.insights}>/{unit.subject} </pre>
+                        <pre className={header.hidden_keywords}>{unit.keywords}</pre>
+                      </div>
                     </a>
-                    <pre style={{ display: 'none' }}>{unit.description}</pre>
-                    <pre style={{ display: 'none' }}>{unit.course}</pre>
-                    <pre style={{ display: 'none' }}>{unit.subject}</pre>
-                    <pre style={{ display: 'none' }}>{unit.keywords}</pre>
                   </li>
                 ))
               }
-              Materials :
+              <div className={header.results}>Materials :</div>
               {
                 materialSearchData.map((material) => (
                   <li key={material._id} onClick={() => putToRecents(material.materialname)}>
                     <a href={`/course/${material.course.toUpperCase()}/subject/${material.subject.toUpperCase()}/unit/${material.unit}/material/${material._id}`}>
                       {material.materialname}
+                      <div>
+                        <pre className={header.hidden_keywords}>{material.description}</pre>
+                        <pre className={header.insights}>/{material.course} </pre>
+                        <pre className={header.insights}>/{material.subject} </pre>
+                        <pre className={header.insights}>/{material.unit} </pre>
+                        <pre className={header.hidden_keywords}>{material.keywords}</pre>
+                      </div>
                     </a>
-                    <pre style={{ display: 'inline' }}>{material._id}</pre>
-                    <pre style={{ display: 'none' }}>{material.course}</pre>/
-                    <pre style={{ display: 'none' }}>{material.subject}</pre>
-                    <pre style={{ display: 'none' }}>{material.subject}</pre>
-                    <pre style={{ display: 'none' }}>{material.keywords}</pre>
                   </li>
                 ))
               }

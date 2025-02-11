@@ -1,6 +1,7 @@
 .footer{
     width: 100%;
-    position: fixed;
+    height: 400px;
     bottom: 0;
-    background-color: rgba(90, 0, 0, 0.96);
+    background-color: var(--primary-color);
+    text-align: center;
 }
