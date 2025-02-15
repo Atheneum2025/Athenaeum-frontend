@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axiosInstance from '../../utils/axios';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
@@ -22,7 +22,7 @@ export default function AllUsers({ role }: UserRole) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/v1/users/${role}`);
+                const response = await axiosInstance.get(`/users/${role}`);
                 // console.log(response.data);
                 if (role === "professors") {
                     setUserDetails(response.data.professors);

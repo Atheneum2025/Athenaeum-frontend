@@ -1,20 +1,19 @@
 import { useState } from 'react'
-import './StudentDashboard.css';
-import LikedVideos from './LikedVideos/LikedVideos';
-import HistoryVideos from './History/HistoryVideos';
-import MyMaterial from './MyMaterial/MyMaterial';
-import axios from 'axios';
-import VideoDisplay from '../VideoDisplay/VideoDisplay';
-import PdfViewer from '../PdfViewer/PdfViewer';
-import { getAuthenticatedUser } from '../../utils/authUtils';
+import '../ProfilePage.css';
+import LikedVideos from '../../../components/LikedVideos/LikedVideos.tsx';
+import HistoryVideos from '../../../components/History/HistoryVideos';
+import MyMaterial from '../../../components/MyMaterial/MyMaterial';
+import axiosInstance from '../../../utils/axios.ts';
+// import { getAuthenticatedUser } from '../../utils/authUtils';
 
 interface StudentDashboardProps {
     user: {
         _id: string;
-        id: string;
         username: string;
         email: string;
         role: string;
+        college: string;
+
     };
 }
 export default function StudentDashboard({ user }: StudentDashboardProps) {
@@ -35,7 +34,7 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
         e.preventDefault();
 
         try {
-            const response = await axios.post(`http://localhost:3000/api/v1/material`, { materialname, description });
+            const response = await axiosInstance.post(`/material`, { materialname, description });
             console.log("material created", response.data);
         }
         catch (err) {
@@ -45,14 +44,14 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
     return (
         <>
             <div className="user_profile">
-                <h1>Welcome Student</h1>
+                <h1>Welcome {user.role}</h1>
                 <div className='user_avatar'>
                     <img src="" alt="" />
                     <div>{user.username}</div>
                 </div>
                 <div className="user_details">
                     <div>student email : {user.email}</div>
-                    <div>college info : St. Xavier's College Mapusa</div>
+                    <div>college info : {user.college}</div>
                 </div>
             </div>
 

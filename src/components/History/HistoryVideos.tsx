@@ -1,5 +1,5 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import axiosInstance from '../../utils/axios';
+import { useEffect, useState } from 'react'
 
 type HistoryType = {
   MaterialName: string;
@@ -14,7 +14,7 @@ export default function HistoryVideos() {
   const [history, setHistory] = useState<HistoryType[]>([])
   const fetchData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3000/api/v1/users/history`, { withCredentials: true });
+      const response = await axiosInstance.get(`/users/history`, { withCredentials: true });
       // console.log(response.data.history)
       setHistory(response.data.history)
     } catch (error) {
@@ -28,7 +28,7 @@ export default function HistoryVideos() {
   console.log(history)
   const deleteHistory = async () => {
     try {
-      const response = await axios.delete(`http://localhost:3000/api/v1/users/delete-history`, {withCredentials: true});
+      const response = await axiosInstance.delete(`/users/delete-history`, {withCredentials: true});
       console.log('history deleted', response)
       fetchData();
     }

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import LikedVideos from "../StudentDashboard/LikedVideos/LikedVideos";
-import HistoryVideos from "../StudentDashboard/History/HistoryVideos";
-import MyMaterial from "../StudentDashboard/MyMaterial/MyMaterial";
-import AllUsers from "../../components/AllUsers/AllUsers";
-import axios from "axios";
-import AdminAnalytics from "../../components/Analytics/AdminAnalytics";
+import LikedVideos from "../../../components/LikedVideos/LikedVideos";
+import HistoryVideos from "../../../components/History/HistoryVideos";
+import MyMaterial from "../../../components/MyMaterial/MyMaterial.tsx"
+import AllUsers from "../../../components/AllUsers/AllUsers";
+import AdminAnalytics from "../../../components/Analytics/AdminAnalytics";
+import axiosInstance from "../../../utils/axios.ts";
+import '../ProfilePage.css'
 
 interface AdmintDashboardProps {
   user: {
@@ -32,7 +33,7 @@ function AdminsDashboard({user}: AdmintDashboardProps) {
     let subjectId = 'DSA'
     let unitId = 'Unit One'
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${unitId}/material`, { materialname, description });
+      const response = await axiosInstance.post(`/course/${courseId}/subject/${subjectId}/unit/${unitId}/material`, { materialname, description });
       console.log("material created", response.data);
       setIsVisible(false);
     }
@@ -55,7 +56,7 @@ function AdminsDashboard({user}: AdmintDashboardProps) {
         </div>
       </div>
 
-      <div className='form-for-adding'>
+      <div className='form_for_adding'>
         <div>update profile details</div>
         <form action="">
           <label htmlFor="first_name">Edit First Name</label>

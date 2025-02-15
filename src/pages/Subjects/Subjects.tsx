@@ -1,10 +1,10 @@
 import './Subjects.css'
+import '../Courses/Courses.css'
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import axios from 'axios';
+import axiosInstance from '../../utils/axios';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
-import axiosInstance from '../../utils/axios';
 
 type SubjectType = {
   _id: string;
@@ -12,7 +12,7 @@ type SubjectType = {
   description: string;
 };
 
-export default function Subject() {
+export default function Subjects() {
   const { user, isAuthenticated } = getAuthenticatedUser();
 
 
@@ -50,7 +50,7 @@ export default function Subject() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const subjectResponse = await axiosInstance(`/api/v1/course/${courseIdParameter}/subject`, { params: { page, limit: 5, sortBy, SortType } });
+      const subjectResponse = await axiosInstance(`/course/${courseIdParameter}/subject`, { params: { page, limit: 5, sortBy, SortType } });
 
       setSubjectDetails(subjectResponse.data.subjects);
       setLoading(false)
@@ -72,7 +72,7 @@ export default function Subject() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject`, { subjectname, description, keywords }, { withCredentials: true });
+      const response = await axiosInstance.post(`/course/${courseIdParameter}/subject`, { subjectname, description, keywords }, { withCredentials: true });
       console.log("subject created", response.data);
       setFormIsVisible(false)
       fetchData();
@@ -87,7 +87,7 @@ export default function Subject() {
   const handleUpdate = async () => {
     try {
       console.log(selectedSubject?._id)
-      const update = await axios.patch(`http://localhost:3000/api/v1/course/${courseId}/subject/${selectedSubject?.subjectname}`, { subjectname, description, keywords }, { withCredentials: true });
+      const update = await axiosInstance.patch(`/course/${courseId}/subject/${selectedSubject?.subjectname}`, { subjectname, description, keywords }, { withCredentials: true });
       console.log(update.data)
       alert("Subject updated successfully!");
       fetchData()
@@ -105,7 +105,7 @@ export default function Subject() {
     const confirmDelete = window.confirm("Are you sure you want to delete this course?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3000/api/v1/course/${courseId}/subject/${selectedSubject?.subjectname}`, { withCredentials: true });
+        await axiosInstance.delete(`/course/${courseId}/subject/${selectedSubject?.subjectname}`, { withCredentials: true });
         alert("Course deleted successfully!");
         fetchData();
       } catch (error) {
@@ -177,45 +177,46 @@ export default function Subject() {
 
         {/* <button onClick={() => deleteCourse(course._id)} >Delete</button>
         <button onClick={() => updateCourse(course._id)} >Edit</button> */}
-        <div>
+        <div className='items_cards_list'>
           {
             loading ? <Loader /> :
               <>
                 {
                   subjectDetails.length === 0 ? (
-                    <div>No Subjects Found</div>
+                    <div className='not_available_text'>No Subjects Found</div>
                   ) : (
-                    subjectDetails.map((subject: SubjectType) => (
-                      <div key={subject._id} onClick={() => sendData(subject.subjectname)}>
-                        <div>
-                          <div>{subject.subjectname}</div>
-                        </div>
-                        <div className="course_details">
-                          <div className='course_name'>Subject Name: {subject.subjectname}</div>
-                          <div className='course_description'>Description: {subject.description}</div>
+                    <>
+                      {
+                        subjectDetails.map((subject: SubjectType) => (
 
-                        </div>
-                        {
-                          user.role === "admin" && (
-                            <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedSubject(subject); e.stopPropagation() }} >Edit</div>
-                          )
-                        }
+                          <div className='secondary_item_card' key={subject._id} onClick={() => sendData(subject.subjectname)}>
+
+                            <div className="item_details">
+                              <div className='item_name'>Subject Name: {subject.subjectname}</div>
+                              <div className='item_description'>Description: {subject.description}</div>
+                            </div>
+                            {
+                              user.role === "admin" && (
+                                <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedSubject(subject); e.stopPropagation() }} >Edit</div>
+                              )
+                            }
+                          </div>
+
+                        ))
+                      }
+                      {/* Pagination */}
+                      <div className='pagination'>
+                        <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                          Prev
+                        </button>
+                        <span> Page {page} of {totalPages} </span>
+                        <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
+                          Next
+                        </button>
                       </div>
-                    )
-                    )
-
+                    </>
                   )
                 }
-                {/* Pagination */}
-                <div className='pagination'>
-                  <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-                    Prev
-                  </button>
-                  <span> Page {page} of {totalPages} </span>
-                  <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
-                    Next
-                  </button>
-                </div>
                 {selectedSubject && (
                   <div className="course_form">
                     <h3>Edit Course</h3>

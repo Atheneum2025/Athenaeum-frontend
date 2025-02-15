@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../utils/axios.js';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
-import axios from 'axios';
-
 
 type CourseType = {
     _id: string;
@@ -44,7 +42,7 @@ export default function Courses() {
     const fetchData = async () => {
         setLoading(true)
         try {
-            const CourseResponse = await axiosInstance.get("/api/v1/course/", { withCredentials: true, params: { page, limit: 5, sortBy, SortType } });
+            const CourseResponse = await axiosInstance.get("/course/", { withCredentials: true, params: { page, limit: 5, sortBy, SortType } });
 
             setCourseDetail(CourseResponse.data.courses);
             setLoading(false)
@@ -68,7 +66,7 @@ export default function Courses() {
         e.preventDefault();
 
         try {
-            const response = await axiosInstance.post('/api/v1/course/', { coursename, description, keywords }, { withCredentials: true });
+            const response = await axiosInstance.post('/course/', { coursename, description, keywords }, { withCredentials: true });
             console.log("course created", response.data);
             setFormIsVisible(false);
             fetchData();
@@ -81,7 +79,7 @@ export default function Courses() {
     const handleUpdate = async () => {
         try {
             console.log(selectedCourse?._id)
-            const update = await axios.patch(`http://localhost:3000/api/v1/course/${selectedCourse?.coursename}`, { coursename, description, keywords }, { withCredentials: true });
+            const update = await axiosInstance.patch(`/course/${selectedCourse?.coursename}`, { coursename, description, keywords }, { withCredentials: true });
             console.log(update.data)
             alert("Course updated successfully!");
             fetchData()
@@ -99,7 +97,7 @@ export default function Courses() {
         const confirmDelete = window.confirm("Are you sure you want to delete this course?");
         if (confirmDelete) {
             try {
-                await axios.delete(`http://localhost:3000/api/v1/course/${selectedCourse?.coursename}`, { withCredentials: true });
+                await axiosInstance.delete(`/course/${selectedCourse?.coursename}`, { withCredentials: true });
                 alert("Course deleted successfully!");
                 fetchData();
             } catch (error) {
@@ -163,43 +161,51 @@ export default function Courses() {
 
                 </div>
 
-                <div className="course_cards_list">
+                <div className="items_cards_list">
                     {
                         loading ? <Loader /> :
                             <>
 
                                 {courseDetail.length === 0 ? (
-                                    <div>No Courses Available</div>
+                                    <div className='not_available_text'>No Courses Available</div>
                                 ) : (
-                                    courseDetail.map((course: CourseType) => (
-                                        <div key={course._id} className="course_card" draggable={true}>
-                                            <div className="course_avatar">
-                                                <div>{course.coursename}</div>
-                                            </div>
-                                            <div className="course_details" onClick={() => sendData(course.coursename)} >
-                                                <div className='course_name'>Course Name: {course.coursename}</div>
-                                                <div className='course_description'>Description: {course.description}</div>
+                                    <>
+                                        {
+                                            courseDetail.map((course: CourseType) => (
 
-                                            </div>
-                                            {
-                                                user.role === "admin" && (
-                                                    <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >Edit</div>
-                                                )
-                                            }
+                                                <div key={course._id} className="item_card">
+                                                    <div className="item_avatar">
+                                                        <div>{course.coursename}</div>
+                                                    </div>
+                                                    <div className="item_details" onClick={() => sendData(course.coursename)} >
+                                                        <div className='item_name'>Course Name: {course.coursename}</div>
+                                                        <div className='item_description'>Description: {course.description}</div>
 
+                                                    </div>
+                                                    {
+                                                        user.role === "admin" && (
+                                                            <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >Edit</div>
+                                                        )
+                                                    }
+
+                                                </div>
+
+
+                                            ))
+                                        }
+                                        {/* Pagination */}
+                                        <div className='pagination'>
+                                            <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                                                Prev
+                                            </button>
+                                            <span> Page {page} of {totalPages} </span>
+                                            <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
+                                                Next
+                                            </button>
                                         </div>
-                                    ))
+                                    </>
                                 )}
-                                {/* Pagination */}
-                                <div className='pagination'>
-                                    <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-                                        Prev
-                                    </button>
-                                    <span> Page {page} of {totalPages} </span>
-                                    <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
-                                        Next
-                                    </button>
-                                </div>
+
                                 {selectedCourse && (
                                     <div className="course_form">
                                         <h3>Edit Course</h3>

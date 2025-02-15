@@ -1,15 +1,21 @@
 
-.course_cards_list{
+.items_cards_list{
     padding-block: 2rem;
 }
 
-.course_card{
+.item_card{
     /* background-color: rgba(90, 0, 0, 0.96); */
     background-color: var(--secondary-color);
+    /* outline: 2px solid white; */
     display: grid;
     grid-template-columns: 2fr 3fr auto auto;
     padding: 1.2rem 1.2rem;
     margin-block-end: 2rem;
+
+    &:hover{
+        /* background-color: var(--secondary-color);
+        outline: none; */
+    }
 }
 /* .course-card{
     width: 8rem;
@@ -17,7 +23,7 @@
     background-color: grey;
 } */
 
-.course_avatar{
+.item_avatar{
     width: 200px;
     height: 200px;
     border-radius: 100%;
@@ -27,27 +33,26 @@
     align-items: center;
 }
 
-.course_avatar >div{
+.item_avatar >div{
     font-family: cursive;
     font-weight: 900;
     font-size: 4.4rem;
 }
 
-.course_details{
-
+.item_details{
     align-content: space-around;
 }
 
-.course_details > div{
+.item_details > div{
     padding: 10px;
 }
 
-.course_name{
+.item_name{
     font-size: 1.5rem;
 }
 
-.course_ratings{
-    color: yellow;
+.item_description{
+    font-size: 1rem;
 }
 
 .title{
@@ -77,9 +82,6 @@
     
 }
 
-.form-for-adding > form{
-    
-}
 
 .add-btn{
     display: flex;
@@ -94,3 +96,141 @@
 }
 
 /* styles for all */
+
+.add_new_material{
+    /* background: rgba(44, 44, 44, 0.8);
+    backdrop-filter: blur(15px) saturate(150%); */
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 90;
+}
+
+.add_new_material_form{
+    background-color: #1e2939;
+    border-radius: 10px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 50%;
+    /* height: 100%; */
+    /* animation: fade-in 0.3s ease-in-out; */
+}
+
+.add_new_material_form_header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+
+
+.form_field > label{
+    display:block;
+    color: white;
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.form_field > select{
+    width: 100%;
+    background-color: #374151;
+    color: white;
+    appearance: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    /* outline:.3px solid white; */
+    border: none;
+    margin-bottom: 14px;
+
+    &:focus{
+        box-shadow: 0 0 0 2px #3b82f6;
+    }
+}
+
+/* .form_field textarea, input{
+    width: 100%;
+    background-color: #374151;
+    color: white;
+    border: none;
+    accent-color: white; */
+    /* outline: .3px solid white; */
+    /* border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    margin-bottom: 14px;
+
+    &::placeholder{
+        color: white;
+    }
+
+}
+
+.form_field textarea:focus, .form_field input:focus{
+    box-shadow: 0 0 0 2px #3b82f6;
+} */
+
+.upload_section > div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.upload_section div label {
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100px;
+    border: 2px dashed grey;
+    border-radius: 10px;
+
+}
+
+.upload_section div label span {
+    color: grey;
+}
+
+
+
+svg{
+    width: 20px;
+    height: 20px;
+}
+
+.upload_text {
+    font-size: 1rem;
+    color: grey;
+}
+.hidden{
+    display: none;
+}
+
+.upload_btns {
+    display: flex;
+    justify-content: end;
+
+}
+
+.upload_btns button{
+    padding: 10px 5px;
+    font-size: 1rem;
+    color: grey;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

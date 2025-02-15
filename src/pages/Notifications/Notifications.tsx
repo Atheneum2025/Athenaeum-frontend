@@ -1,4 +1,5 @@
 import axios from 'axios';
+import './Notifications.css';
 import React, { useEffect, useState } from 'react'
 import { getAuthenticatedUser } from '../../utils/authUtils';
 
@@ -53,41 +54,44 @@ export default function Notifications() {
     }
     return (
         <>
-            <div>Notifications</div>
-            <div>By : Professor James</div>
-            <div>Message: Please Publish this material</div>
-            <div>material : Link</div>
-            <button>Publish</button>
-
-
-            <div>
-                <div className='grid_layout'>
-                    <div>Professor</div>
-                    <div>Message</div>
-                    <div>Material</div>
-                    <div>Publish Status</div>
-                </div>
-            </div>
             {
-                user.role === "admin" && (
+                isAuthenticated && (
                     <>
-
-                        {courseDetail.map((notification: NotificationType) => (
-                            <div key={notification._id} className="course_card">
-                                <div>
-                                    <div>{notification.messageBy}</div>
-                                </div>
-                                <div className="course_details">
-                                    <div className='course_name'>Course Name: {notification.message}</div>
-                                    <div className='course_description'>Description: {notification.material}</div>
-                                    <button className='course_ratings' onClick={() => handlePublish(notification._id)} >Publish</button>
-                                    <div>Subjects no.: 45</div>
-                                </div>
+                        <div>
+                            <div className='grid_layout'>
+                                <div>Professor</div>
+                                <div>Message</div>
+                                <div>Material</div>
+                                <div>Publish Status</div>
                             </div>
-                        ))}
+                        </div>
+                        {
+                            user.role === "admin" && (
+                                <>
+
+                                    {courseDetail.map((notification: NotificationType) => (
+                                        <div key={notification._id} className="notification">
+                                            <div>
+                                                <div>{notification.messageBy}</div>
+                                            </div>
+                                            <div className="">
+                                                <div className=''>Message: {notification.message}</div>
+                                                {
+                                                    notification.material && (
+                                                        <button className='' onClick={() => handlePublish(notification._id)} >Publish</button>
+                                                    )
+                                                }
+
+                                            </div>
+                                        </div>
+                                    ))}
+                                </>
+                            )
+                        }
                     </>
                 )
             }
+
         </>
     )
 }

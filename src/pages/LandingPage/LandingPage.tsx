@@ -1,5 +1,4 @@
-import React from 'react';
-import "./Landing.css";
+import "./LandingPage.css";
 export default function Landing() {
   return (
     <>
@@ -14,7 +13,7 @@ export default function Landing() {
           </div>
 
           <button className="btn btn-start">
-            <a href="/login"></a>
+            <a href="/login">Start Studying</a>
           </button>
         </div>
       </section>

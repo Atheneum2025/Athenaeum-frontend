@@ -1,15 +1,8 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../utils/axios";
 import Cookies from "js-cookie"
-import styles from "./Login.module.css";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import {
-//   faGoogle,
-//   faFacebookF,
-//   faGithub,
-//   faLinkedinIn,
-// } from "@fortawesome/free-brands-svg-icons";
+import styles from "./NewLogin.module.css";
 
 const LoginPage = () => {
 
@@ -21,23 +14,8 @@ const LoginPage = () => {
     const [emailError, setEmailError] = useState<string>("");
     const [passwordError, setPasswordError] = useState<string>("")
     const [isActive, setIsActive] = useState(false);
-    // const [formData, setFormData] = useState({
-    //     name: "",
-    //     email: "",
-    //     password: "",
-    // });
+    const [color, setColor] = useState("red");
     const navigate = useNavigate();
-
-    // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     setFormData({
-    //         ...formData,
-    //         [e.target.name]: e.target.value,
-    //     });
-    // };
-
-    // if(password.length < 6){
-    //     setPasswordError("Password  must be atleast 6 characters")
-    // }
 
     const [loginMessage, setResMessage] = useState<string>("");
     const [signupMessage, setSignupMessage] = useState<string>("");
@@ -51,8 +29,9 @@ const LoginPage = () => {
                 setResMessage("Please fill in all the fields")
             }
             else {
-                const response = await axios.post(`http://localhost:3000/auth/login`, { username, password }, { withCredentials: true })
+                const response = await axiosInstance.post(`/auth/login`, { username, password }, { withCredentials: true })
                 console.log(response);
+                setColor("green");
                 navigate("/home");
                 localStorage.setItem("authToken", JSON.stringify(response.data));
                 Cookies.set("authToken", response.data.accessToken)
@@ -68,25 +47,35 @@ const LoginPage = () => {
         e.preventDefault();
 
         try {
-            if (!(username && password)) {
-                setSignupMessage("Please fill in all the fields")
+
+            if (!username || !password || !email) {
+                setSignupMessage("Please fill in all the fields");
+                return;
             }
-            if (validateEmail(email)) {
-                const response = await axios.post('http://localhost:3000/auth/signup', { username, password, role, email });
-                setSignupMessage("Registration Successful")
-                setEmail("")
-                console.log(response.data)
-            }
-            else {
+            if (!validateEmail(email)) {
                 setEmailError("Invalid email error")
-
+                return;
             }
-        } catch (error) {
-            console.error(error)
-            setSignupMessage("Email already exists")
-        }
+            if (password !== confirmPassword){
+                setPasswordError("Passwords do not match");
+                return;
+            }
+            const response = await axiosInstance.post('/auth/signup', { username, password, role, email });
+            setSignupMessage("Registration Successful")
+            setColor("green");
+            setEmail("")
+            setUsername("")
+            setPassword("")
+            setEmailError("")
+            setPasswordError("")
+            setConfirmPassword("")
+            setRole("")
+            console.log(response.data)
 
-        // navigate("/dashboard");
+        } catch (error: any) {
+            console.error(error)
+            setSignupMessage(error.reponse?.data?.message || "Email already exists");
+        }
     }
 
     const validateEmail = (email: string): boolean => {
@@ -97,23 +86,27 @@ const LoginPage = () => {
 
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
-        if (password.length + 1 <= 5) {
-            setPasswordError(`password must be atleast ${password.length + 1} characters`)
-            return
+        setConfirmPassword("")
+        if ((password.length + 1) < 5) {
+            setPasswordError(`password must be atleast 5 characters`)
+            return true
         }
         else {
             setPasswordError("");
+            return false
         }
     }
 
+
     const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setConfirmPassword(e.target.value);
-        if (password !== confirmPassword) {
+        if (e.target.value !== password) {
             setPasswordError("Passwords do not match")
-            return
+            return true
         }
         else {
-            setPasswordError(" ")
+            setPasswordError("")
+            return false
         }
     }
 
@@ -154,6 +147,7 @@ const LoginPage = () => {
                             <input
                                 type="text"
                                 name="confirmPassword"
+                                value={confirmPassword}
                                 placeholder="Confirm Password"
                                 onChange={handleConfirmPasswordChange}
                             />
@@ -170,10 +164,11 @@ const LoginPage = () => {
                                 {emailError && <pre>{emailError}</pre>}
                                 {passwordError && <pre>{passwordError}</pre>}
                                 {signupMessage && (
-                                    <pre className={styles["error_message"]}>{signupMessage}</pre>
+                                    <pre style={{color: "{color}"}} >{signupMessage}</pre>
                                 )}
                             </div>
                         </form>
+
                     </div>
 
                     {/* Sign In Form */}
@@ -195,10 +190,13 @@ const LoginPage = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                             <button type="submit">Sign In</button>
-                            {loginMessage && (
-                                <pre className={styles["error_message"]}>{loginMessage}</pre>
-                            )}
+                            <div className={styles["error_message"]}>
+                                {loginMessage && (
+                                    <pre style={{ color: "{color}" }} >{loginMessage}</pre>
+                                )}
+                            </div>
                         </form>
+
                     </div>
 
                     {/* Toggle Container */}
@@ -215,6 +213,8 @@ const LoginPage = () => {
                                 >
                                     Sign In
                                 </button>
+                                <a href="/home">Continue as guest</a>
+
                             </div>
                             <div className={`${styles["toggle_panel"]} ${styles["toggle_right"]}`}>
                                 <h1>Welcome Back!</h1>
@@ -224,6 +224,7 @@ const LoginPage = () => {
                                 <button className={styles.hidden} onClick={() => setIsActive(true)}>
                                     Sign Up
                                 </button>
+                                <a href="/home">Continue as guest</a>
                             </div>
                         </div>
                     </div>

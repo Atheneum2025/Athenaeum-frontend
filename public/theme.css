@@ -1,13 +1,24 @@
 :root{
     --background-color: black;
     --primary-color: rgb(0, 0, 0);
-    --secondary-color: #2C2C2C;
+    /* --secondary-color: #2C2C2C; */
+    --secondary-color: #111f28;
     --font-color: white;
 }
+
+/* :root {
+    --background-color: rgb(255, 255, 255);
+    --primary-color: rgb(255, 255, 255);
+    --secondary-color: #2C2C2C;
+    --secondary-color: #112825;
+    --font-color: rgb(0, 0, 0);
+} */
 
 /* --primary-color: rgb(3, 68, 79); */
 /* rgb(51, 18, 66) */
 /* red */
+
+/* #112825 */
 body{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
     scroll-behavior:smooth;

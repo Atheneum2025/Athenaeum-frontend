@@ -1,11 +1,11 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import axiosInstance from '../../utils/axios';
+import { useEffect, useState } from 'react'
 
 type SavedMaterialType = {
   _id: string;
   materialId: string;
 }
-export default function LikedVideos() {as
+export default function LikedVideos() {
 
   const [savedMaterials, setSavedMaterials] = useState<SavedMaterialType[]>([]);
 
@@ -13,7 +13,7 @@ export default function LikedVideos() {as
     const fetchData = async () => {
 
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/users/save`, {withCredentials: true})
+        const response = await axiosInstance.get(`/users/save`, {withCredentials: true})
         setSavedMaterials(response.data.savedMaterials);
       }
       catch (error) {

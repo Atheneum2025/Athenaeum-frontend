@@ -1,5 +1,5 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import axiosInstance from '../../utils/axios';
+import { useEffect, useState } from 'react'
 
 type User = { 
     _id: string;
@@ -15,7 +15,7 @@ export default function MyMaterial({_id}: User) {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/api/v1/material/${_id}`, {withCredentials: true})
+            const response = await axiosInstance.get(`/material/${_id}`, {withCredentials: true})
             setMaterialDetails(response.data.materials)
         } catch (error) {
             console.error(error)

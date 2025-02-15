@@ -1,55 +1,86 @@
 /* course , subject, unit, material page */
 
-.items_display_page{
-    padding: 2rem;
+.items_display_page {
+  padding: 2rem;
 }
 .items_display_header {
-    display: grid;
-    grid-template-columns: 3fr auto auto;
-    gap: 2rem;
+  display: grid;
+  grid-template-columns: 3fr auto auto;
+  gap: 2rem;
 }
 
 .item_filters {
-    display: grid;
-    align-content: space-between;
-    place-items: center;
+  display: grid;
+  align-content: space-between;
+  place-items: center;
 }
 
-.item_filters>div:first-child::after {
-    display: inline-block;
-    content: " ";
-    /* width: 10px; */
-    height: 2px;
-    /* background-color: green; */
-    border-top: 10px solid white;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
+.item_filters > div:first-child::after {
+  display: inline-block;
+  content: " ";
+  /* width: 10px; */
+  height: 2px;
+  /* background-color: green; */
+  border-top: 10px solid white;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
 }
 
-.item_filters>div:last-child {
-    display: flex;
-    gap: 10px;
+.item_filters > div:last-child {
+  display: flex;
+  gap: 10px;
 }
 
 .item_filters select {
-    border: 1px solid white;
-    outline: none;
-    border-radius: 2px;
+  border: none;
+  padding: 2px 4px;
+  background-color: var(--secondary-color);
+  color: white;
+  outline: none;
+  border-radius: 2px;
+}
+
+.item_filters select option {
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .pagination {
-    /* background-color: green; */
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    align-items: center;
+  /* background-color: green; */
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  align-items: center;
 }
 
 .pagination button {
-    padding: .5rem 1rem;
-    font-weight: 700;
-    font-size: 1rem;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.not_available_text {
+  color: var(--font-color);
+  width: 100%;
+  font-size: 3rem;
+  height: 75vh;
+  text-align: center;
+  align-content: center;
+}
+
+.secondary_item_card{
+  outline: 1px solid grey;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 100px;
+  margin-block: 2rem;
+  font-size: 2rem;
+
+  &:hover{
+    background-color: var(--secondary-color);
+    outline: none;
+  }
 }

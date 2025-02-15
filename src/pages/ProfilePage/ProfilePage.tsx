@@ -1,8 +1,6 @@
-import React, { useContext } from 'react'
-import AuthContext from '../../context/AuthContext';
-import AdminsDashboard from '../AdminsDashboard/AdminsDashboard';
-import ProfessorDashboard from '../ProfessorDashboard/ProfessorDashboard';
-import StudentDashboard from '../StudentDashboard/StudentDashboard';
+import AdminsDashboard from './AdminsDashboard/AdminsDashboard';
+import ProfessorDashboard from './ProfessorDashboard/ProfessorDashboard';
+import StudentDashboard from './StudentDashboard/StudentDashboard';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 
 export default function ProfilePage() {
@@ -17,7 +15,7 @@ export default function ProfilePage() {
                         {user.role === "admin" ? (
                             <AdminsDashboard user = {user} />
                         ) : user.role === "professor" ? (
-                            <ProfessorDashboard user = {user}/>
+                            <ProfessorDashboard user = {user} />
                         ) : user.role === "student" ? (
                             <StudentDashboard user = {user} />
                         ) : null}

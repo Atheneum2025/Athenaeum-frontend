@@ -1,6 +1,6 @@
 .material_main_layout{
     display: grid;
-    grid-template-columns: 232px 3fr;
+    grid-template-columns: 3fr 232px;
 }
 .sidebar{
     background-color: rgb(26, 26, 26);

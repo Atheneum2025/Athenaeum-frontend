@@ -1,0 +1,169 @@
+body {
+    font-family: sans-serif;
+    /* Choose a suitable font */
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    /* Black background */
+    color: #fff;
+    /* White text color */
+}
+
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-weight: bold;
+}
+
+.hero-section {
+    background-image: url("./athena.png");
+    background-size: 25% auto;
+    background-position: right 20%;
+    background-repeat: no-repeat;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    /* Stack content vertically */
+    align-items: left;
+    /* Align to the left */
+    justify-content: center;
+    /* Align to the top */
+    padding: 50px;
+    /* Adjust padding as needed */
+    z-index: 1000;
+}
+
+.hero-section>div {
+    width: 80%;
+    /* Adjust as needed */
+}
+
+.head-title {
+    font-size: 140px;
+    margin: 0;
+}
+
+.para {
+    color: #FFD700;
+    font-size: 20px;
+    margin: 20px 0;
+}
+
+.btn-container {
+    /* New container for the button */
+    margin-top: 30px;
+    /* Space between paragraph and button */
+}
+
+.btn {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #EEEEEE;
+    /* Or your preferred color */
+    color: gold;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    width: fit-content;
+}
+
+.btn:hover {
+    background-color: #DDDDDD;
+}
+
+.btn a {
+    color: inherit;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 15px 30px;
+}
+
+
+
+.section-2 {
+    padding: 100px 50px;
+    text-align: center;
+    background-image: url("./greek.png");
+    background-position: center;
+    background-size: 60%;
+    /* Reduced the size of the background image */
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.section-2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Dark overlay for better text visibility */
+    z-index: -1;
+}
+
+.section-2 div {
+    position: relative;
+    z-index: 1;
+    /* Ensure text is above the overlay */
+}
+
+.section-2 p {
+    font-size: 20px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #fff;
+    /* Ensure text is white */
+}
+
+/* Responsive Design (adjust as needed) */
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .hero-section>div {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .head-title {
+        font-size: 48px;
+    }
+
+    .para {
+        font-size: 16px;
+    }
+
+    .btn {
+        font-size: 16px;
+        padding: 12px 25px;
+    }
+
+    .section-2 {
+        padding: 50px 20px;
+        /* Adjust padding for smaller screens */
+    }
+
+    .section-2 p {
+        font-size: 16px;
+    }
+}

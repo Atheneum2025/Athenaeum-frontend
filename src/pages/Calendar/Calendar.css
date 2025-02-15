@@ -3,7 +3,6 @@
 }
 
 .fc {
-    background-color: var(--secondary-color);
     color: var(--font-color);
 }
 
@@ -17,7 +16,7 @@
 }
 
 .fc-daygrid-day:hover {
-    background-color: #ffcccb !important;
+    background-color: var(--secondary-color) !important;
 }
 
 /* Header customization */
@@ -32,7 +31,8 @@
 }
 
 .fc-button{
-    background-color: red;
+    background-color: green;
+
 }
 
 .fc-view-harness{

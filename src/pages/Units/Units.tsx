@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import '../Subjects/Subjects.css'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../utils/axios';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
 // import '../Courses/Courses.css';
@@ -12,7 +12,7 @@ type UnitType = {
   description: string;
 };
 
-export default function Unit() {
+export default function Units() {
   const { user, isAuthenticated } = getAuthenticatedUser();
 
   const location = useLocation();
@@ -48,7 +48,7 @@ export default function Unit() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const unitResponse = await axios(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`, { params: { page, limit: 5, sortBy, SortType } });
+      const unitResponse = await axiosInstance.get(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`, { params: { page, limit: 5, sortBy, SortType } });
       setUnitDetails(unitResponse.data.units);
       setTotalPages(unitResponse.data.totalPages)
       setLoading(false)
@@ -66,7 +66,7 @@ export default function Unit() {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`, { unitname, description, keywords }, { withCredentials: true });
+      const response = await axiosInstance.post(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`, { unitname, description, keywords }, { withCredentials: true });
       console.log("unit created", response.data);
       setFormIsVisible(false);
       fetchData();
@@ -80,7 +80,7 @@ export default function Unit() {
   const handleUpdate = async () => {
     try {
       console.log(selectedUnit?._id)
-      const update = await axios.patch(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { unitname, description, keywords }, { withCredentials: true });
+      const update = await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { unitname, description, keywords }, { withCredentials: true });
       console.log(update.data)
       alert("Unit updated successfully!");
       fetchData()
@@ -98,7 +98,7 @@ export default function Unit() {
     const confirmDelete = window.confirm("Are you sure you want to delete this course?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { withCredentials: true });
+        await axiosInstance.delete(`/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { withCredentials: true });
         alert("Course deleted successfully!");
         fetchData();
       } catch (error) {
@@ -162,42 +162,47 @@ export default function Unit() {
           </div>
         </div>
         {/* Display all the units in a subject */}
-        <div>
+        <div className="items_cards_list">
           {
             loading ? <Loader /> :
               <>
                 {
                   UnitDetails.length === 0 ? (
-                    <div>No Units Found</div>
+                    <div className='not_available_text'>No Units Found</div>
                   ) : (
-                    UnitDetails.map((unit: UnitType) => (
-                      <div key={unit._id} onClick={() => sendData(unit.unitname)}>
-                        <div>
-                          <div>{unit.unitname}</div>
-                        </div>
-                        <div className="course_details">
-                          <div className='course_name'>Unit Name: {unit.unitname}</div>
-                          <div className='course_description'>Description: {unit.description}</div>
-                        </div>
+                    <>
                         {
-                          user.role === "admin" && (
-                            <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedUnit(unit); e.stopPropagation() }} >Edit</div>
-                          )
+                          UnitDetails.map((unit: UnitType) => (
+                            <>
+                              <div className="secondary_item_card" key={unit._id} onClick={() => sendData(unit.unitname)}>
+                                <div className="course_details">
+                                  <div className='course_name'>Unit Name: {unit.unitname}</div>
+                                  <div className='course_description'>Description: {unit.description}</div>
+                                </div>
+                                {
+                                  user.role === "admin" && (
+                                    <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedUnit(unit); e.stopPropagation() }} >Edit</div>
+                                  )
+                                }
+                                {/* Pagination */}
+                              </div>
+
+                            </>
+                          ))
                         }
+                      <div className='pagination'>
+                        <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                          Prev
+                        </button>
+                        <span> Page {page} of {totalPages} </span>
+                        <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
+                          Next
+                        </button>
                       </div>
-                    ))
+                    </>
                   )
                 }
-                {/* Pagination */}
-                <div className='pagination'>
-                  <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-                    Prev
-                  </button>
-                  <span> Page {page} of {totalPages} </span>
-                  <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
-                    Next
-                  </button>
-                </div>
+
                 {selectedUnit && (
                   <div className="course_form">
                     <h3>Edit Course</h3>

@@ -1,7 +1,6 @@
-import React from 'react'
-import Header from "../../components/Header/Header"
+import Header from "../../components/Header/Header.tsx"
 import { Outlet } from 'react-router-dom'
-import Footer from '../../components/Footer/Footer'
+import Footer from '../../components/Footer/Footer.tsx'
 
 function MainLayout() {
   return (
@@ -9,7 +8,6 @@ function MainLayout() {
       <Header />
       <main>
         <Outlet />
-
       </main>
       <Footer />
     </>

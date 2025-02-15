@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import './Home.css'
 import AllUsers from "../../components/AllUsers/AllUsers";
+import { getAuthenticatedUser } from "../../utils/authUtils";
 
 // import Header from "../../components/Header/Header";
 // let right = document.getElementById('right');
@@ -21,6 +22,7 @@ type User = {
 }
 export default function Home() {
   // const {isAuthenticated, logout} = useContext(AuthContext);
+  const { isAuthenticated } = getAuthenticatedUser();
 
   const [scrollY, setScrollY] = useState<number>(0);
 
@@ -61,10 +63,17 @@ export default function Home() {
     <>
       <div className="hero">
         <div className="hero_text"
-          style={{opacity: `${disappear}`}}
+          style={{ opacity: `${disappear}` }}
         >
           <div className="hero_text_heading">ATHENAEUM</div>
           <p className="hero_text_para">"Unlock the power of wisdom and strategy - Learn like Athena".</p>
+          {
+            !isAuthenticated && (
+              <div className="hero_btns">
+                <button><a href="/login">Login</a></button>
+              </div>
+            )
+          }
         </div>
         <img className="hands left"
           style={{ transform: `translateY(-50%) translateX(${leftHandMovement}px)` }}

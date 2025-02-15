@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import '../Courses/Courses.css'
 import '../Subjects/Subjects.css'
-import axios from 'axios';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
@@ -13,9 +12,11 @@ type MaterialType = {
   materialname: string;
   description: string;
   isPublished: boolean;
+  fileType: string;
+  owner: string;
 };
 
-export default function Material() {
+export default function Materials() {
   const { user, isAuthenticated } = getAuthenticatedUser();
 
   const location = useLocation();
@@ -60,7 +61,7 @@ export default function Material() {
   const fetchData = async () => {
     setLoading(true)
     try {
-      const MaterialResponse = await axios(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`, { params: { page, limit: 5, sortBy, SortType } });
+      const MaterialResponse = await axiosInstance.get(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`, { params: { page, limit: 5, sortBy, SortType } });
 
       setMaterialDetails(MaterialResponse.data.materials);
       setTotalPages(MaterialResponse.data.totalPages);
@@ -104,7 +105,7 @@ export default function Material() {
     try {
       setUploading(true);
       setMessage("");
-      const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`, formData, {
+      const response = await axiosInstance.post(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material`, formData, {
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
@@ -128,7 +129,7 @@ export default function Material() {
   const handleUpdate = async () => {
     try {
       console.log(selectedMaterial?._id)
-      const update = await axios.patch(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { materialname, description, keywords }, { withCredentials: true });
+      const update = await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { materialname, description, keywords }, { withCredentials: true });
       console.log(update.data)
       alert("Unit updated successfully!");
       fetchData()
@@ -146,7 +147,7 @@ export default function Material() {
     const confirmDelete = window.confirm("Are you sure you want to delete this course?");
     if (confirmDelete) {
       try {
-        await axios.delete(`http://localhost:3000/api/v1/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { withCredentials: true });
+        await axiosInstance.delete(`/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { withCredentials: true });
         alert("Course deleted successfully!");
         fetchData();
       } catch (error) {
@@ -168,7 +169,7 @@ export default function Material() {
   const saveToViewLater = async (vLMaterialName: string) => {
 
     try {
-      const response = await axiosInstance.post(`http://localhost:3000/api/v1/viewLater/`, { vLMaterialName }, { withCredentials: true })
+      const response = await axiosInstance.post(`/viewLater/`, { vLMaterialName }, { withCredentials: true })
       setSidebarKey(prevKey => prevKey + 1);
       console.log(response)
       // setDroppedItems((prev) => [...prev, droppedItem]);
@@ -193,11 +194,6 @@ export default function Material() {
       <div className='title'>Subject Name - {subjectIdParameter}</div>
       <div className='title'>Unit Name - {unitIdParameter}</div>
       <div className='material_main_layout'>
-
-        <div className='viewLaterSidebar' onDragOver={(e) => e.preventDefault()}
-          onDrop={handleDrop}>
-          <UserSidebar key={sidebarKey} />
-        </div>
 
         <div className='items_display_page'>
           <div className="items_display_header">
@@ -259,50 +255,52 @@ export default function Material() {
           </div>
           {/* Display all the materials in a unit */}
 
-          <div>
+          <div className="items_cards_list" >
             {
               loading ? <Loader /> :
                 <>
                   {
                     materialDetails.length === 0 ? (
-                      <div>No Materials Found</div>
+                      <div className='not_available_text'>No Materials Found</div>
                     ) : (
-                      materialDetails
-                        .filter((material: MaterialType) => material.isPublished === true)
-                        .map((material: MaterialType) => (
-                          <div key={material._id} onClick={() => sendData(material._id)} draggable={true} onDragStart={(e) => handleDragStart(e, material)}>
-                            <div>
-                              <div>{material.materialname}</div>
-                            </div>
-                            <div className="course_details">
-                              <div className='course_name'>Material Name: {material.materialname}</div>
-                              <div className='course_description'>Description: {material.description}</div>
-                              <div className="course_like">Liked</div>
-                            </div>
-                            {
-                              user && (
-                                <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >Save</div>
-                              )
-                            }
-                            {
-                              user.role === "admin" && (
-                                <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedMaterial(material); e.stopPropagation() }} >Edit</div>
-                              )
-                            }
-                          </div>
-                        ))
+                      <>
+                          {
+                            materialDetails
+                              .filter((material: MaterialType) => material.isPublished === true)
+                              .map((material: MaterialType) => (
+                                <div className='secondary_item_card' key={material._id} onClick={() => sendData(material._id)} draggable={true} onDragStart={(e) => handleDragStart(e, material)}>
+                                  <div className="course_details">
+                                    <div className='course_name'>Material Name: {material.materialname}</div>
+                                    <div className='course_description'>Description: {material.description}</div>
+                                    <div className="course_like">Material Type: {material.fileType}</div>
+                                  </div>
+                                  {
+                                    user && (
+                                      <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >Save</div>
+                                    )
+                                  }
+                                  {
+                                    user.role === "admin" && (
+                                      <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedMaterial(material); e.stopPropagation() }} >Edit</div>
+                                    )
+                                  }
+                                </div>
+                              ))
+                          }
+                        {/* Pagination */}
+                        <div className='pagination'>
+                          <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                            Prev
+                          </button>
+                          <span> Page {page} of {totalPages} </span>
+                          <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
+                            Next
+                          </button>
+                        </div>
+                      </>
                     )
                   }
-                  {/* Pagination */}
-                  <div className='pagination'>
-                    <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-                      Prev
-                    </button>
-                    <span> Page {page} of {totalPages} </span>
-                    <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>
-                      Next
-                    </button>
-                  </div>
+
                   {selectedMaterial && (
                     <div className="course_form">
                       <h3>Edit Course</h3>
@@ -335,6 +333,11 @@ export default function Material() {
                 </>
             }
           </div>
+        </div>
+
+        <div className='viewLaterSidebar' onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}>
+          <UserSidebar key={sidebarKey} />
         </div>
 
         {/* <div>Browse More Materials</div> */}

@@ -1,5 +1,4 @@
 import header from "./Header.module.css";
-import '../../../public/globals.css';
 import AuthContext from "../../context/AuthContext.tsx";
 import { getAuthenticatedUser } from "../../utils/authUtils.ts";
 import { useContext, useRef, useState } from "react";
@@ -13,13 +12,6 @@ export default function Header() {
 
   const { logout } = useContext(AuthContext);
   const { user, isAuthenticated } = getAuthenticatedUser();
-  // const { isAuthenticated, logout } = useContext(AuthContext);
-  // console.log(isAuthenticated);
-  // const authToken = localStorage.getItem("authToken");
-  // let parsedToken
-  // authToken ? parsedToken = JSON.parse(authToken) : parsedToken = null;
-  // const user = parsedToken?.user;
-  // console.log(user?.username);
 
   const [sidebarIsVisible, setSidebarIsVisible] = useState<boolean>(false);
   const [profileOptionsVisible, setProfileOptionsVisible] = useState<boolean>(false);
@@ -85,7 +77,7 @@ export default function Header() {
 
           {/* <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)} ref={profileButtonRef}> */}
           <div className={header.profile_avatar} onClick={() => setProfileOptionsVisible(!profileOptionsVisible)} >
-            <img src="User.png" alt="" />
+            <img src=".\src\assets\User.png" alt="user_avatar" />
           </div>
           {profileOptionsVisible &&
             <div className={header.profile_avatar_options} >
@@ -98,11 +90,16 @@ export default function Header() {
 
               </div>
               {!isAuthenticated ? (
-                <Link to={'/login'}>Login</Link>
+                <div>
+                  <Link to={'/login'}>Login</Link>
+                </div>
               ) : (
                 <>
                   <div>
                     <Link to={'/notifications'}>Notifications</Link>
+                  </div>
+                  <div>
+                    <Link to={'/calendar'}>Calendar</Link>
                   </div>
                   <div>
                     <Link onClick={logout} to={'/login'}>Logout</Link>

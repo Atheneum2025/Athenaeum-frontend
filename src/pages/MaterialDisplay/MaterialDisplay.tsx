@@ -1,11 +1,9 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
-import { data, useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 
-// interface VideoDisplayProps {
-//     url: string;
-// }
+
 type VideoType = {
   material: any;
   _id: string;
@@ -13,7 +11,7 @@ type VideoType = {
   url: string;
   fileType: string;
 }
-const VideoPlayer = () => {
+const MaterialDisplay = () => {
   const location = useLocation();
   const subjectName = location.state?.subjectName;
   const courseName = location.state?.courseName;
@@ -37,7 +35,6 @@ const VideoPlayer = () => {
         const url = await axios.get<VideoType>(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialIdParameter}/`, { withCredentials: true });
 
         setMaterialUrl(url.data);
-        console.log(url.data.material._id)
       }
       catch (error) {
         console.error(error);
@@ -50,13 +47,12 @@ const VideoPlayer = () => {
   const saveMaterial = async () => {
     try {
       const response = await axios.post(`http://localhost:3000/api/v1/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialIdParameter}/save/`, {}, { withCredentials: true });
-      console.log(response)
     } catch (error) {
       console.error(error)
     }
   }
 
-  
+
   // console.log(materialUrl)
   return (
     <>
@@ -64,7 +60,6 @@ const VideoPlayer = () => {
         materialUrl?.material.fileType === 'raw' ? (
           <>
             <div>Material Name : {materialUrl?.material.materialname}</div>
-            <div>{materialUrl?.material._id}</div>
             <div>Description : {materialUrl?.material.description}</div>
             <div>Uploaded By : {materialUrl?.material.owner}</div>
             <div>{materialUrl?.material.fileType}</div>
@@ -87,13 +82,16 @@ const VideoPlayer = () => {
                 height="300px"
                 controls={true}
               />
-                <div>Material Name : {materialUrl?.material.materialname}</div>
-                <div>{materialUrl?.material._id}</div>
-                <div>Description : {materialUrl?.material.description}</div>
-                <div>Uploaded By : {materialUrl?.material.owner}</div>
-                <div>{materialUrl?.material.fileType}</div>
+              <div>Material Name : {materialUrl?.material.materialname}</div>
+              <div>{materialUrl?.material._id}</div>
+              <div>Description : {materialUrl?.material.description}</div>
+              <div>Uploaded By : {materialUrl?.material.owner}</div>
+              <div>{materialUrl?.material.fileType}</div>
 
-              <button onClick={() => saveMaterial()} >Save Material</button>
+              <button onClick={() => saveMaterial()} >
+                {/* <img src=".\src\assets\ThumbsUp.png" alt="like" /> */}
+                Save
+              </button>
             </div>
           </div>
         )
@@ -103,4 +101,4 @@ const VideoPlayer = () => {
   );
 };
 
-export default VideoPlayer;
+export default MaterialDisplay;
