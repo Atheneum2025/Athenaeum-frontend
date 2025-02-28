@@ -5,6 +5,9 @@ import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../utils/axios.js';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
+import AddImage from '../../assets/add.png';
+import EditComponent from '../../components/EditComponent/EditComponent.js';
+import Bottom_Line_Image from "../../assets/bottom_line_cropped.png"
 
 type CourseType = {
     _id: string;
@@ -42,7 +45,7 @@ export default function Courses() {
     const fetchData = async () => {
         setLoading(true)
         try {
-            const CourseResponse = await axiosInstance.get("/course/", { withCredentials: true, params: { page, limit: 5, sortBy, SortType } });
+            const CourseResponse = await axiosInstance.get("/course/", { withCredentials: true, params: { page, limit: 8, sortBy, SortType } });
 
             setCourseDetail(CourseResponse.data.courses);
             setLoading(false)
@@ -117,25 +120,39 @@ export default function Courses() {
                     {/* Get List of all Courses */}
                     {
                         isAuthenticated && (
-                            user.role === "admin" && (
+                            user?.role === "admin" && (
                                 <>
-                                    <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>
-                                        <div>+</div>
+                                    <button className='add_btn' onClick={() => setFormIsVisible(true)}>
+                                        <img src={AddImage} alt="" />
                                         <div>Add New Course</div>
                                     </button>
                                     {
                                         formIsVisible && (
-                                            <div className="form-for-adding-new">
-                                                <form action="" onSubmit={handleSubmit}>
-                                                    <label htmlFor="file">Enter a Course Name</label>
-                                                    <input type="text" id='file-name' value={coursename} onChange={(e) => setCoursename(e.target.value)} />
-                                                    <label htmlFor="file">ENter Description</label>
-                                                    <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                                                    <label htmlFor="keywords">Enter Keywords</label>
-                                                    <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
-                                                    <button type='submit'>Save</button>
-                                                    <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                                                </form>
+                                            <div className="add_new_material">
+                                                <div className='add_new_material_form'>
+                                                    <form action="" onSubmit={handleSubmit}>
+                                                        <div className="add_new_material_form_header">
+                                                            <h2>Create New Course</h2>
+                                                            <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
+                                                        </div>
+                                                        <div className="form_field">
+                                                            <label htmlFor="file">Enter a Course Name</label>
+                                                            <input type="text" id='file-name' value={coursename} onChange={(e) => setCoursename(e.target.value)} />
+                                                        </div>
+                                                        <div className="form_field">
+                                                            <label htmlFor="file">ENter Description</label>
+                                                            <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                                                        </div>
+                                                        <div className="form_field">
+                                                            <label htmlFor="keywords">Enter Keywords</label>
+                                                            <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                                                        </div>
+                                                        <div className="upload_btns">
+                                                            <button type="button" onClick={() => setFormIsVisible(false)}>Cancel</button>
+                                                            <button type="submit">Create Course</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         )
                                     }
@@ -145,7 +162,7 @@ export default function Courses() {
                     }
                     <div className='item_filters'>
                         <div>Filter  </div>
-                        <div>
+                        {/* <div>
                             <select onChange={(e) => setSortBy(e.target.value)}>
                                 <option value="createdAt">Newest First</option>
                                 <option value="coursename">Course Name</option>
@@ -154,7 +171,7 @@ export default function Courses() {
                                 <option value="-1">Descending</option>
                                 <option value="1">Ascending</option>
                             </select>
-                        </div>
+                        </div> */}
                     </div>
 
 
@@ -170,29 +187,35 @@ export default function Courses() {
                                     <div className='not_available_text'>No Courses Available</div>
                                 ) : (
                                     <>
-                                        {
-                                            courseDetail.map((course: CourseType) => (
+                                        <div className="course_layout">
 
-                                                <div key={course._id} className="item_card">
-                                                    <div className="item_avatar">
-                                                        <div>{course.coursename}</div>
+                                            {
+                                                courseDetail.map((course: CourseType, index) => (
+
+                                                    <div key={index} className="item_card">
+                                                        {/* <div className="item_avatar" style={{ background: `linear-gradient(to right,  hsl(${index * 40}, 80%, 60%), hsl(${(index * 60) % 360}, 70%, 50%))` }}> */}
+                                                        <div className="item_avatar">
+                                                            <div>{course.coursename}</div>
+                                                        </div>
+                                                        <div className="item_details" onClick={() => sendData(course.coursename)} >
+                                                            <div className='item_name'>Course Name: {course.coursename}</div>
+                                                            <div className='item_description'>Description: {course.description}</div>
+
+                                                        </div>
+                                                        {
+                                                            user?.role === "admin" && (
+                                                                <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >
+                                                                    <EditComponent />
+                                                                </div>
+                                                            )
+                                                        }
+
                                                     </div>
-                                                    <div className="item_details" onClick={() => sendData(course.coursename)} >
-                                                        <div className='item_name'>Course Name: {course.coursename}</div>
-                                                        <div className='item_description'>Description: {course.description}</div>
-
-                                                    </div>
-                                                    {
-                                                        user.role === "admin" && (
-                                                            <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >Edit</div>
-                                                        )
-                                                    }
-
-                                                </div>
 
 
-                                            ))
-                                        }
+                                                ))
+                                            }
+                                        </div>
                                         {/* Pagination */}
                                         <div className='pagination'>
                                             <button disabled={page === 1} onClick={() => setPage(page - 1)}>
@@ -206,6 +229,9 @@ export default function Courses() {
                                     </>
                                 )}
 
+<div className="bottom_line">
+    <img src={Bottom_Line_Image} alt="" />
+</div>
                                 {selectedCourse && (
                                     <div className="course_form">
                                         <h3>Edit Course</h3>

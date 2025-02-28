@@ -3,6 +3,9 @@ import AuthContext from "../../context/AuthContext";
 import './Home.css'
 import AllUsers from "../../components/AllUsers/AllUsers";
 import { getAuthenticatedUser } from "../../utils/authUtils";
+import HeroImage from "../../assets/athena.png";
+import Left_Hand_Image from "../../assets/left_hand.png";
+import Right_Hand_Image from "../../assets/right_hand.png";
 
 // import Header from "../../components/Header/Header";
 // let right = document.getElementById('right');
@@ -66,22 +69,23 @@ export default function Home() {
           style={{ opacity: `${disappear}` }}
         >
           <div className="hero_text_heading">ATHENAEUM</div>
-          <p className="hero_text_para">"Unlock the power of wisdom and strategy - Learn like Athena".</p>
+          <p className="hero_text_para">"Athenaeum - where knowledge meets wisdom"</p>
           {
             !isAuthenticated && (
               <div className="hero_btns">
-                <button><a href="/login">Login</a></button>
+                <button><a href="/login">Sign In</a></button>
+                <button><a href="/login">Sign Up</a></button>
               </div>
             )
           }
         </div>
         <img className="hands left"
-          style={{ transform: `translateY(-50%) translateX(${leftHandMovement}px)` }}
-          id="left" src="..\src\assets\left_hand.png" alt="" />
-        <img className="middle_hero" src="..\src\assets\middle_one.png" alt="" />
+          style={{ transform: ` translateY(-50%) translateX(${leftHandMovement}px)` }}
+          id="left" src={Left_Hand_Image} alt="" />
+        <img className="middle_hero" src={HeroImage} alt="" />
         <img className="hands right"
           style={{ transform: `translateY(-50%) translateX(${rightHandMovement}px)` }}
-          id="right" src="..\src\assets\right_hand.png" alt="" />
+          id="right" src={Right_Hand_Image} alt="" />
       </div>
 
       {/* <div>
@@ -99,12 +103,7 @@ export default function Home() {
           ))}
         </div>
       </div> */}
-      <AllUsers role={"professors"} />
-      <h1>
-        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Non ut dicta, aut sequi doloremque aliquid animi totam quibusdam nobis quis sed unde accusantium facere maxime rem delectus fugiat possimus illo consequatur exercitationem laboriosam quo facilis? Ipsa dignissimos aliquid neque, deleniti recusandae dolores? Voluptatem dolores alias quod natus exercitationem expedita officiis modi beatae? Ipsam deserunt nihil fugit necessitatibus quis. Velit quidem reiciendis soluta totam ducimus, tempora distinctio. Accusantium impedit minima nihil dicta porro dignissimos in! Necessitatibus fuga cum iste! Aspernatur quos ea possimus? Omnis quaerat est voluptatem reiciendis nam tempora.
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima laboriosam, magni sed facere similique vero delectus possimus neque animi sit voluptatem. Nam tenetur excepturi pariatur veritatis vel minus eos quaerat voluptate, iste expedita facilis quibusdam, blanditiis, id voluptatibus vitae? Voluptatibus ipsum itaque eius atque ratione.
-        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Porro recusandae delectus in quo accusantium alias, magnam mollitia quia eligendi. Beatae tenetur excepturi non qui sit. Sint error eius quis, ex aut alias? Maxime officia eum quis quod repellat, dolores ipsa, ex sed itaque, quidem quisquam.
-      </h1>
+      {/* <AllUsers role={"professors"} /> */}
     </>
   )
 }

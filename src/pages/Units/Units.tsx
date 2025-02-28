@@ -4,7 +4,8 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import axiosInstance from '../../utils/axios';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
-// import '../Courses/Courses.css';
+import AddImage from '../../assets/add.png';
+import EditComponent from '../../components/EditComponent/EditComponent';
 
 type UnitType = {
   _id: string;
@@ -115,8 +116,8 @@ export default function Units() {
   return (
     <>
 
-      <div className='title'>Course : {courseIdParameter}</div>
-      <div className='title'>Subject : {subjectIdParameter}</div>
+      <div className='title' onClick={() => { navigate(`/course/`) }}>Course Name : {courseIdParameter}</div>
+      <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject`) }}>Subject Name : {subjectIdParameter}</div>
       <div className='items_display_page'>
         <div className='items_display_header'>
 
@@ -126,20 +127,40 @@ export default function Units() {
             isAuthenticated && (
               user.role === "admin" && (
                 <>
-                  <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Unit</button>
+                  <button className='add_btn' onClick={() => setFormIsVisible(true)}>
+                    <img src={AddImage} alt="" />
+                    <div>Add New Unit</div>
+                  </button>
                   {
                     formIsVisible && (
-                      <div className="form-for-adding-new">
-                        <form action="" onSubmit={handleSubmit}>
-                          <label htmlFor="file">ENter a Unit Name</label>
-                          <input type="text" id='file-name' value={unitname} onChange={(e) => setUnitname(e.target.value)} />
-                          <label htmlFor="file">ENter Description</label>
-                          <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                          <label htmlFor="keywords">Enter Keywords</label>
-                          <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
-                          <button type='submit' >Save</button>
-                          <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                        </form>
+                      <div className="add_new_material">
+                        <div className='add_new_material_form'>
+
+                          <form action="" onSubmit={handleSubmit}>
+                            <div className="add_new_material_form_header">
+                              <h2>Create New Unit</h2>
+                              <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
+                            </div>
+                            <div className="form_field">
+                              <label htmlFor="file">ENter a Unit Name</label>
+                              <input type="text" id='file-name' value={unitname} onChange={(e) => setUnitname(e.target.value)} />
+                            </div>
+                            <div className="form_field">
+                              <label htmlFor="file">ENter Description</label>
+                              <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                            </div>
+                            <div className="form_field">
+                              <label htmlFor="keywords">Enter Keywords</label>
+                              <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                            </div>
+                            <div className="upload_btns">
+                              <button type="button" onClick={() => setFormIsVisible(false)}>Cancel</button>
+                              <button type="submit">Create Course</button>
+                            </div>
+                            {/* <button type='submit' >Save</button>
+                          <button onClick={() => setFormIsVisible(false)}>Cancel</button> */}
+                          </form>
+                        </div>
                       </div>
                     )
                   }
@@ -149,7 +170,7 @@ export default function Units() {
           }
           <div className='item_filters'>
             <div>Filter  </div>
-            <div>
+            {/* <div>
               <select onChange={(e) => setSortBy(e.target.value)}>
                 <option value="createdAt">Newest First</option>
                 <option value="unitname">Unit Name</option>
@@ -158,7 +179,7 @@ export default function Units() {
                 <option value="-1">Descending</option>
                 <option value="1">Ascending</option>
               </select>
-            </div>
+            </div> */}
           </div>
         </div>
         {/* Display all the units in a subject */}
@@ -171,25 +192,28 @@ export default function Units() {
                     <div className='not_available_text'>No Units Found</div>
                   ) : (
                     <>
-                        {
-                          UnitDetails.map((unit: UnitType) => (
-                            <>
-                              <div className="secondary_item_card" key={unit._id} onClick={() => sendData(unit.unitname)}>
-                                <div className="course_details">
-                                  <div className='course_name'>Unit Name: {unit.unitname}</div>
-                                  <div className='course_description'>Description: {unit.description}</div>
-                                </div>
-                                {
-                                  user.role === "admin" && (
-                                    <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedUnit(unit); e.stopPropagation() }} >Edit</div>
-                                  )
-                                }
-                                {/* Pagination */}
+                      {
+                        UnitDetails.map((unit: UnitType, index) => (
+                          <>
+                            <div className="secondary_item_card" key={index} onClick={() => sendData(unit.unitname)}>
+                              <div className="index">{index+1}.</div>
+                              <div className="item_details">
+                                <div className="item_name">Unit Name: {unit.unitname}</div>
+                                <div className="item_description">Description: {unit.description}</div>
                               </div>
+                              {
+                                user.role === "admin" && (
+                                  <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedUnit(unit); e.stopPropagation() }} >
+                                    <EditComponent/>
+                                  </div>
+                                )
+                              }
+                              {/* Pagination */}
+                            </div>
 
-                            </>
-                          ))
-                        }
+                          </>
+                        ))
+                      }
                       <div className='pagination'>
                         <button disabled={page === 1} onClick={() => setPage(page - 1)}>
                           Prev
@@ -231,7 +255,6 @@ export default function Units() {
                     </button>
                   </div>
                 )}
-                <div>hello</div>
               </>
           }
         </div>

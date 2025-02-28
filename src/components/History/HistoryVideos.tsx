@@ -1,5 +1,7 @@
 import axiosInstance from '../../utils/axios';
 import { useEffect, useState } from 'react'
+import Delete_Light_Image from '../../assets/light_theme/delete.png';
+import Delete_Dark_Image from '../../assets/dark_theme/delete.png';
 
 type HistoryType = {
   MaterialName: string;
@@ -25,10 +27,9 @@ export default function HistoryVideos() {
     fetchData();
   }, []);
 
-  console.log(history)
   const deleteHistory = async () => {
     try {
-      const response = await axiosInstance.delete(`/users/delete-history`, {withCredentials: true});
+      const response = await axiosInstance.delete(`/users/delete-history`, { withCredentials: true });
       console.log('history deleted', response)
       fetchData();
     }
@@ -39,21 +40,30 @@ export default function HistoryVideos() {
 
   return (
     <>
-      <div>All User History Material</div>
-      <button onClick={() => deleteHistory()} >Delete History</button>
-      <div className='liked_materials'>
+      <div style={{display: "flex", justifyContent: "space-between"}}>
+        <div>User History</div>
+        <button onClick={() => deleteHistory()} className="delete_history_btn" >
+          <img src={Delete_Light_Image} alt="" />
+          {/* <img src={Delete_Dark_Image} alt="" /> */}
+          <div>Delete History</div>
+        </button>
+      </div>
+      <div className="option_material_header" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
+        <div>Material Name</div>
+        <div>Uploader</div>
+      </div>
+      <div className='option_materials'>
         {
           history.map((history: HistoryType, index) => (
-            <div className="liked_material_card" key={index}>
-              <div className="liked_material_details">
+            <div className="option_material_card" key={index}>
+              <div className="option_material_details" style={{gridTemplateColumns: "repeat(2, 1fr)"}}>
                 <div className="liked_material_name">{history.MaterialName}</div>
                 <div className='uploaded_by'>{history.user}</div>
               </div>
             </div>
-
           ))
         }
-        
+
       </div>
     </>
   )

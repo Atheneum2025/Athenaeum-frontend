@@ -1,11 +1,17 @@
 import { useEffect, useState } from 'react';
 import './UserSidebar.css'
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../../utils/axios';
 import Loader from '../../Loader/Loader';
+import Delete_Light_Image from '../../../assets/light_theme/delete.png';
+import Delete_Dark_Image from '../../../assets/dark_theme/delete.png';
+import { getAuthenticatedUser } from '../../../utils/authUtils';
+import { useTheme } from "../../../context/ThemeContext.tsx";
+
+
 type ViewLaterType = {
     _id: string;
-    materialName: string;
+    materialname: string;
+    materialId: string;
 };
 
 type MaterialType = {
@@ -19,26 +25,29 @@ type MaterialType = {
 };
 export default function UserSidebar() {
 
+    const { theme } = useTheme();
+    const { user, isAuthenticated } = getAuthenticatedUser();
+
     const [viewLater, setViewLater] = useState<ViewLaterType[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     // const navigate = useNavigate();
 
 
+    const fetchData = async () => {
+        setLoading(true)
+        try {
+            const response = await axiosInstance.get("/viewLater/", { withCredentials: true });
+            setViewLater(response.data.allMaterials)
+            setLoading(false);
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
     useEffect(() => {
 
-        const fetchdata = async () => {
-            setLoading(true)
-            try {
-                const response = await axios.get("http://localhost:3000/api/v1/viewLater/", { withCredentials: true });
-                setViewLater(response.data.allMaterials)
-                setLoading(false);
-            }
-            catch (error) {
-                console.error(error);
-            }
-        }
+        fetchData();
 
-        fetchdata();
     }, []);
     console.log(viewLater)
 
@@ -46,10 +55,11 @@ export default function UserSidebar() {
         console.log(materialId);
 
         try {
-            const response = await axios.delete(`http://localhost:3000/api/v1/viewLater/${materialId}`, {
+            const response = await axiosInstance.delete(`/viewLater/${materialId}`, {
                 withCredentials: true,
             });
             console.log(response);
+            fetchData();
         } catch (error) {
             console.error("Error removing material", error);
         }
@@ -61,24 +71,32 @@ export default function UserSidebar() {
     return (
 
         <>
-            <div id='sidebar' className="sidebar">
-                <div>View Later</div>
-                {
-                    loading ? <Loader /> :
-                        <>
+            {
+                isAuthenticated && (
+                    <div id='sidebar' className="sidebar">
+                        <div className="viewLater_text">View Later :</div>
+                        {
+                            loading ? <Loader /> :
+                                <>
+                                    {viewLater.map((viewLater: ViewLaterType) => (
+                                        <div key={viewLater._id} className="viewLater_card" >
+                                            <div>
+                                                <div className='viewLater_name'>Material Name: {viewLater.materialname}</div>
+                                                <div>/course/subject/unit</div>
+                                            </div>
+                                            <div className='delete_viewLater' onClick={() => { removeFromViewLater(viewLater.materialId) }}>
+                                                <img src={theme === "light" ? Delete_Light_Image : Delete_Dark_Image} alt="" />
+                                                {/* <img src={Delete_Dark_Image} alt="" /> */}
+                                            </div>
+                                        </div>
+                                    ))}
 
-                            {viewLater.map((viewLater: ViewLaterType) => (
-                                <div key={viewLater._id} className="viewLater_card" >
-                                    <div>
-                                        <div className='viewLater_name'>Material Name: {viewLater.materialName}</div>
-                                        <div>/course/subject/unit</div>
-                                    </div>
-                                    <div onClick={() => { removeFromViewLater(viewLater.materialName) }}>D</div>
-                                </div>
-                            ))}
-                        </>
-                }
-            </div>
+                                    {/* <div>Completed {user.viewCount} out of {viewLater.length}</div> */}
+                                </>
+                        }
+                    </div>
+                )
+            }
 
         </>
     )

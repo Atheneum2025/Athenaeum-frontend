@@ -1,13 +1,16 @@
 import React, { useState } from "react";
-import LikedVideos from "../../../components/LikedVideos/LikedVideos";
+import SavedMaterials from "../../../components/SavedMaterials/SavedMaterials.tsx";
 import HistoryVideos from "../../../components/History/HistoryVideos";
 import MyMaterial from "../../../components/MyMaterial/MyMaterial.tsx"
 import AllUsers from "../../../components/AllUsers/AllUsers";
 import AdminAnalytics from "../../../components/Analytics/AdminAnalytics";
 import axiosInstance from "../../../utils/axios.ts";
 import '../ProfilePage.css'
-
-interface AdmintDashboardProps {
+import AddImage from '../../../assets/add.png';
+import User_Light_Image from '../../../assets/light_theme/user.png';
+import User_Dark_Image from '../../../assets/dark_theme/user.png';
+import { useTheme } from "../../../context/ThemeContext.tsx";
+interface AdminDashboardProps {
   user: {
     _id: string;
     username: string;
@@ -15,8 +18,9 @@ interface AdmintDashboardProps {
     role: string;
   };
 }
-function AdminsDashboard({user}: AdmintDashboardProps) {
+function AdminsDashboard({ user }: AdminDashboardProps) {
 
+  const {theme} = useTheme();
   const [activePage, setActivePage] = useState<number>(1);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [materialname, setMaterialname] = useState<string>("")
@@ -47,60 +51,93 @@ function AdminsDashboard({user}: AdmintDashboardProps) {
       <div className="user_profile">
         <h1>Welcome {user.role}</h1>
         <div className='user_avatar'>
-          <img src="" alt="" />
+          <img src={theme === "light" ? User_Light_Image : User_Dark_Image} alt="" />
           <div>{user.username}</div>
         </div>
         <div className="user_details">
           <div>Email : {user.email}</div>
-          <div>Id : {user._id}</div>
         </div>
       </div>
 
-      <div className='form_for_adding'>
-        <div>update profile details</div>
-        <form action="">
-          <label htmlFor="first_name">Edit First Name</label>
-          <input type="text" id="first_name" />
-          <label htmlFor="last_name">Edit Last Name</label>
-          <input type="text" id="last_name" />
-
-          <button type='submit'>Update Info</button>
-        </form>
-      </div>
-      <div>
-        <button className='add-btn' id='btn' onClick={() => setIsVisible(true)}>Add New Material</button>
+      <div className="user_profile_middle_section">
+        <button className='add_btn' id='btn' onClick={() => setIsVisible(true)}>
+          <img src={AddImage} alt="" />
+          <div>Add New Material</div>
+        </button>
         {
           isVisible && (
-            <div className="form-for-adding-new">
-              <form action="" onSubmit={handleSubmit}>
-                <select name="" id="">
-                  <option value="">Course</option>
-                  <option value="">BCA</option>
-                  <option value="">BBA</option>
-                  <option value="">BA</option>
-                </select>
-                <select name="" id="">
-                  <option value="">Subject</option>
-                  <option value="">PSPC</option>
-                  <option value="">DSA</option>
-                  <option value="">DM</option>
-                </select>
-                <select name="" id="">
-                  <option value="">Unit</option>
-                  <option value="">Unit 1</option>
-                  <option value="">Unit 2</option>
-                  <option value="">Unit 3</option>
-                </select>
-                <label htmlFor="file">ENter a Material Name</label>
-                <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
-                <label htmlFor="file">ENter Description</label>
-                <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                <label htmlFor="file">Upload a file</label>
-                <input type="file" />
+            <div className="add_new_material">
+              <div className="add_new_material_form">
+                <form action="" onSubmit={handleSubmit}>
+                  <div className="add_new_material_form_header">
+                    <h2>Upload New Material</h2>
+                    <button type="button" onClick={() => { setIsVisible(false) }}>✕</button>
+                  </div>
+                  <div className="form_field">
+                    <label >Material Name</label>
+                    <input
+                      type="text"
+                      // value={materialname}
+                      // onChange={(e) => setMaterialname(e.target.value)}
+                      className=""
+                      placeholder="Enter material name"
+                    />
+                  </div>
+                  <div className="form_field">
+                    <label>Description</label>
+                    <textarea
+                      // value={description}
+                      // onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Add description..."
+                      rows={3}
+                    />
+                  </div>
+                  <div className="upload_section">
+                    <label>Upload File</label>
+                    <div className="">
+                      <label className="">
+                        <span className="text-gray-400 mb-2">
+                          <svg
+                            className="w-8 h-8"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                            />
+                          </svg>
+                        </span>
+                        <span>Click to upload or drag and drop</span>
+                        <input
+                          type="file"
+                          className="hidden"
+                        // onChange={(e) => console.log(e.target.files[0])}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  <div className="form_field">
+                    <label>Keywords</label>
+                    <input
+                      type="text"
+                      // value={description}
+                      // onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Add keywords..."
+                    />
+                  </div>
+                  <div className="upload_btns">
+                    <button type="button" onClick={() => setIsVisible(false)}>Cancel</button>
+                    <button type="submit">Upload Material</button>
+                  </div>
 
-                <button type='submit'>Save</button>
-                <button onClick={() => setIsVisible(false)}>Cancel</button>
-              </form>
+                  {/* <button type='submit' onClick={() => setIsVisible(false)}>Save</button>
+                                <button onClick={() => setIsVisible(false)}>Cancel</button> */}
+                </form>
+              </div>
             </div>
           )
         }
@@ -116,10 +153,22 @@ function AdminsDashboard({user}: AdmintDashboardProps) {
       <div className='user_profile_options_display'>
         <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
           {/* list of professors */}
+          <div>All Professors</div>
+          <div className="option_material_header">
+            <div>Name</div>
+            <div>Role</div>
+            <div>Status</div>
+          </div>
           <AllUsers role={"professors"} />
         </div>
         <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
           {/* list of students */}
+          <div>All Students</div>
+          <div className="option_material_header">
+            <div>Name</div>
+            <div>Role</div>
+            <div>Status</div>
+          </div>
           <AllUsers role={"students"} />
 
         </div>
@@ -132,7 +181,7 @@ function AdminsDashboard({user}: AdmintDashboardProps) {
         </div>
         <div id='5' className={`options_page ${activePage === 5 ? "active" : ""}`}>
           {/* <MyMaterial /> */}
-          <AdminAnalytics/>
+          <AdminAnalytics />
         </div>
       </div>
     </>

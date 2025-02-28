@@ -5,6 +5,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axiosInstance from '../../utils/axios';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
+import AddImage from '../../assets/add.png';
+import EditComponent from '../../components/EditComponent/EditComponent';
 
 type SubjectType = {
   _id: string;
@@ -123,7 +125,7 @@ export default function Subjects() {
   return (
 
     <>
-      <div className='title'>Course : {courseIdParameter}</div>
+      <div className='title' onClick={()=>{navigate(`/course/`)}} >Course Name : {courseIdParameter}</div>
       <div className='items_display_page'>
         <div className="items_display_header">
           <h1>Subjects :</h1>
@@ -132,23 +134,39 @@ export default function Subjects() {
             isAuthenticated && (
               user.role === "admin" && (
                 <>
-                  <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>
-                    <div>+</div>
+                  <button className='add_btn' onClick={() => setFormIsVisible(true)}>
+                    <img src={AddImage} alt="" />
                     <div>Add New Subject</div>
                   </button>
                   {
                     formIsVisible && (
-                      <div className="form-for-adding-new">
-                        <form action="" onSubmit={handleSubmit}>
-                          <label htmlFor="file">Enter a Subject Name</label>
-                          <input type="text" id='file-name' value={subjectname} onChange={(e) => setSubjectname(e.target.value)} />
-                          <label htmlFor="file">ENter Description</label>
-                          <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                          <label htmlFor="keywords">Enter Keywords</label>
-                          <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
-                          <button type='submit'>Save</button>
-                          <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                        </form>
+                      <div className="add_new_material">
+                        <div className='add_new_material_form'>
+                          <form action="" onSubmit={handleSubmit}>
+                            <div className="add_new_material_form_header">
+                              <h2>Create New Subject</h2>
+                              <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
+                            </div>
+                            <div className="form_field">
+                              <label htmlFor="file">Enter a Subject Name</label>
+                              <input type="text" id='file-name' value={subjectname} onChange={(e) => setSubjectname(e.target.value)} />
+                            </div>
+                            <div className="form_field">
+                              <label htmlFor="file">ENter Description</label>
+                              <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                            </div>
+                            <div className="form_field">
+                              <label htmlFor="keywords">Enter Keywords</label>
+                              <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                            </div>
+                            <div className="upload_btns">
+                              <button type="button" onClick={() => setFormIsVisible(false)}>Cancel</button>
+                              <button type="submit">Create Subject</button>
+                            </div>
+                            {/* <button type='submit'>Save</button>
+                            <button onClick={() => setFormIsVisible(false)}>Cancel</button> */}
+                          </form>
+                        </div>
                       </div>
                     )
                   }
@@ -158,7 +176,7 @@ export default function Subjects() {
           }
           <div className='item_filters'>
             <div>Filter  </div>
-            <div>
+            {/* <div>
               <select onChange={(e) => setSortBy(e.target.value)}>
                 <option value="createdAt">Newest First</option>
                 <option value="subjectname">Subject Name</option>
@@ -167,7 +185,7 @@ export default function Subjects() {
                 <option value="-1">Descending</option>
                 <option value="1">Ascending</option>
               </select>
-            </div>
+            </div> */}
           </div>
           {/* Display all the subjects in a course */}
         </div>
@@ -187,17 +205,19 @@ export default function Subjects() {
                   ) : (
                     <>
                       {
-                        subjectDetails.map((subject: SubjectType) => (
+                        subjectDetails.map((subject: SubjectType, index) => (
 
                           <div className='secondary_item_card' key={subject._id} onClick={() => sendData(subject.subjectname)}>
-
+                            <div className='index'>{index + 1}.</div>
                             <div className="item_details">
                               <div className='item_name'>Subject Name: {subject.subjectname}</div>
                               <div className='item_description'>Description: {subject.description}</div>
                             </div>
                             {
                               user.role === "admin" && (
-                                <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedSubject(subject); e.stopPropagation() }} >Edit</div>
+                                <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedSubject(subject); e.stopPropagation() }} >
+                                  <EditComponent/>
+                                </div>
                               )
                             }
                           </div>
@@ -245,7 +265,6 @@ export default function Subjects() {
                     </button>
                   </div>
                 )}
-                <div>hello</div>
               </>
           }
         </div>

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom';
+import axiosInstance from '../../utils/axios';
 
 type UserDetailsType = {
     user: any;
@@ -8,6 +9,7 @@ type UserDetailsType = {
     username: string;
     role: string;
     college: string;
+    isActive: boolean;
 }
 
 type MaterialType = {
@@ -21,13 +23,15 @@ export default function UserDetails() {
     const [userDetails, setUserDetails] = useState<UserDetailsType>()
     const [materialDetails, setMaterialDetails] = useState<MaterialType[]>([]);
     const { userId } = useParams<{ userId: string }>();
-
+    const [isActive, setIsActive] = useState<boolean>();
+    
 
     const fetchUserData = async () => {
         try {
-            const response = await axios.get<UserDetailsType>(`http://localhost:3000/api/v1/users/c/${userId}`)
+            const response = await axiosInstance.get<UserDetailsType>(`/users/c/${userId}`)
             // console.log(response.data.user);
             setUserDetails(response.data.user);
+            setIsActive(response.data.user.isActive);
         } catch (error) {
             console.error(error)
         }
@@ -35,7 +39,7 @@ export default function UserDetails() {
 
     const fetchMaterialData = async () => {
         try {
-            const MaterialResponse = await axios.get(`http://localhost:3000/api/v1/users/c/${userId}/materials/`);
+            const MaterialResponse = await axiosInstance.get(`/users/c/${userId}/materials/`);
 
             setMaterialDetails(MaterialResponse.data.materials);
 
@@ -44,6 +48,18 @@ export default function UserDetails() {
             console.error(error);
         }
     }
+
+    const toggleUserStatus = async (_id: string) => {
+
+        try {
+            const response = await axiosInstance.patch(`/users/toggleActive/${_id}`);
+            console.log(response.data);
+            setIsActive(!isActive);
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     useEffect(() => {
         fetchUserData();
         fetchMaterialData();
@@ -57,6 +73,19 @@ export default function UserDetails() {
                     <>
                         <div>{userDetails.username}</div>
                         <div>{userDetails.role}</div>
+                        <button onClick={()=>toggleUserStatus(userDetails._id)} >
+                            {
+                                isActive ? (
+                                    <>
+                                        Deactivate
+                                    </>
+                                ) : (
+                                    <>
+                                        Activate
+                                    </>
+                                )
+                            }
+                        </button>
                         {
                             materialDetails.map((material: MaterialType, index) => (
                                 <div key={index}>

@@ -94,34 +94,34 @@ export default function Questions() {
                                         <div key={question._id} className={questions.question_list} >
 
                                             <div className="course_details">
-                                                <div className='question'>
+                                                <div className='question_answer'>
                                                     <div className='course_name'>Q 1. {question.questionOne}</div>
                                                     {/* <div className='course_description'>Answer{question.answerOne.toString()}</div> */}
                                                     <button onClick={() => handleAnswer(1, true)}>True</button>
                                                     <button onClick={() => handleAnswer(1, false)}>False</button>
                                                 </div>
-                                                <div className='question'>
+                                                <div className='question_answer'>
 
                                                     <div className='course_name'>Q 2. {question.questionTwo}</div>
                                                     {/* <div className='course_description'>Answer{question.answerTwo.toString()}</div> */}
                                                     <button onClick={() => handleAnswer(2, true)}>True</button>
                                                     <button onClick={() => handleAnswer(2, false)}>False</button>
                                                 </div>
-                                                <div className='question'>
+                                                <div className='question_answer'>
 
                                                     <div className='course_name'>Q 3. {question.questionThree}</div>
                                                     {/* <div className='course_description'>Answer{question.answerThree.toString()}</div> */}
                                                     <button onClick={() => handleAnswer(3, true)}>True</button>
                                                     <button onClick={() => handleAnswer(3, false)}>False</button>
                                                 </div>
-                                                <div className='question'>
+                                                <div className='question_answer'>
 
                                                     <div className='course_name'>Q 4. {question.questionFour}</div>
                                                     {/* <div className='course_description'>Answer{question.answerFour.toString()}</div> */}
                                                     <button onClick={() => handleAnswer(4, true)}>True</button>
                                                     <button onClick={() => handleAnswer(4, false)}>False</button>
                                                 </div>
-                                                <div className='question'>
+                                                <div className='question_answer'>
 
                                                     <div className='course_name'>Q 5. {question.questionFive}</div>
                                                     {/* <div className='course_description'>Answer{question.answerFive.toString()}</div> */}

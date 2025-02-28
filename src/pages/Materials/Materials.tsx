@@ -6,6 +6,15 @@ import { getAuthenticatedUser } from '../../utils/authUtils';
 import Loader from '../../components/Loader/Loader';
 import UserSidebar from '../../components/Sidebar/UserSidebar/UserSidebar';
 import axiosInstance from '../../utils/axios';
+import View_Light_Image from '../../assets/light_theme/viewLater.png';
+import View_Dark_Image from '../../assets/dark_theme/viewLater.png';
+import Document_Light_Image from '../../assets/light_theme/document.png';
+import Document_Dark_Image from '../../assets/dark_theme/document.png'
+import Video_Light_Image from '../../assets/light_theme/video.png';
+import Video_Dark_Image from '../../assets/dark_theme/video.png'
+import AddImage from '../../assets/add.png';
+import EditComponent from '../../components/EditComponent/EditComponent';
+import { useTheme } from "../../context/ThemeContext.tsx";
 
 type MaterialType = {
   _id: string;
@@ -17,6 +26,7 @@ type MaterialType = {
 };
 
 export default function Materials() {
+  const { theme } = useTheme();
   const { user, isAuthenticated } = getAuthenticatedUser();
 
   const location = useLocation();
@@ -37,11 +47,12 @@ export default function Materials() {
   const [keywords, setKeywords] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [selectedMaterial, setSelectedMaterial] = useState<MaterialType | null>(null);
+  const [isPopup, setIsPopup] = useState<boolean>(false);
 
   // for url params
   let courseIdParameter, subjectIdParameter, unitIdParameter;
   courseId ? courseIdParameter = courseId.toUpperCase() : courseIdParameter = courseName;
-  subjectId ? subjectIdParameter = subjectId.toUpperCase() : subjectIdParameter = subjectName;
+  subjectId ? subjectIdParameter = subjectId : subjectIdParameter = subjectName;
   unitId ? unitIdParameter = unitId : unitIdParameter = unitName;
 
   // for displaying all materials
@@ -173,8 +184,11 @@ export default function Materials() {
       setSidebarKey(prevKey => prevKey + 1);
       console.log(response)
       // setDroppedItems((prev) => [...prev, droppedItem]);
-    } catch (error) {
-      console.error(error)
+    } catch (error: any) {
+      console.error(error.status)
+      if (error.status === 400) {
+        setIsPopup(true)
+      }
     }
   }
 
@@ -190,9 +204,9 @@ export default function Materials() {
 
   return (
     <>
-      <div className='title'>Course Name - {courseIdParameter}</div>
-      <div className='title'>Subject Name - {subjectIdParameter}</div>
-      <div className='title'>Unit Name - {unitIdParameter}</div>
+      <div className='title' onClick={() => { navigate(`/course/`) }}>Course Name : {courseIdParameter}</div>
+      <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject`) }}>Subject Name : {subjectIdParameter}</div>
+      <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`) }}>Unit Name : {unitIdParameter}</div>
       <div className='material_main_layout'>
 
         <div className='items_display_page'>
@@ -203,35 +217,87 @@ export default function Materials() {
               isAuthenticated && (
                 user.role === "admin" && (
                   <>
-                    <button className='add-btn' id='btn' onClick={() => setFormIsVisible(true)}>Add New Material</button>
+                    <button className='add_btn' onClick={() => setFormIsVisible(true)}>
+                      <img src={AddImage} alt="" />
+                      <div>Add New Material</div>
+                    </button>
                     {
                       formIsVisible && (
-                        <div className="form-for-adding-new">
-                          <form action="" onSubmit={handleSubmit}>
-                            <label htmlFor="file">ENter a Material Name</label>
-                            <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
-                            <label htmlFor="file">ENter Description</label>
-                            <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                            <select name="" id="">
-                              <option value="document">Document</option>
-                              <option value="video">Video</option>
-                            </select>
-                            <label htmlFor="keywords">Enter Keywords</label>
-                            <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
-                            <label htmlFor="file">Upload a file</label>
-                            <input type="file" onChange={handleFileChange} />
+                        <div className="add_new_material">
+                          <div className="add_new_material_form">
+                            <form action="" onSubmit={handleSubmit}>
+                              <div className="add_new_material_form_header">
+                                <h2>Add New Material</h2>
+                                <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
+                              </div>
+                              <div className="form_field">
+                                <label htmlFor="file">ENter a Material Name</label>
+                                <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
+                              </div>
+                              <div className="form_field">
+                                <label htmlFor="file">ENter Description</label>
+                                <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
+                              </div>
+                              {/* <select name="" id="">
+                                <option value="document">Document</option>
+                                <option value="video">Video</option>
+                              </select> */}
+                              <div className="form_field">
+                                <label htmlFor="keywords">Enter Keywords</label>
+                                <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
+                              </div>
 
-                            <button type='submit'>Save</button>
-                            <button onClick={() => setFormIsVisible(false)}>Cancel</button>
-                            {uploading && (
-                              <div className="progress-bar-container">
-                                <div className="progress-bar" style={{ width: `${uploadProgress}%` }}>
-                                  {uploadProgress}%
+                              {/* <label htmlFor="file">Upload a file</label>
+                              <input type="file" onChange={handleFileChange} /> */}
+                              <div className="upload_section">
+                                <label>Upload File</label>
+                                <div className="">
+                                  <label className="">
+                                    <span className="text-gray-400 mb-2">
+                                      <svg
+                                        className="w-8 h-8"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                        />
+                                      </svg>
+                                    </span>
+                                    <span>Click to upload or drag and drop</span>
+                                    <input
+                                      type="file"
+                                      className="hidden"
+                                      onChange={handleFileChange}
+                                    />
+                                  </label>
                                 </div>
                               </div>
-                            )}
-                            {message && <p>{message}</p>}
-                          </form>
+                              <div className="upload_btns">
+                                <button type="button" onClick={() => setFormIsVisible(false)}>Cancel</button>
+                                <button type="submit">Upload Material</button>
+                              </div>
+                              {/* <button type='submit'>Save</button>
+                              <button onClick={() => setFormIsVisible(false)}>Cancel</button> */}
+                              {uploading && (
+                                <div className="progress-bar-container">
+                                  <div className="progress-bar" style={{ width: `${uploadProgress}%` }}>
+                                    {uploadProgress}%
+                                    {uploadProgress === 100 ? (
+                                      <div>uploading to cloud</div>
+                                    ) : (
+                                      <div>please wait</div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                              {message && <p>{message}</p>}
+                            </form>
+                          </div>
                         </div>
                       )
                     }
@@ -241,16 +307,17 @@ export default function Materials() {
             }
             <div className='item_filters'>
               <div>Filter  </div>
-              <div>
+              {/* <div>
                 <select onChange={(e) => setSortBy(e.target.value)}>
                   <option value="createdAt">Newest First</option>
                   <option value="materialname">Material Name</option>
+                  <option value="professorname">Professor's Name</option>
                 </select>
                 <select onChange={(e) => setSortType(e.target.value)}>
                   <option value="-1">Descending</option>
                   <option value="1">Ascending</option>
                 </select>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* Display all the materials in a unit */}
@@ -264,29 +331,43 @@ export default function Materials() {
                       <div className='not_available_text'>No Materials Found</div>
                     ) : (
                       <>
-                          {
-                            materialDetails
-                              .filter((material: MaterialType) => material.isPublished === true)
-                              .map((material: MaterialType) => (
-                                <div className='secondary_item_card' key={material._id} onClick={() => sendData(material._id)} draggable={true} onDragStart={(e) => handleDragStart(e, material)}>
-                                  <div className="course_details">
-                                    <div className='course_name'>Material Name: {material.materialname}</div>
-                                    <div className='course_description'>Description: {material.description}</div>
-                                    <div className="course_like">Material Type: {material.fileType}</div>
-                                  </div>
+                        {
+                          materialDetails
+                            .filter((material: MaterialType) => material.isPublished === true)
+                            .map((material: MaterialType, index) => (
+                              <div className='secondary_item_card tertiary_item_card' key={material._id} onClick={() => sendData(material._id)} draggable={true} onDragStart={(e) => handleDragStart(e, material)}>
+                                <div className="index">{index + 1}.</div>
+                                <div className='item_type'>
                                   {
-                                    user && (
-                                      <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >Save</div>
-                                    )
-                                  }
-                                  {
-                                    user.role === "admin" && (
-                                      <div onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedMaterial(material); e.stopPropagation() }} >Edit</div>
+                                    material.fileType === "raw" ? (
+                                      <>
+                                        <img src={theme === "light" ? Document_Light_Image : Document_Dark_Image} alt="" />
+                                      </>
+                                    ) : (
+                                      <>
+                                        <img src={theme === "light" ? Video_Light_Image : Video_Dark_Image} alt="" />
+                                      </>
                                     )
                                   }
                                 </div>
-                              ))
-                          }
+                                <div className="item_details">
+                                  <div className="item_name">Material Name: {material.materialname}</div>
+                                  <div className="item_description">Description: {material.description}</div>
+                                  <div className="item_description">Professor: {material.owner}</div>
+                                </div>
+                                <div className='save_image' onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >
+                                  <img src={theme === "light" ? View_Light_Image : View_Dark_Image} alt="" />
+                                </div>
+                                {
+                                  user.role === "admin" && (
+                                    <div className='edit_image' onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedMaterial(material); e.stopPropagation() }} >
+                                      <EditComponent />
+                                    </div>
+                                  )
+                                }
+                              </div>
+                            ))
+                        }
                         {/* Pagination */}
                         <div className='pagination'>
                           <button disabled={page === 1} onClick={() => setPage(page - 1)}>
@@ -329,7 +410,6 @@ export default function Materials() {
                       </button>
                     </div>
                   )}
-                  <div>Hello</div>
                 </>
             }
           </div>
@@ -340,6 +420,14 @@ export default function Materials() {
           <UserSidebar key={sidebarKey} />
         </div>
 
+        {
+          isPopup && (
+            <div className="popupMessage">
+              Allready added
+              <button onClick={() => setIsPopup(false)} >Close</button>
+            </div>
+          )
+        }
         {/* <div>Browse More Materials</div> */}
 
       </div>

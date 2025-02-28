@@ -8,6 +8,7 @@ type MaterialType = {
     _id: string;
     materialname: string;
     views: number;
+    createdAt: string;
 }
 export default function MyMaterial({_id}: User) {
 
@@ -28,14 +29,16 @@ export default function MyMaterial({_id}: User) {
     return (
         <>
             <div>MyMaterial</div>
-            <div className='liked_materials'>
+            <div className="option_material_header">
+                <div>Material Name</div>
+            </div>
+            <div className='option_materials'>
                 {
                     materialDetails.map((materials: MaterialType, index) => (
-                        <div className="liked_material_card" key={index}>
-                            <div className="liked_material_details">
-                                <div className="liked_material_name">{materials.materialname}</div>
-                                <div className='uploaded_by'>{materials._id}</div>
-                                <div>{materials.views}</div>
+                        <div className="option_material_card" key={index}>
+                            <div className="option_material_details" style={{gridTemplateColumns: "repeat(2, 1fr)"}}>
+                                <div className="liked_m aterial_name">{materials.materialname}</div>
+                                <div className="liked_material_name" >Uploaded On :{materials.createdAt}</div>
                             </div>
                         </div>
 

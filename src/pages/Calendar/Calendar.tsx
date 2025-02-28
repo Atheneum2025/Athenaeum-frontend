@@ -7,23 +7,27 @@ import { useState } from "react";
 import axiosInstance from "../../utils/axios";
 import "./Calendar.css";
 import { getAuthenticatedUser } from "../../utils/authUtils";
+import Calendar_Dark_Image from "../../assets/dark_theme/calendar.png";
+import Calendar_Light_Image from "../../assets/light_theme/calendar.png";
+import CalendarSidebar from "../../components/Sidebar/CalendarSidebar/CalendarSidebar";
 
 type EventType = {
-    event: string;
+    title: string;
     date: Date;
 }
 export default function Calendar() {
 
     const { user, isAuthenticated } = getAuthenticatedUser();
-    
+
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [event, setEvent] = useState<EventType[]>([]);
     const [title, setTitle] = useState<string>("")
     const [date, setDate] = useState<Date>()
+    const day = date?.toString();
 
     const fetchData = async () => {
-        try{
-            const response = await axiosInstance.get(`/users/${user._id}/calendar/`, {withCredentials : true});
+        try {
+            const response = await axiosInstance.get(`/users/${user._id}/calendar/`, { withCredentials: true });
             // console.log(response);
             const formattedEvents = response.data.events.map((event: any) => ({
                 title: event.title,  // Ensure correct format
@@ -32,15 +36,15 @@ export default function Calendar() {
             setEvent(formattedEvents);
 
         }
-        catch(error){
+        catch (error) {
             console.error(error);
         }
     }
     console.log(event)
 
-    useEffect(()=>{
+    useEffect(() => {
         fetchData();
-    },[])
+    }, [])
 
     const handleDateClick = (info: any) => {
         setIsVisible(true);
@@ -57,36 +61,59 @@ export default function Calendar() {
             setIsVisible(true)
             const response = await axiosInstance.post(`/users/${user._id}/calendar`, { title, date }, { withCredentials: true });
             console.log(response);
-            setTitle("")
+            setTitle("");
             fetchData();
+            setIsVisible(false);
         } catch (error) {
             console.error(error);
         }
     }
     return (
         <>
-            <div className="calendar_page">
-                <h1>Calendar</h1>
-                <FullCalendar
-                    plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-                    initialView="dayGridMonth"
-                    editable={true}
-                    selectable={true}
-                    events={event}
-                    dateClick={handleDateClick}
-                />
-                {
-                    isVisible && (
-                        <>
-                            <form action="" onSubmit={(e) => handleSubmit(e)}>
-                                <label htmlFor="event">Enter Event Title:</label>
-                                <input type="text" id="text" value={title} onChange={(e: any)=>setTitle(e.target.value)} />
-                                <button type="submit">Save</button>
-                            </form>
-                        </>
-                    ) 
-                }
-                <div>HEllo</div>
+            <div className="material_main_layout">
+                <div className="calendar_page">
+                    <div className="calendar_text">
+                        <h1>Calendar</h1>
+                        <img src={Calendar_Light_Image} alt="" />
+                        {/* <img src={Calendar_Dark_Image} alt="" /> */}
+                    </div>
+                    <FullCalendar
+                        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                        initialView="dayGridMonth"
+                        editable={true}
+                        selectable={true}
+                        events={event}
+                        dateClick={handleDateClick}
+                    />
+                    {
+                        isVisible && (
+                            <>
+                                <div className="add_new_material">
+                                    <div className="add_new_material_form">
+                                        <form action="" onSubmit={(e) => handleSubmit(e)}>
+                                            <div className="add_new_material_form_header">
+                                                <h2>Add New Event</h2>
+                                                <button type="button" onClick={() => { setIsVisible(false) }}>✕</button>
+                                            </div>
+                                            <div>Date : {day}</div>
+                                            <div className="form_field">
+                                                <label htmlFor="event">Enter Event Title:</label>
+                                                <input type="text" id="text" value={title} onChange={(e: any) => setTitle(e.target.value)} />
+                                            </div>
+                                            <div className="upload_btns">
+                                                <button type="button" onClick={() => setIsVisible(false)}>Cancel</button>
+                                                <button type="submit" >Save</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </>
+                        )
+                    }
+                </div>
+                <div className="viewLaterSidebar">
+                    <CalendarSidebar />
+                </div>
             </div>
         </>
     );

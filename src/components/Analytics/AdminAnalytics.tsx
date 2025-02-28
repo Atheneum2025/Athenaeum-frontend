@@ -1,10 +1,11 @@
 import React from 'react'
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip, Legend, ArcElement } from "chart.js";
+import { color } from 'chart.js/helpers';
 
 
 
-ChartJS.register(ArcElement,BarElement, CategoryScale, LinearScale, Tooltip, Legend);
+ChartJS.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 export default function AdminAnalytics() {
     const data = {
         labels: ["Jan", "Feb", "Mar", "Apr", "May"],
@@ -12,7 +13,7 @@ export default function AdminAnalytics() {
             {
                 label: "Sales",
                 data: [400, 300, 500, 200, 600],
-                backgroundColor: "rgba(218, 24, 24, 0.6)",
+                backgroundColor: "rgba(236, 38, 38, 0.6)",
             },
         ],
     };
@@ -30,8 +31,14 @@ export default function AdminAnalytics() {
     return (
         <>
             <div>AdminAnalytics</div>
-            <Bar data={data} />;
-            <Pie data={newData} />
+            <div className='analytics'>
+                <div>
+                    <Bar data={data} />
+                </div>
+                <div>
+                    <Pie data={newData} />
+                </div>
+            </div>
         </>
     )
 }

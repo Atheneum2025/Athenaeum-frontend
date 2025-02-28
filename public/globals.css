@@ -1,18 +1,46 @@
 /* course , subject, unit, material page */
+.items_cards_list {
+  padding-block: 2rem;
+  /* background-color: blue; */
+}
 
-.items_display_page {
+main {
+  height: minmax(max-content, 100vh);
+  min-height: 100vh;
+  
+}
+.title {
+  text-align: center;
+  display: inline-block;
+  width: 25%;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  /* background-color: peru; */
+  cursor: pointer;
+}
+.items_display_page,
+.settings_page {
   padding: 2rem;
+  /* background-image: url("../src/assets/wings.png");
+  background-position: center;
+  background-size: 30% ;
+  background-attachment: fixed;
+  background-repeat: no-repeat; */
+  /* background-blend-mode: color-burn; */
 }
 .items_display_header {
   display: grid;
   grid-template-columns: 3fr auto auto;
   gap: 2rem;
+  border-bottom: 1px solid var(--secondary-color);
+  padding-bottom: 10px;
 }
 
 .item_filters {
   display: grid;
   align-content: space-between;
   place-items: center;
+  place-content: center;
 }
 
 .item_filters > div:first-child::after {
@@ -51,6 +79,8 @@
   justify-content: center;
   gap: 40px;
   align-items: center;
+  /* border-bottom: 2px solid white; */
+  padding-block: 2rem;
 }
 
 .pagination button {
@@ -71,16 +101,258 @@
   align-content: center;
 }
 
-.secondary_item_card{
-  outline: 1px solid grey;
+.secondary_item_card {
+  /* outline: 1px solid grey; */
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr 100px;
-  margin-block: 2rem;
+  grid-template-columns:minmax(40px, max-content) 1fr auto;
+  margin-block-end: 2rem;
   font-size: 2rem;
-
-  &:hover{
-    background-color: var(--secondary-color);
+  padding: 1.2rem 1.2rem;
+  &:hover {
+    background-color: rgba(82, 82, 82, .2);
     outline: none;
+  }
+}
+
+.secondary_item_card .index{
+  padding-top: .5rem;
+}
+
+.tertiary_item_card {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(30px, max-content) max-content 1fr minmax(max-content, 0) minmax(
+      max-content,
+      0
+    );
+}
+
+
+.item_type {
+  /* background-color: yellow; */
+  align-content: center;
+  height: max-content;
+}
+/* button */
+
+button {
+}
+
+.edit_image {
+  cursor: pointer;
+  height: max-content;
+  width: max-content;
+  /* background-color: red; */
+}
+
+.edit_image img,
+.save_image img,
+.item_type img {
+  width: 2rem;
+}
+
+.save_image {
+  cursor: pointer;
+  height: max-content;
+  width: max-content;
+  color: purple;
+}
+
+.add_btn {
+  width: 200px;
+  height: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding-inline: 0.5rem;
+  font-weight: 900;
+  cursor: pointer;
+  background-color:white;
+}
+
+.add_btn img {
+  width: 30px;
+}
+
+/* styles for all */
+
+.add_new_material {
+  /* background: rgba(44, 44, 44, 0.8);
+    backdrop-filter: blur(15px) saturate(150%); */
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 90;
+}
+
+.add_new_material_form {
+  background-color: #1e2939;
+  border-radius: 10px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 50%;
+  /* height: 100%; */
+  /* animation: fade-in 0.3s ease-in-out; */
+}
+
+.add_new_material_form_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.add_new_material_form_header > button {
+  background-color: transparent;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 1.3rem;
+}
+
+.form_field > label {
+  display: block;
+  color: white;
+  margin-bottom: 5px;
+  font-size: 1rem;
+}
+
+.form_field > select {
+  width: 100%;
+  background-color: #374151;
+  color: white;
+  appearance: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  /* outline:.3px solid white; */
+  border: none;
+  margin-bottom: 14px;
+
+  &:focus {
+    box-shadow: 0 0 0 2px #3b82f6;
+  }
+}
+
+.form_field textarea,
+.form_field input,
+.quiz_form_field input {
+  width: 100%;
+  background-color: #374151;
+  color: white;
+  border: none;
+  accent-color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 14px;
+
+  &::placeholder {
+    color: white;
+  }
+  &:focus {
+    outline-color: #3b82f6;
+  }
+}
+/* 
+.form_field .answers{
+    display: flex;
+    gap: 10px;
+} */
+
+.form_field textarea:focus,
+.form_field input:focus {
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.upload_section > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.upload_section div label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  border: 2px dashed grey;
+  border-radius: 10px;
+}
+
+.upload_section div label span {
+  color: grey;
+}
+
+svg {
+  width: 20px;
+  height: 20px;
+}
+
+.upload_text {
+  font-size: 1rem;
+  color: grey;
+}
+.hidden {
+  display: none;
+}
+
+.upload_btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 60%;
+  place-self: end;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.upload_btns button {
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: white;
+  font-size: 1rem;
+
+  &:hover {
+    color: rgba(256, 256, 256, 0.6);
+  }
+}
+.upload_btns button:last-child {
+  background-color: rgb(21, 93, 252);
+
+  &:hover {
+    background-color: rgba(21, 93, 252, 0.6);
+  }
+}
+
+.bottom_line{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.bottom_line img{
+    width: 50%;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }

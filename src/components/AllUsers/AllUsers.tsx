@@ -10,7 +10,8 @@ type User = {
     _id: string;
     username: string;
     role: string;
-    college: string
+    college: string;
+    isActive: boolean;
 }
 
 export default function AllUsers({ role }: UserRole) {
@@ -43,18 +44,19 @@ export default function AllUsers({ role }: UserRole) {
     }
     return (
         <>
-            {
-                userDetails.map((user: User, index) => (
-                    <div className="liked_material_card" key={index} onClick={() => sendData(user._id)}>
-                        
-
-                            <div className="liked_material_details">
+            <div className="option_materials">
+                {
+                    userDetails.map((user: User, index) => (
+                        <div className="option_material_card" key={index} onClick={() => sendData(user._id)}>
+                            <div className="option_material_details">
                                 <div className="liked_material_name">{user.username}</div>
                                 <div className='uploaded_by'>{user.role}</div>
+                                <div>{JSON.stringify(user.isActive)}</div>
                             </div>
-                    </div>
-                ))
-            }
+                        </div>
+                    ))
+                }
+            </div>
         </>
     )
 }

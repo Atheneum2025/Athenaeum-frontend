@@ -2,6 +2,9 @@ import axiosInstance from '../../utils/axios';
 import { useEffect, useRef, useState } from 'react';
 import header from '../Header/Header.module.css';
 import { Link } from 'react-router-dom';
+import SearchImage from "../../assets/search.png";
+import CancelImage from "../../assets/add.png";
+import Recent_Clock from "../../assets/recents_clock.png";
 
 type CourseType = {
   _id: string;
@@ -35,7 +38,13 @@ type MaterialType = {
   subject: string;
   unit: string;
   keywords: string;
+  owner: string;
 };
+
+type ProfessorType = {
+  _id: string;
+  username: string;
+}
 
 export default function SearchBar() {
 
@@ -44,6 +53,7 @@ export default function SearchBar() {
   const [subjectSearchData, setSubjectSearchData] = useState<SubjectType[]>([]);
   const [unitSearchData, setUnitSearchData] = useState<UnitType[]>([]);
   const [materialSearchData, setMaterialSearchData] = useState<MaterialType[]>([]);
+  const [professorSearchData, setProfessorSearchData] = useState<ProfessorType[]>([])
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [searchIconVisible, setSearchIconVisible] = useState<boolean>(true);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -92,17 +102,19 @@ export default function SearchBar() {
         try {
 
 
-          const [courseResponse, subjectResponse, unitResponse, materialResponse] = await Promise.all([
+          const [courseResponse, subjectResponse, unitResponse, materialResponse, professorResponse] = await Promise.all([
             axiosInstance.get('/course/c', { withCredentials: true }),
             axiosInstance.get('/subject', { withCredentials: true }),
             axiosInstance.get('/unit', { withCredentials: true }),
-            axiosInstance.get('/material', { withCredentials: true })
+            axiosInstance.get('/material', { withCredentials: true }),
+            axiosInstance.get('/users/professors', { withCredentials: true }),
           ]);
 
           const courseData = courseResponse.data;
           const subjectData = subjectResponse.data;
           const unitData = unitResponse.data;
           const materialData = materialResponse.data;
+          const professorData = professorResponse.data;
 
           setCourseSearchData(
             courseData.courses.filter((course: CourseType) =>
@@ -126,6 +138,11 @@ export default function SearchBar() {
               JSON.stringify(material).toLowerCase().includes(search.toLowerCase())
             )
           );
+          setProfessorSearchData(
+            professorData.professors.filter((professor: ProfessorType) =>
+              JSON.stringify(professor).toLowerCase().includes(search.toLowerCase())
+            )
+          )
 
         } catch (error) {
           console.error("Error fetching data:", error);
@@ -136,7 +153,8 @@ export default function SearchBar() {
         setCourseSearchData([]);
         setSubjectSearchData([]);
         setUnitSearchData([]);
-        setMaterialSearchData([])
+        setMaterialSearchData([]);
+        setProfessorSearchData([]);
       }
     }
 
@@ -168,7 +186,7 @@ export default function SearchBar() {
   return (
     <>
       <div className={header.search_bar_section} ref={searchRef}>
-        <div 
+        <div
           className={header.search_bar}
           onClick={() => setSearchIconVisible(!searchIconVisible)}
         >
@@ -179,15 +197,15 @@ export default function SearchBar() {
             maxLength={100}
             onChange={(e) => setSearch(e.target.value)}
             onFocus={() => setIsVisible(true)}
-            
+
           // onKeyDown={handleKeyDown}
           />
-          <button onClick={()=> {handleVisibility()}} className={header.cancel_btn}>
+          <button onClick={() => { handleVisibility() }} className={header.cancel_btn}>
             {
               searchIconVisible ? (
-                <img src=".\src\assets\search.png" alt="" />
+                <img src={SearchImage} alt="" />
               ) : (
-                <img src=".\src\assets\add.png" alt="" style={{transform: "rotateZ(45deg)"}} />
+                <img src={CancelImage} alt="" style={{ transform: "rotateZ(45deg)" }} />
               )
             }
           </button>
@@ -198,16 +216,16 @@ export default function SearchBar() {
               {
                 search == "" && (
                   <>
-                    Recents :
                     {recentSearches.length > 0 && (
-                      <ul >
+                      <ul className={header.recents} >
                         {recentSearches.map((term, index) => (
                           <li
                             key={index}
                             onClick={() => putToRecents(term)}
-                            style={{ borderBottom: index !== recentSearches.length - 1 ? "1px solid #ccc" : "none" }}
+                            style={{paddingBlock: "10px", borderBottom: index !== recentSearches.length - 1 ? "1px solid #ccc" : "none" }}
                           >
                             {term}
+                            <img  src={Recent_Clock} alt="" />
                           </li>
                         ))}
                       </ul>
@@ -215,69 +233,111 @@ export default function SearchBar() {
                   </>
                 )
               }
-              <div className={header.results}>Results :</div>
-              <div className={header.results}>Courses :</div>
+              {/* {
+                search !== "" && (
+                  <div className={header.results}>Results :</div>
+                )  
+              } */}
               {
-                courseSearchData.map((course) => (
-                  <li key={course._id} onClick={() => putToRecents(course.coursename)}>
-                    {/* <a href={`/course/${course.coursename.toUpperCase()}/subject`}>
-                      {course.coursename}
-                    </a> */}
-                    <Link to={`/course/${course.coursename.toUpperCase()}/subject`} >{course.coursename}</Link>
-                    <pre className={header.hidden_keywords}>{course.description}</pre>
-                    <pre className={header.hidden_keywords}>{course.keywords}</pre>
-                  </li>
-                ))
+                search !== "" && (
+                  <>
+                    <div className={header.results}>Courses :</div>
+                    {
+                      courseSearchData.map((course) => (
+                        <li key={course._id} onClick={() => putToRecents(course.coursename)}>
+                          <Link to={`/course/${course.coursename.toUpperCase()}/subject`} >{course.coursename}</Link>
+                          <pre className={header.hidden_keywords}>{course.description}</pre>
+                          <pre className={header.hidden_keywords}>{course.keywords}</pre>
+                        </li>
+                      ))
+                    }
+                  </>
+                )
               }
-              <div className={header.results}>Subjects :</div>
               {
-                subjectSearchData.map((subject) => (
-                  <li key={subject._id} onClick={() => putToRecents(subject.subjectname)}>
-                    <Link to={`/course/${subject.course.toUpperCase()}/subject/${subject.subjectname.toUpperCase()}/unit`}>
-                      {subject.subjectname}
-                      <div>
-                        <pre className={header.hidden_keywords}>{subject.description}</pre>
-                        <pre className={header.insights}>/{subject.course} </pre>
-                        <pre className={header.hidden_keywords}>{subject.keywords}</pre>
-                      </div>
-                    </Link>
-                  </li>
-                ))
+                search !== "" && (
+                  <>
+                    <div className={header.results}>Subjects :</div>
+                    {
+                      subjectSearchData.map((subject) => (
+                        <li key={subject._id} onClick={() => putToRecents(subject.subjectname)}>
+                          <Link to={`/course/${subject.course.toUpperCase()}/subject/${subject.subjectname.toUpperCase()}/unit`}>
+                            {subject.subjectname}
+                            <div>
+                              <pre className={header.hidden_keywords}>{subject.description}</pre>
+                              <pre className={header.insights}>/{subject.course} </pre>
+                              <pre className={header.hidden_keywords}>{subject.keywords}</pre>
+                            </div>
+                          </Link>
+                        </li>
+                      ))
+                    }
+                  </>
+                )
               }
-              <div className={header.results}>Units :</div>
               {
-                unitSearchData.map((unit) => (
-                  <li key={unit._id} onClick={() => putToRecents(unit.unitname)}>
-                    <Link to={`/course/${unit.course.toUpperCase()}/subject/${unit.subject.toUpperCase()}/unit/${unit.unitname}/material`}>
-                      {unit.unitname}
-                      <div>
-                        <pre className={header.hidden_keywords}>{unit.description}</pre>
-                        <pre className={header.insights}>/{unit.course} </pre>
-                        <pre className={header.insights}>/{unit.subject} </pre>
-                        <pre className={header.hidden_keywords}>{unit.keywords}</pre>
-                      </div>
-                    </Link>
-                  </li>
-                ))
+                search !== "" && (
+                  <>
+                    <div className={header.results}>Units :</div>
+                    {
+                      unitSearchData.map((unit) => (
+                        <li key={unit._id} onClick={() => putToRecents(unit.unitname)}>
+                          <Link to={`/course/${unit.course.toUpperCase()}/subject/${unit.subject.toUpperCase()}/unit/${unit.unitname}/material`}>
+                            {unit.unitname}
+                            <div>
+                              <pre className={header.hidden_keywords}>{unit.description}</pre>
+                              <pre className={header.insights}>/{unit.course} </pre>
+                              <pre className={header.insights}>/{unit.subject} </pre>
+                              <pre className={header.hidden_keywords}>{unit.keywords}</pre>
+                            </div>
+                          </Link>
+                        </li>
+                      ))
+                    }
+                  </>
+                )
               }
-              <div className={header.results}>Materials :</div>
               {
-                materialSearchData.map((material) => (
-                  <li key={material._id} onClick={() => putToRecents(material.materialname)}>
-                    <Link to={`/course/${material.course.toUpperCase()}/subject/${material.subject.toUpperCase()}/unit/${material.unit}/material/${material._id}`}>
-                      {material.materialname}
-                      <div>
-                        <pre className={header.hidden_keywords}>{material.description}</pre>
-                        <pre className={header.insights}>/{material.course} </pre>
-                        <pre className={header.insights}>/{material.subject} </pre>
-                        <pre className={header.insights}>/{material.unit} </pre>
-                        <pre className={header.hidden_keywords}>{material.keywords}</pre>
-                      </div>
-                    </Link>
-                  </li>
-                ))
+                search !== "" && (
+                  <>
+                    <div className={header.results}>Materials :</div>
+                    {
+                      materialSearchData.map((material) => (
+                        <li key={material._id} onClick={() => putToRecents(material.materialname)}>
+                          <Link to={`/course/${material.course.toUpperCase()}/subject/${material.subject.toUpperCase()}/unit/${material.unit}/material/${material._id}`}>
+                            {material.materialname}
+                            <div>
+                              <pre className={header.hidden_keywords}>{material.description}</pre>
+                              <pre className={header.insights}>/{material.course} </pre>
+                              <pre className={header.insights}>/{material.subject} </pre>
+                              <pre className={header.insights}>/{material.unit} </pre>
+                              <pre className={header.hidden_keywords}>{material.keywords}</pre>
+                              <pre className={header.hidden_keywords}>{material.owner}</pre>
+                            </div>
+                          </Link>
+                        </li>
+                      ))
+                    }
+                  </>
+                )
               }
-              {/* http://localhost:5173/course/BCA/subject/TWS/unit/Unit%20Three/material/6797db3f403af229c5aae083 */}
+              {
+                (search !== "" || professorSearchData.length !== 0) && (
+                  <>
+                    <div className={header.results}>Professors :</div>
+                    {
+                      professorSearchData.map((professor) => (
+                        <li key={professor._id} >
+                          <Link to={`user/${professor._id}/`}>
+                            {professor.username}
+
+                          </Link>
+                        </li>
+                      ))
+                    }
+                  </>
+                )
+              }
             </div>
           )
         }

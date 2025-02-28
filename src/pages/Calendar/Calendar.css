@@ -1,9 +1,18 @@
-.calendar_page > h1{
-    margin: 20px;
+.calendar_page {
+    padding: 2rem;
+}
+
+.calendar_text{
+    display: grid;
+    /* background-color: green; */
+    grid-template-columns: minmax(max-content, 200px) 100px;
+    align-items: center;
 }
 
 .fc {
     color: var(--font-color);
+    margin-top: 2rem;
+    background-color: rgba(0, 0, 0, .6);
 }
 
 .fc-event {
@@ -24,6 +33,10 @@
     font-size: 20px;
     font-weight: bold;
     color: var(--font-color);
+    outline: 1px;
+    outline-style: dashed;
+    outline-color: grey;
+    padding: .5rem;
 }
 
 .fc-header-toolbar{

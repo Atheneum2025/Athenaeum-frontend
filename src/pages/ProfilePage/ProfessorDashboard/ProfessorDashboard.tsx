@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react'
-import LikedVideos from '../../../components/LikedVideos/LikedVideos.tsx';
+import SavedMaterials from '../../../components/SavedMaterials/SavedMaterials.tsx';
 import HistoryVideos from '../../../components/History/HistoryVideos.tsx';
 import MyMaterial from '../../../components/MyMaterial/MyMaterial.tsx';
 import ProfessorAnalytics from '../../../components/Analytics/ProfessorAnalytics';
 import axiosInstance from '../../../utils/axios.ts';
 import '../ProfilePage.css'
+import AddImage from '../../../assets/add.png';
+import User_Light_Image from '../../../assets/light_theme/user.png';
+import User_Dark_Image from '../../../assets/dark_theme/user.png';
+import { useTheme } from "../../../context/ThemeContext.tsx";
 
 interface StudentDashboardProps {
     user: {
@@ -27,6 +31,7 @@ type UnitType = {
 }
 export default function ProfessorDashboard({ user }: StudentDashboardProps) {
 
+    const {theme} = useTheme();
     const [activePage, setActivePage] = useState<number>(1);
     const [isVisible, setIsVisible] = useState<boolean>(false)
 
@@ -42,6 +47,54 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
     const [selectedSubject, setSelectedSubject] = useState<string>("")
     const [selectedUnit, setSelectedUnit] = useState<string>("")
 
+    const [materialname, setMaterialname] = useState<string>("")
+    const [description, setDescription] = useState<string>("");
+    const [keywords, setKeywords] = useState<string>("");
+    const [file, setFile] = useState<File | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFile(e.target.files[0]); // Store the selected file in state
+        }
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (!file) {
+            alert("Please select a file to upload");
+            return;
+        }
+
+        // Prepare FormData
+        const formData = new FormData();
+        formData.append("materialName", materialname);
+        formData.append("description", description);
+        formData.append("keywords", keywords);
+        formData.append("file", file); // Append the file
+
+        try {
+            // setUploading(true);
+            // setMessage("");
+            const response = await axiosInstance.post(`/course/${selectedCourse}/subject/${selectedSubject}/unit/${selectedUnit}/material`, formData, {
+                // onUploadProgress: (progressEvent) => {
+                //     if (progressEvent.total) {
+                //         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                //         setUploadProgress(percentCompleted);
+                //     }
+                // },
+                withCredentials: true
+            });
+            // setMessage("Upload successful!");
+            console.log("material created", response.data);
+            // setFormIsVisible(false);
+        }
+        catch (err) {
+            console.error("failed:", err);
+            // setFormIsVisible(false);
+            // setMessage("Upload failed. Please try again.");
+        }
+    }
     useEffect(() => {
         const fetchCourses = async () => {
             try {
@@ -92,7 +145,8 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
             <div className="user_profile">
                 <h1>Welcome {user.role}</h1>
                 <div className='user_avatar'>
-                    <img src="" alt="" />
+                    <img src={theme === "light" ? User_Light_Image : User_Dark_Image} alt="" />
+                    {/* <img src={User_Dark_Image} alt="" /> */}
                     <div>{user.username}</div>
                 </div>
                 <div className="user_details">
@@ -101,21 +155,11 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                 </div>
             </div>
 
-            <div className='form_for_adding'>
-                <div>update profile details</div>
-                <form action="">
-                    <label htmlFor="first_name">Edit First Name</label>
-                    <input type="text" id="first_name" />
-                    <label htmlFor="last_name">Edit Last Name</label>
-                    <input type="text" id="last_name" />
-
-                    <button type='submit'>Update Info</button>
-                </form>
-            </div>
-            <div>ProfessorDashboard</div>
-
-            <div>
-                <button className='add-btn' id='btn' onClick={() => setIsVisible(true)}>Add New Material</button>
+            <div className="user_profile_middle_section">
+                <button className='add_btn' id='btn' onClick={() => setIsVisible(true)}>
+                    <img src={AddImage} alt="" />
+                    <div>Add New Material</div>
+                </button>
                 {
                     isVisible && (
                         <>
@@ -123,22 +167,12 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                                 <div className="add_new_material_form">
                                     <form className="">
                                         <div className="add_new_material_form_header">
-                                            <h2>
-                                                Upload New Material
-                                            </h2>
-                                            <button
-                                                type="button"
-                                                // onClick={() => setIsVisible(false)}
-                                                onClick={() => { setIsVisible(false) }}
-                                            >
-                                                ✕
-                                            </button>
+                                            <h2>Upload New Material</h2>
+                                            <button type="button" onClick={() => { setIsVisible(false) }}>✕</button>
                                         </div>
 
                                         <div className="form_field">
-                                            <label >
-                                                Course
-                                            </label>
+                                            <label>Course</label>
                                             <select
                                                 value={selectedCourse}
                                                 onChange={(e) => setSelectedCourse(e.target.value)}
@@ -153,12 +187,10 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                                         </div>
 
                                         <div className="form_field">
-                                            <label >
-                                                Subject
-                                            </label>
+                                            <label>Subject</label>
                                             <select
-                                            value={selectedSubject}
-                                            onChange={(e) => setSelectedSubject(e.target.value)}
+                                                value={selectedSubject}
+                                                onChange={(e) => setSelectedSubject(e.target.value)}
                                             >
                                                 <option value="">Select Subject</option>
                                                 {
@@ -185,8 +217,8 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                                             <label >Material Name</label>
                                             <input
                                                 type="text"
-                                                // value={materialname}
-                                                // onChange={(e) => setMaterialname(e.target.value)}
+                                                value={materialname}
+                                                onChange={(e) => setMaterialname(e.target.value)}
                                                 className=""
                                                 placeholder="Enter material name"
                                             />
@@ -195,8 +227,8 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                                         <div className="form_field">
                                             <label>Description</label>
                                             <textarea
-                                                // value={description}
-                                                // onChange={(e) => setDescription(e.target.value)}
+                                                value={description}
+                                                onChange={(e) => setDescription(e.target.value)}
                                                 placeholder="Add description..."
                                                 rows={3}
                                             />
@@ -230,7 +262,15 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                                                 </label>
                                             </div>
                                         </div>
-
+                                        <div className="form_field">
+                                            <label>Keywords</label>
+                                            <input
+                                                type="text"
+                                                value={keywords}
+                                                onChange={(e) => setKeywords(e.target.value)}
+                                                placeholder="Add keywords..."
+                                            />
+                                        </div>
                                         <div className="upload_btns">
                                             <button type="button" onClick={() => setIsVisible(false)}>Cancel</button>
                                             <button type="submit">Upload Material</button>
@@ -254,7 +294,7 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                     <ProfessorAnalytics />
                 </div>
                 <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
-                    <LikedVideos />
+                    <SavedMaterials />
                 </div>
                 <div id='3' className={`options_page ${activePage === 3 ? "active" : ""}`}>
                     <HistoryVideos />

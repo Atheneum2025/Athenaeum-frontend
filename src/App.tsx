@@ -20,6 +20,8 @@ import UserDetails from "./pages/UserDetails/UserDetails.tsx";
 import ContactUs from "./pages/ContactUs/ContactUs.tsx";
 import ErrorPage from "./pages/ErrorPage/ErrorPage.tsx";
 import RegisterUser from "./pages/Register/RegisterUser";
+import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.tsx";
+import DocsPage from "./pages/DocsPage/DocsPage.tsx";
 function App() {
   return (
     <>
@@ -29,15 +31,17 @@ function App() {
           <Route path="/login" element={<NewLogin />}></Route>
           <Route element={<MainLayout />}>
             <Route path="/home" element={<Home />} />
+            <Route path="/about" element={<AboutUsPage/>} />
+            <Route path="/docs" element={<DocsPage />} />
             <Route path="/register" element={<RegisterUser />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/contact" element={<ContactUs />} />
             <Route path="/user/:userId" element={<UserDetails />} />
-            <Route path="/quizzes" element={<Quiz />} />
-            <Route path="/quizzes/:quizId/questions" element={<Questions />} />
-            <Route path="/quizzes/:quizId/leaderboard" element={<Leaderboard />} />
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/quiz/:quizId/questions" element={<Questions />} />
+            <Route path="/quiz/:quizId/leaderboard" element={<Leaderboard />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/course" element={<Courses />} />
             <Route path="/course/:courseId/subject" element={<Subjects />} />

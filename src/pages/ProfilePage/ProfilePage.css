@@ -22,6 +22,12 @@
   background-color: grey;
 }
 
+.user_profile_middle_section{
+  padding: 10px;
+  display: flex;
+  justify-content: end;
+}
+
 .user_profile_options{
     display: flex;
     flex-direction: row;
@@ -47,7 +53,8 @@
     background-color: grey;
     display: flex;
     flex-direction: row;
-    color: rgba(90, 0, 0, 0.96);
+    /* color: rgba(90, 0, 0, 0.96); */
+    color: var(--secondary-color);
     font-size: 1.4rem;
     font-family: cursive;
     font-weight: 600;
@@ -60,40 +67,58 @@
 }
 
 .options_page {
-    display: none;
-  }
-  .options_page.active {
-    display: block;
-  }
-  
-  .options {
-    cursor: pointer;
-  }
-  
-  .options.active {
-    font-weight: bold;
-    color: white;
-  }
-  
-
-.liked_materials{
-  padding: 2rem;
-  
+  display: none;
+}
+.options_page.active {
+  display: block;
 }
 
-.liked_material_card{
-  border: 2px solid black;
+.options {
+  cursor: pointer;
+}
+
+.options.active {
+  font-weight: bold;
+  background-color: var(--secondary-color);
+}
+  
+
+/* .option_materials{
+  padding: 2rem;
+  
+} */
+
+.option_material_card{
+  border-bottom: 1px solid black;
   margin-block: 1rem;
 }
 
-.liked_material_details, .grid_layout {
+.option_material_details, .grid_layout, .option_material_header {
   display: grid;
-  place-items: center;
-  grid-template-columns: auto auto auto auto;
+  place-items: start ;
+  grid-template-columns: repeat(3, 1fr);
+  /* place-content: center; */
 }
 
-.grid_layout{
+.delete_history_btn{
+  color: black;
+  padding: 10px;
+  border:none;
+  background-color: transparent;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  outline: 2px solid var(--secondary-color);
 
+  &:hover{
+    background-color: var(--secondary-color);
+    outline: none;
+    color: white;
+  }
+}
+
+.delete_history_btn img{
+  width: 20px;
 }
 
 .form_for_adding{
@@ -140,11 +165,23 @@
     padding: 0;
   }
 
-  .liked_materials{
+  .option_materials{
     padding-inline: 0;
   }
 
   .grid_layout{
     font-size: 1rem;
   }
+}
+
+.analytics{
+  display: flex;
+  justify-content: space-between;
+}
+
+.analytics > div{
+  width: 50%;
+  background-color: green;
+  display: flex;
+  /* justify-content: center; */
 }

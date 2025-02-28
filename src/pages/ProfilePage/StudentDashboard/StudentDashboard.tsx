@@ -1,9 +1,14 @@
 import { useState } from 'react'
 import '../ProfilePage.css';
-import LikedVideos from '../../../components/LikedVideos/LikedVideos.tsx';
+import SavedMaterials from '../../../components/SavedMaterials/SavedMaterials.tsx';
 import HistoryVideos from '../../../components/History/HistoryVideos';
 import MyMaterial from '../../../components/MyMaterial/MyMaterial';
 import axiosInstance from '../../../utils/axios.ts';
+import AddImage from '../../../assets/add.png';
+import User_Light_Image from '../../../assets/light_theme/user.png';
+import User_Dark_Image from '../../../assets/dark_theme/user.png';
+import { useTheme } from "../../../context/ThemeContext.tsx";
+
 // import { getAuthenticatedUser } from '../../utils/authUtils';
 
 interface StudentDashboardProps {
@@ -18,6 +23,7 @@ interface StudentDashboardProps {
 }
 export default function StudentDashboard({ user }: StudentDashboardProps) {
 
+    const {theme} = useTheme();
     // const { user, isAuthenticated } = getAuthenticatedUser();
     const [activePage, setActivePage] = useState<number>(1);
 
@@ -46,7 +52,8 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
             <div className="user_profile">
                 <h1>Welcome {user.role}</h1>
                 <div className='user_avatar'>
-                    <img src="" alt="" />
+                    <img src={theme === "light" ? User_Light_Image : User_Dark_Image} alt="" />
+                    {/* <img src={User_Dark_Image} alt="" /> */}
                     <div>{user.username}</div>
                 </div>
                 <div className="user_details">
@@ -55,34 +62,85 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
                 </div>
             </div>
 
-            <div className='form-for-adding'>
-                <div>update profile details</div>
-                <form action="">
-                    <label htmlFor="first_name">Edit First Name</label>
-                    <input type="text" id="first_name" />
-                    <label htmlFor="last_name">Edit Last Name</label>
-                    <input type="text" id="last_name" />
-
-                    <button type='submit'>Update Info</button>
-                </form>
-            </div>
-
-            <div>
-                <button className='add-btn' id='btn' onClick={() => setIsVisible(true)}>Add New Material</button>
+            <div className='user_profile_middle_section'>
+                <button className='add_btn' id='btn' onClick={() => setIsVisible(true)}>
+                    <img src={AddImage} alt="" />
+                    <div>Add New Material</div>
+                </button>
                 {
                     isVisible && (
-                        <div className="form-for-adding-new">
-                            <form action="" onSubmit={handleSubmit}>
-                                <label htmlFor="file">ENter a Material Name</label>
-                                <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
-                                <label htmlFor="file">ENter Description</label>
-                                <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
-                                <label htmlFor="file">Upload a file</label>
-                                <input type="file" />
+                        <div className="add_new_material">
+                            <div className="add_new_material_form">
+                                <form action="" onSubmit={handleSubmit}>
+                                    <div className="add_new_material_form_header">
+                                        <h2>Upload New Material</h2>
+                                        <button type="button" onClick={() => { setIsVisible(false) }}>✕</button>
+                                    </div>
+                                    <div className="form_field">
+                                        <label >Material Name</label>
+                                        <input
+                                            type="text"
+                                            // value={materialname}
+                                            // onChange={(e) => setMaterialname(e.target.value)}
+                                            className=""
+                                            placeholder="Enter material name"
+                                        />
+                                    </div>
+                                    <div className="form_field">
+                                        <label>Description</label>
+                                        <textarea
+                                            // value={description}
+                                            // onChange={(e) => setDescription(e.target.value)}
+                                            placeholder="Add description..."
+                                            rows={3}
+                                        />
+                                    </div>
+                                    <div className="upload_section">
+                                        <label>Upload File</label>
+                                        <div className="">
+                                            <label className="">
+                                                <span className="text-gray-400 mb-2">
+                                                    <svg
+                                                        className="w-8 h-8"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth={2}
+                                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                                        />
+                                                    </svg>
+                                                </span>
+                                                <span>Click to upload or drag and drop</span>
+                                                <input
+                                                    type="file"
+                                                    className="hidden"
+                                                // onChange={(e) => console.log(e.target.files[0])}
+                                                />
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="form_field">
+                                        <label>Keywords</label>
+                                        <input
+                                            type="text"
+                                            // value={description}
+                                            // onChange={(e) => setDescription(e.target.value)}
+                                            placeholder="Add keywords..."
+                                        />
+                                    </div>
+                                    <div className="upload_btns">
+                                        <button type="button" onClick={() => setIsVisible(false)}>Cancel</button>
+                                        <button type="submit">Upload Material</button>
+                                    </div>
 
-                                <button type='submit' onClick={() => setIsVisible(false)}>Save</button>
-                                <button onClick={() => setIsVisible(false)}>Cancel</button>
-                            </form>
+                                    {/* <button type='submit' onClick={() => setIsVisible(false)}>Save</button>
+                                <button onClick={() => setIsVisible(false)}>Cancel</button> */}
+                                </form>
+                            </div>
                         </div>
                     )
                 }
@@ -91,11 +149,11 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
                 <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Saved Material</div>
                 <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Your History</div>
                 <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>My Material</div>
-                <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Analytics</div>
+                <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}></div>
             </ul>
             <div className='user_profile_options_display'>
                 <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
-                    <LikedVideos/>
+                    <SavedMaterials />
                 </div>
                 <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
                     <HistoryVideos />
