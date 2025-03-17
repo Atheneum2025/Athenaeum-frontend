@@ -41,6 +41,8 @@ main {
   align-content: space-between;
   place-items: center;
   place-content: center;
+  position: relative;
+  cursor: pointer;
 }
 
 .item_filters > div:first-child::after {
@@ -59,6 +61,13 @@ main {
   gap: 10px;
 }
 
+.filters{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 40px;
+  cursor: default;
+}
 .item_filters select {
   border: none;
   padding: 2px 4px;
@@ -66,6 +75,7 @@ main {
   color: white;
   outline: none;
   border-radius: 2px;
+  cursor:pointer;
 }
 
 .item_filters select option {
@@ -196,6 +206,8 @@ button {
   padding: 2rem;
   width: 100%;
   max-width: 50%;
+  max-height: 90%;
+  overflow-y: auto;
   /* height: 100%; */
   /* animation: fade-in 0.3s ease-in-out; */
 }
@@ -217,14 +229,14 @@ button {
   font-size: 1.3rem;
 }
 
-.form_field > label {
+.form_field > label , .question_form_field > label{
   display: block;
   color: white;
   margin-bottom: 5px;
   font-size: 1rem;
 }
 
-.form_field > select {
+.form_field > select , .question_form_field > select{
   width: 100%;
   background-color: #374151;
   color: white;

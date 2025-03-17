@@ -8,7 +8,7 @@ type LeaderboardType = {
   _id: string;
   score: number;
   quiz: string;
-  student: string;
+  studentname: string;
 }
 export default function Leaderboard() {
   const { user, isAuthenticated } = getAuthenticatedUser();
@@ -54,7 +54,7 @@ export default function Leaderboard() {
           sortedLeaderboard.map((leaderboard: LeaderboardType, index) => (
             <div className='leaderboard_grid score' key={leaderboard._id}>
               <div>{index + 1}</div>
-              <div>{leaderboard.student}</div>
+              <div>{leaderboard.studentname}</div>
               <div>{leaderboard.score}</div>
             </div>
           ))

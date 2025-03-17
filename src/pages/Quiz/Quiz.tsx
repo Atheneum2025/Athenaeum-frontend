@@ -5,19 +5,26 @@ import { useNavigate } from 'react-router-dom';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import AddImage from '../../assets/add.png';
 import Loader from '../../components/Loader/Loader';
+import axiosInstance from '../../utils/axios';
 
 type QuizType = {
     _id: string;
     quizName: string;
+    selectedSubject: string;
     author: string;
+}
+
+type SubjectType = {
+    subjectname: string;
 }
 export default function Quiz() {
     const navigate = useNavigate();
+    const [subjects, setSubjects] = useState<SubjectType[]>([])
 
     const [quizDetails, setQuizDetails] = useState<QuizType[]>([])
     const [formIsVisible, setFormIsVisible] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false)
-
+    const [selectedSubject, setSelectedSubject] = useState<string>("");
     const [quizName, setQuizName] = useState<string>("");
     const [questionOne, setQuestionOne] = useState<string>("");
     const [questionTwo, setQuestionTwo] = useState<string>("");
@@ -49,6 +56,20 @@ export default function Quiz() {
     useEffect(() => {
         fetchData();
     }, []);
+
+    useEffect(() => {
+
+        const fetchSubjects = async () => {
+            try {
+                const response = await axiosInstance.get(`/subject`);
+                setSubjects(response.data.subjects);
+            } catch (error) {
+                console.error("Error fetching subjects:", error);
+            }
+        }
+
+        fetchSubjects();
+    }, []);
     console.log(quizDetails)
     function sendData(quizId: string) {
         navigate(`/quiz/${quizId}/questions`, { state: { quizId: quizId } });
@@ -61,7 +82,7 @@ export default function Quiz() {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:3000/api/v1/quiz/', { quizName, questionOne, answerOne, questionTwo, answerTwo, questionThree, answerThree, questionFour, answerFour, questionFive, answerFive }, { withCredentials: true });
+            const response = await axiosInstance.post('/quiz/', { selectedSubject, quizName, questionOne, answerOne, questionTwo, answerTwo, questionThree, answerThree, questionFour, answerFour, questionFive, answerFive }, { withCredentials: true });
             console.log("course created", response.data);
             fetchData();
             setFormIsVisible(false)
@@ -96,6 +117,20 @@ export default function Quiz() {
                                                                 <div className="add_new_material_form_header">
                                                                     <h2>Create New Quiz</h2>
                                                                     <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
+                                                                </div>
+                                                                <div className="question_form_field">
+                                                                    <label>Subject</label>
+                                                                    <select
+                                                                        value={selectedSubject}
+                                                                        onChange={(e) => setSelectedSubject(e.target.value)}
+                                                                    >
+                                                                        <option value="">Select Subject</option>
+                                                                        {
+                                                                            subjects.map((subject, index) => (
+                                                                                <option value={subject.subjectname} key={index}>{subject.subjectname}</option>
+                                                                            ))
+                                                                        }
+                                                                    </select>
                                                                 </div>
                                                                 <div className="question_form_field">
                                                                     <label htmlFor="quizName">Enter Quiz Name :</label>
@@ -178,10 +213,11 @@ export default function Quiz() {
                                                                 <div className="index">{index + 1}.</div>
                                                                 <div className="course_details">
                                                                     <div className='course_name'>Quiz Name: {quiz.quizName}</div>
+                                                                    <div className='course_description'>Subject :{quiz.selectedSubject}</div>
                                                                     <div className='course_description'>Quiz By :{quiz.author}</div>
                                                                 </div>
-                                                                <button onClick={() => showLeaderboard(quiz._id)} className='add_btn'>Check Leaderboard</button>
                                                             </div>
+                                                            <button onClick={() => { showLeaderboard(quiz._id) }} className='add_btn'>Check Leaderboard</button>
                                                         </div>
                                                     ))}
                                                 </>

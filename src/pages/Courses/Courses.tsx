@@ -13,12 +13,8 @@ type CourseType = {
     _id: string;
     coursename: string;
     description: string;
-};
-
-type CourseFormProps = {
-    course: CourseType;
-    onUpdate: () => void;
-    onDelete: () => void;
+    keywords: string;
+    ratings: number;
 };
 
 export default function Courses() {
@@ -31,7 +27,12 @@ export default function Courses() {
     const [coursename, setCoursename] = useState<string>("");
     const [description, setDescription] = useState<string>("");
     const [keywords, setKeywords] = useState<string>("");
+    const [showFilters, setShowFilters] = useState<boolean>(false);
     const [selectedCourse, setSelectedCourse] = useState<CourseType | null>(null);
+    let editCoursename = selectedCourse?.coursename;
+    let editCoursedescription = selectedCourse?.description;
+    let editCoursekeywords = selectedCourse?.keywords;
+    const [rateCourse, setRateCourse] = useState<boolean>(false);
     // const [upCoursename, setupCoursename] = useState<string>("");
     // const [upDescription, setupDescription] = useState<string>("");
     // const [upKeywords, setupKeywords] = useState<string>("");
@@ -161,17 +162,21 @@ export default function Courses() {
                         )
                     }
                     <div className='item_filters'>
-                        <div>Filter  </div>
-                        {/* <div>
-                            <select onChange={(e) => setSortBy(e.target.value)}>
-                                <option value="createdAt">Newest First</option>
-                                <option value="coursename">Course Name</option>
-                            </select>
-                            <select onChange={(e) => setSortType(e.target.value)}>
-                                <option value="-1">Descending</option>
-                                <option value="1">Ascending</option>
-                            </select>
-                        </div> */}
+                        <div onClick={()=>setShowFilters(!showFilters)} >Filter  </div>
+                        {
+                            showFilters && (
+                                <div className='filters'>
+                                    <select onChange={(e) => setSortBy(e.target.value)}>
+                                        <option value="createdAt">Newest First</option>
+                                        <option value="coursename">Course Name</option>
+                                    </select>
+                                    <select onChange={(e) => setSortType(e.target.value)}>
+                                        <option value="-1">Descending</option>
+                                        <option value="1">Ascending</option>
+                                    </select>
+                                </div>
+                            )
+                        }
                     </div>
 
 
@@ -200,7 +205,6 @@ export default function Courses() {
                                                         <div className="item_details" onClick={() => sendData(course.coursename)} >
                                                             <div className='item_name'>Course Name: {course.coursename}</div>
                                                             <div className='item_description'>Description: {course.description}</div>
-
                                                         </div>
                                                         {
                                                             user?.role === "admin" && (
@@ -209,6 +213,9 @@ export default function Courses() {
                                                                 </div>
                                                             )
                                                         }
+                                                        <div onClick={() => { setRateCourse(!rateCourse) }} >
+                                                            Star
+                                                        </div>
 
                                                     </div>
 
@@ -229,35 +236,74 @@ export default function Courses() {
                                     </>
                                 )}
 
-<div className="bottom_line">
-    <img src={Bottom_Line_Image} alt="" />
-</div>
+                                <div className="bottom_line">
+                                    <img src={Bottom_Line_Image} alt="" />
+                                </div>
                                 {selectedCourse && (
-                                    <div className="course_form">
-                                        <h3>Edit Course</h3>
-                                        <input
-                                            type="text"
-                                            name="coursename"
-                                            value={coursename}
-                                            onChange={(e) => setCoursename(e.target.value)}
-                                            placeholder="Course Name"
-                                        />
-                                        <input
-                                            name="description"
-                                            value={description}
-                                            onChange={(e) => setDescription(e.target.value)}
-                                            placeholder="Course Description"
-                                        ></input>
-                                        <input
-                                            name="keywords"
-                                            value={keywords}
-                                            onChange={(e) => setKeywords(e.target.value)}
-                                            placeholder="Course Keywords"
-                                        ></input>
-                                        <button onClick={handleUpdate}>Update</button>
-                                        <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
-                                            Delete
-                                        </button>
+                                    <div className="add_new_material">
+                                        <div className="add_new_material_form">
+                                            <form action="">
+
+                                                <div className="add_new_material_form_header">
+                                                    <h2>Edit Course Details</h2>
+                                                    <button type="button" onClick={() => { setSelectedCourse(null) }}>✕</button>
+                                                </div>
+                                                <div className="form_field">
+                                                    <label htmlFor="coursename">Enter a Course Name</label>
+                                                    <input
+                                                        id="coursename"
+                                                        type="text"
+                                                        name="coursename"
+                                                        value={editCoursename}
+                                                        contentEditable="true"
+                                                        onChange={(e) => setCoursename(e.target.value)}
+                                                        placeholder="Course Name"
+                                                    />
+                                                </div>
+                                                <div className="form_field">
+                                                    <label htmlFor="description">Enter a Course Name</label>
+                                                    <input
+                                                        id="description"
+                                                        name="description"
+                                                        value={editCoursedescription}
+                                                        onChange={(e) => setDescription(e.target.value)}
+                                                        placeholder="Course Description"
+                                                    />
+                                                </div>
+                                                <div className="form_field">
+                                                    <label htmlFor="keywords">Enter a Course Name</label>
+                                                    <input
+                                                        id="keywords"
+                                                        name="keywords"
+                                                        value={editCoursekeywords}
+                                                        onChange={(e) => setKeywords(e.target.value)}
+                                                        placeholder="Course Keywords"
+                                                    />
+                                                </div>
+                                                <button onClick={handleUpdate}>Update</button>
+                                                <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                )}
+                                {rateCourse && (
+                                    <div className="add_new_material">
+                                        <div className="add_new_material_form">
+                                            <div className="add_new_material_form_header">
+                                                <h2>Rate Course</h2>
+                                                <button type="button" onClick={() => { setRateCourse(false) }}>✕</button>
+                                            </div>
+                                            <form action="">
+                                                star star star star star
+                                                <button onClick={handleUpdate}>Update</button>
+                                                <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 )}
                             </>

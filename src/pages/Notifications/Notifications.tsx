@@ -11,28 +11,37 @@ type NotificationType = {
     material: string;
     reply: string;
 };
+
+type MessagesType = {
+    _id: string;
+    message: string;
+    sender: string;
+    receiver: string;
+}
 export default function Notifications() {
 
     const { user, isAuthenticated } = getAuthenticatedUser();
     const [courseDetail, setCourseDetail] = useState<NotificationType[]>([]);
+    const [messageDetail, setMessageDetail] = useState<MessagesType[]>([]);
 
     // get all notifications
     useEffect(() => {
 
-        const fetchdata = async () => {
+        const fetchMessageData = async () => {
             try {
-                const Courseresponse = await fetch("http://localhost:3000/api/v1/users/notifications");
-                const Courseresult = await Courseresponse.json();
-                setCourseDetail(Courseresult.notifications);
+                const Courseresponse = await axiosInstance.get("/contactUs", {withCredentials: true});
+                setMessageDetail(Courseresponse.data.messages);
+                // console.log(Courseresponse.data.messages)
             }
             catch (error) {
                 console.error(error);
             }
         }
 
-        fetchdata();
+        fetchMessageData();
     }, []);
-    console.log(courseDetail)
+    
+    console.log(messageDetail)
 
     const handlePublish = async (notificationId: string) => {
         console.log(notificationId)
@@ -93,7 +102,22 @@ export default function Notifications() {
                                 {
                                     (user.role === "admin" || user.role === "student") && (
                                         <>
+                                        <div className="notification_section">
+                                            <div className='notification'>Anouncements</div>
+                                            <div className='section'>
+                                                <div>Messages</div>
 
+                                                    {
+                                                        messageDetail.map((message: MessagesType, index) => (
+                                                            <div key={index}>
+                                                                <div>{message.sender}</div>
+                                                                <div>{message.message}</div>
+                                                            </div>
+                                                        ))
+                                                    }
+                                            </div>
+                                        </div>
+                                            
                                             {courseDetail.map((notification: NotificationType) => (
                                                 <div key={notification._id} className="notification">
                                                     <div>

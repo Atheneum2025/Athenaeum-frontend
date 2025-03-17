@@ -211,7 +211,7 @@ export default function Subjects() {
                             <div className='index'>{index + 1}.</div>
                             <div className="item_details">
                               <div className='item_name'>Subject Name: {subject.subjectname}</div>
-                              <div className='item_description'>Description: {subject.description}</div>
+                              <div className='item_description'>Subject Code: {subject.description}</div>
                             </div>
                             {
                               user.role === "admin" && (

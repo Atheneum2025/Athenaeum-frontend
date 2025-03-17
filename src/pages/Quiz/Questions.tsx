@@ -24,7 +24,7 @@ export default function Questions() {
 
 
     const [answers, setAnswers] = useState<Record<number, boolean>>({})
-    const [score, setScore] = useState<number | null>(null);
+    const [score, setScore] = useState<number>(0);
     const [question, setQuestionsDetails] = useState<QuestionsType>()
     const { quizId } = useParams<{ quizId: string }>();
 
@@ -34,10 +34,7 @@ export default function Questions() {
         const fetchdata = async () => {
             try {
                 const questionsResponse = await axios.get<QuestionsType>(`http://localhost:3000/api/v1/quiz/${quizId}/`);
-
                 setQuestionsDetails(questionsResponse.data.quiz);
-                console.log(questionsResponse.data.quiz);
-
             }
             catch (error) {
                 console.error(error);
@@ -47,15 +44,17 @@ export default function Questions() {
         fetchdata();
     }, [quizId]);
 
-    console.log(answers)
     const handleAnswer = (questionId: number, answer: boolean) => {
         setAnswers({ ...answers, [questionId]: answer });
     };
 
-    const handleSubmit = async () => {
+    console.log(answers)
+
+    const handleSubmit = async (currentScore: number) => {
 
         try {
-            const response = await axios.post(`http://localhost:3000/api/v1/quiz/${quizId}/leaderboard/`, { score }, {withCredentials: true});
+            console.log(currentScore)
+            const response = await axios.post(`http://localhost:3000/api/v1/quiz/${quizId}/leaderboard/`, { currentScore }, {withCredentials: true});
             console.log("leaderboard created", response.data);
         }
         catch (err) {
@@ -74,10 +73,11 @@ export default function Questions() {
         if (answers[4] === question.answerFour) currentScore++;
         if (answers[5] === question.answerFive) currentScore++;
 
+        console.log(currentScore)
         setScore(currentScore);
-        handleSubmit();
+        handleSubmit(currentScore);
     };
-    console.log(score)
+    // console.log(score)
 
     return (
         <>

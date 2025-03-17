@@ -6,6 +6,7 @@ import { getAuthenticatedUser } from "../../utils/authUtils";
 import HeroImage from "../../assets/athena.png";
 import Left_Hand_Image from "../../assets/left_hand.png";
 import Right_Hand_Image from "../../assets/right_hand.png";
+import FeaturedComponent from "../../components/FeaturedComponent/FeaturedComponent";
 
 // import Header from "../../components/Header/Header";
 // let right = document.getElementById('right');
@@ -104,6 +105,7 @@ export default function Home() {
         </div>
       </div> */}
       {/* <AllUsers role={"professors"} /> */}
+      <FeaturedComponent/>
     </>
   )
 }
