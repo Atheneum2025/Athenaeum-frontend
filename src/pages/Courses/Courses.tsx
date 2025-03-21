@@ -4,10 +4,16 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import axiosInstance from '../../utils/axios.js';
 import { getAuthenticatedUser } from '../../utils/authUtils';
+import { useTheme } from "../../context/ThemeContext.tsx";
 import Loader from '../../components/Loader/Loader';
 import AddImage from '../../assets/add.png';
+import RateStar_Light_Image from '../../assets/light_theme/star.png';
+import RateStar_Dark_Image from '../../assets/dark_theme/star.png';
+import EmptyStar_Image from '../../assets/star.png';
+import FilledStar_Image from '../../assets/star_filled.png';
 import EditComponent from '../../components/EditComponent/EditComponent.js';
 import Bottom_Line_Image from "../../assets/bottom_line_cropped.png"
+import RatingComponent from '../../components/RatingComponent/RatingComponent.tsx';
 
 type CourseType = {
     _id: string;
@@ -19,6 +25,7 @@ type CourseType = {
 
 export default function Courses() {
 
+    const {theme} = useTheme();
     const { user, isAuthenticated } = getAuthenticatedUser();
     const navigate = useNavigate();
     const [courseDetail, setCourseDetail] = useState<CourseType[]>([]);
@@ -113,7 +120,7 @@ export default function Courses() {
 
     return (
         <>
-            <div className="items_display_page">
+            <div className="items_display_page courses_page">
                 <div className='items_display_header'>
                     <h1>Courses :</h1>
 
@@ -162,7 +169,7 @@ export default function Courses() {
                         )
                     }
                     <div className='item_filters'>
-                        <div onClick={()=>setShowFilters(!showFilters)} >Filter  </div>
+                        <div onClick={() => setShowFilters(!showFilters)} >Filter  </div>
                         {
                             showFilters && (
                                 <div className='filters'>
@@ -206,15 +213,17 @@ export default function Courses() {
                                                             <div className='item_name'>Course Name: {course.coursename}</div>
                                                             <div className='item_description'>Description: {course.description}</div>
                                                         </div>
-                                                        {
-                                                            user?.role === "admin" && (
-                                                                <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >
-                                                                    <EditComponent />
-                                                                </div>
-                                                            )
-                                                        }
-                                                        <div onClick={() => { setRateCourse(!rateCourse) }} >
-                                                            Star
+                                                        <div className="item_options">
+                                                            {
+                                                                user?.role === "admin" && (
+                                                                    <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >
+                                                                        <EditComponent />
+                                                                    </div>
+                                                                )
+                                                            }
+                                                            <div className="edit_image" onClick={() => { setRateCourse(!rateCourse) }} >
+                                                                <img src={theme === "light" ? RateStar_Light_Image : RateStar_Dark_Image} alt="" />
+                                                            </div>
                                                         </div>
 
                                                     </div>
@@ -296,13 +305,7 @@ export default function Courses() {
                                                 <h2>Rate Course</h2>
                                                 <button type="button" onClick={() => { setRateCourse(false) }}>✕</button>
                                             </div>
-                                            <form action="">
-                                                star star star star star
-                                                <button onClick={handleUpdate}>Update</button>
-                                                <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
-                                                    Cancel
-                                                </button>
-                                            </form>
+                                            <RatingComponent/>
                                         </div>
                                     </div>
                                 )}

@@ -1,7 +1,6 @@
 
-body{
-    /* background-image: url(../../assets/background2.png); */
-}
+
+
 .course_layout{
     display: grid;
     grid-template-columns: 1fr 1fr;

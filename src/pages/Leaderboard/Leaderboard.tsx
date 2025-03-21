@@ -3,6 +3,7 @@ import "./Leaderboard.css"
 import axios from 'axios'
 import { useParams } from 'react-router-dom';
 import { getAuthenticatedUser } from '../../utils/authUtils';
+import axiosInstance from '../../utils/axios';
 
 type LeaderboardType = {
   _id: string;
@@ -22,7 +23,7 @@ export default function Leaderboard() {
     const fetchData = async () => {
 
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/quiz/${quizId}/leaderboard`);
+        const response = await axiosInstance.get(`/quiz/${quizId}/leaderboard`);
         // console.log(response.data);
         setLeaderboard(response.data.leaderboard)
       }
@@ -30,7 +31,6 @@ export default function Leaderboard() {
         console.error(error)
       }
     }
-
     fetchData();
   }, [])
 
@@ -38,33 +38,32 @@ export default function Leaderboard() {
 
   return (
     <>
-    {
-      isAuthenticated ? (
-        <>
-        
-      <div>Leaderboard</div>
-      {/* <div>{ }</div> */}
-      <div className='leaderboard'>
-        <div className='leaderboard_grid header'>
-          <div>Rank</div>
-          <div>Student</div>
-          <div>Score</div>
-        </div>
-        {
-          sortedLeaderboard.map((leaderboard: LeaderboardType, index) => (
-            <div className='leaderboard_grid score' key={leaderboard._id}>
-              <div>{index + 1}</div>
-              <div>{leaderboard.studentname}</div>
-              <div>{leaderboard.score}</div>
+      {
+        isAuthenticated ? (
+          <>
+            <div>Leaderboard</div>
+            {/* <div>{ }</div> */}
+            <div className='leaderboard'>
+              <div className='leaderboard_grid header'>
+                <div>Rank</div>
+                <div>Student</div>
+                <div>Score</div>
+              </div>
+              {
+                sortedLeaderboard.map((leaderboard: LeaderboardType, index) => (
+                  <div className='leaderboard_grid score' key={leaderboard._id}>
+                    <div>{index + 1}</div>
+                    <div>{leaderboard.studentname}</div>
+                    <div>{leaderboard.score}</div>
+                  </div>
+                ))
+              }
             </div>
-          ))
-        }
-      </div>
-        </>
-      ):(
-        <div>please Login</div>
-      )
-    }
+          </>
+        ) : (
+          <div>please Login</div>
+        )
+      }
 
     </>
   )

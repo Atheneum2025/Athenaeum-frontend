@@ -48,6 +48,7 @@ export default function Materials() {
   const [file, setFile] = useState<File | null>(null);
   const [selectedMaterial, setSelectedMaterial] = useState<MaterialType | null>(null);
   const [isPopup, setIsPopup] = useState<boolean>(false);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   // for url params
   let courseIdParameter, subjectIdParameter, unitIdParameter;
@@ -83,6 +84,7 @@ export default function Materials() {
     }
   }
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchData();
   }, [page, sortBy, SortType]);
   // console.log(materialDetails)
@@ -209,7 +211,7 @@ export default function Materials() {
       <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`) }}>Unit Name : {unitIdParameter}</div>
       <div className='material_main_layout'>
 
-        <div className='items_display_page'>
+        <div className='items_display_page materials_page'>
           <div className="items_display_header">
             <h1>Materials :</h1>
             {/* form for making a new material */}
@@ -306,18 +308,22 @@ export default function Materials() {
               )
             }
             <div className='item_filters'>
-              <div>Filter  </div>
-              {/* <div>
-                <select onChange={(e) => setSortBy(e.target.value)}>
-                  <option value="createdAt">Newest First</option>
-                  <option value="materialname">Material Name</option>
-                  <option value="professorname">Professor's Name</option>
-                </select>
-                <select onChange={(e) => setSortType(e.target.value)}>
-                  <option value="-1">Descending</option>
-                  <option value="1">Ascending</option>
-                </select>
-              </div> */}
+              <div onClick={() => setShowFilters(!showFilters)}>Filter  </div>
+              {
+                showFilters && (
+                  <div className='filters'>
+                    <select onChange={(e) => setSortBy(e.target.value)}>
+                      <option value="createdAt">Newest First</option>
+                      <option value="materialname">Material Name</option>
+                      <option value="professorname">Professor's Name</option>
+                    </select>
+                    <select onChange={(e) => setSortType(e.target.value)}>
+                      <option value="-1">Descending</option>
+                      <option value="1">Ascending</option>
+                    </select>
+                  </div>
+                )
+              }
             </div>
           </div>
           {/* Display all the materials in a unit */}

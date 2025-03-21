@@ -133,11 +133,6 @@ export default function Header() {
 
           {/* </div> */}
         </div>
-        {/* <div className="auth">
-          <a href="/student-dashboard">
-            <img src="User.png" alt="" />
-          </a>
-        </div> */}
         <div id="menu" className={header.menu} onClick={() => setSidebarIsVisible(!sidebarIsVisible)}>Menu</div>
       </header>
 

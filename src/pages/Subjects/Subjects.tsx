@@ -35,6 +35,7 @@ export default function Subjects() {
   const [selectedSubject, setSelectedSubject] = useState<SubjectType | null>(null);
 
   const [confirmIsVisible, setconfirmIsVisible] = useState<boolean>(false);
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -65,6 +66,7 @@ export default function Subjects() {
     }
   }
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchData();
   }, [page, sortBy, SortType]);
   console.log(subjectDetails)
@@ -125,8 +127,8 @@ export default function Subjects() {
   return (
 
     <>
-      <div className='title' onClick={()=>{navigate(`/course/`)}} >Course Name : {courseIdParameter}</div>
-      <div className='items_display_page'>
+      <div className='title' onClick={() => { navigate(`/course/`) }} >Course Name : {courseIdParameter}</div>
+      <div className='items_display_page subjects_page'>
         <div className="items_display_header">
           <h1>Subjects :</h1>
           {/* form for making a new subject */}
@@ -175,17 +177,21 @@ export default function Subjects() {
             )
           }
           <div className='item_filters'>
-            <div>Filter  </div>
-            {/* <div>
-              <select onChange={(e) => setSortBy(e.target.value)}>
-                <option value="createdAt">Newest First</option>
-                <option value="subjectname">Subject Name</option>
-              </select>
-              <select onChange={(e) => setSortType(e.target.value)}>
-                <option value="-1">Descending</option>
-                <option value="1">Ascending</option>
-              </select>
-            </div> */}
+            <div onClick={() => setShowFilters(!showFilters)} >Filter  </div>
+            {
+              showFilters && (
+                <div className="filters" >
+                  <select onChange={(e) => setSortBy(e.target.value)}>
+                    <option value="createdAt">Newest First</option>
+                    <option value="subjectname">Subject Name</option>
+                  </select>
+                  <select onChange={(e) => setSortType(e.target.value)}>
+                    <option value="-1">Descending</option>
+                    <option value="1">Ascending</option>
+                  </select>
+                </div>
+              )
+            }
           </div>
           {/* Display all the subjects in a course */}
         </div>
@@ -216,7 +222,7 @@ export default function Subjects() {
                             {
                               user.role === "admin" && (
                                 <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedSubject(subject); e.stopPropagation() }} >
-                                  <EditComponent/>
+                                  <EditComponent />
                                 </div>
                               )
                             }

@@ -31,7 +31,7 @@ export default function Units() {
   const [description, setDescription] = useState<string>("");
   const [keywords, setKeywords] = useState<string>("");
   const [selectedUnit, setSelectedUnit] = useState<UnitType | null>(null);
-
+  const [showFilters, setShowFilters] = useState<boolean>(false);
 
   // for url params
   let courseIdParameter, subjectIdParameter;
@@ -59,6 +59,7 @@ export default function Units() {
     }
   }
   useEffect(() => {
+    window.scrollTo(0, 0);
     fetchData();
   }, [page, sortBy, SortType]);
 
@@ -118,7 +119,7 @@ export default function Units() {
 
       <div className='title' onClick={() => { navigate(`/course/`) }}>Course Name : {courseIdParameter}</div>
       <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject`) }}>Subject Name : {subjectIdParameter}</div>
-      <div className='items_display_page'>
+      <div className='items_display_page units_page'>
         <div className='items_display_header'>
 
           <h1>Units :</h1>
@@ -169,17 +170,21 @@ export default function Units() {
             )
           }
           <div className='item_filters'>
-            <div>Filter  </div>
-            {/* <div>
-              <select onChange={(e) => setSortBy(e.target.value)}>
-                <option value="createdAt">Newest First</option>
-                <option value="unitname">Unit Name</option>
-              </select>
-              <select onChange={(e) => setSortType(e.target.value)}>
-                <option value="-1">Descending</option>
-                <option value="1">Ascending</option>
-              </select>
-            </div> */}
+            <div onClick={() => setShowFilters(!showFilters)}>Filter  </div>
+            {
+              showFilters && (
+                <div className='filters'>
+                  <select onChange={(e) => setSortBy(e.target.value)}>
+                    <option value="createdAt">Newest First</option>
+                    <option value="unitname">Unit Name</option>
+                  </select>
+                  <select onChange={(e) => setSortType(e.target.value)}>
+                    <option value="-1">Descending</option>
+                    <option value="1">Ascending</option>
+                  </select>
+                </div>
+              )
+            }
           </div>
         </div>
         {/* Display all the units in a subject */}
@@ -196,7 +201,7 @@ export default function Units() {
                         UnitDetails.map((unit: UnitType, index) => (
                           <>
                             <div className="secondary_item_card" key={index} onClick={() => sendData(unit.unitname)}>
-                              <div className="index">{index+1}.</div>
+                              <div className="index">{index + 1}.</div>
                               <div className="item_details">
                                 <div className="item_name">Unit Name: {unit.unitname}</div>
                                 <div className="item_description">Description: {unit.description}</div>
@@ -204,7 +209,7 @@ export default function Units() {
                               {
                                 user.role === "admin" && (
                                   <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedUnit(unit); e.stopPropagation() }} >
-                                    <EditComponent/>
+                                    <EditComponent />
                                   </div>
                                 )
                               }

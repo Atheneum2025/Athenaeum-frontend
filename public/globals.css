@@ -1,4 +1,19 @@
 /* course , subject, unit, material page */
+.courses_page{
+    background-image: url(../src/assets/background2.png);
+}
+
+.subjects_page{
+    background-image: url(../src/assets/background3.png);
+    background-position: top;
+    background-size: contain;
+}
+.units_page{
+    background-image: url(../src/assets/moonSets.png);
+}
+.materials_page{
+    background-image: url(../src/assets/background2.png);
+}
 .items_cards_list {
   padding-block: 2rem;
   /* background-color: blue; */
@@ -81,6 +96,13 @@ main {
 .item_filters select option {
   background-color: var(--primary-color);
   color: white;
+}
+
+.item_options{
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .pagination {
