@@ -1,6 +1,7 @@
 /* course , subject, unit, material page */
 .courses_page{
     background-image: url(../src/assets/background2.png);
+    background-position: top;
 }
 
 .subjects_page{
@@ -73,7 +74,7 @@ main {
 
 .item_filters > div:last-child {
   display: flex;
-  gap: 10px;
+  /* gap: 10px; */
 }
 
 .filters{
@@ -85,7 +86,7 @@ main {
 }
 .item_filters select {
   border: none;
-  padding: 2px 4px;
+  padding: 5px 16px;
   background-color: var(--secondary-color);
   color: white;
   outline: none;
@@ -99,10 +100,17 @@ main {
 }
 
 .item_options{
-  height: 50%;
+  height: 5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
+}
+
+.option_images{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .pagination {
@@ -171,7 +179,7 @@ main {
 button {
 }
 
-.edit_image {
+.edit_image, .option_images {
   cursor: pointer;
   height: max-content;
   width: max-content;
@@ -181,7 +189,7 @@ button {
 .edit_image img,
 .save_image img,
 .item_type img {
-  width: 2rem;
+  width: 1.5rem;
 }
 
 .save_image {
@@ -339,7 +347,7 @@ svg {
   display: none;
 }
 
-.upload_btns {
+.upload_btns, .update_btns{
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 60%;
@@ -348,7 +356,7 @@ svg {
   gap: 10px;
 }
 
-.upload_btns button {
+.upload_btns button, .update_btns button{
   height: 40px;
   border-radius: 10px;
   border: none;
@@ -368,6 +376,25 @@ svg {
     background-color: rgba(21, 93, 252, 0.6);
   }
 }
+
+.update_btns button:first-child {
+  background-color: rgb(21, 93, 252);
+
+  &:hover {
+    background-color: rgba(21, 93, 252, 0.6);
+  }
+}
+.update_btns button:last-child {
+    background-color: rgb(255, 0, 0);
+
+  &:hover {
+    background-color: rgba(255, 0, 0, .6);
+  }
+}
+
+/* .ratings_section{
+  width: 100%;
+} */
 
 .bottom_line{
     width: 100%;

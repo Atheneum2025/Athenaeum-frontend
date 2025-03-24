@@ -150,11 +150,11 @@ export default function Subjects() {
                               <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
                             </div>
                             <div className="form_field">
-                              <label htmlFor="file">Enter a Subject Name</label>
+                              <label htmlFor="file">Enter Subject Name</label>
                               <input type="text" id='file-name' value={subjectname} onChange={(e) => setSubjectname(e.target.value)} />
                             </div>
                             <div className="form_field">
-                              <label htmlFor="file">ENter Description</label>
+                              <label htmlFor="file">Enter Description</label>
                               <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
                             </div>
                             <div className="form_field">
@@ -165,8 +165,6 @@ export default function Subjects() {
                               <button type="button" onClick={() => setFormIsVisible(false)}>Cancel</button>
                               <button type="submit">Create Subject</button>
                             </div>
-                            {/* <button type='submit'>Save</button>
-                            <button onClick={() => setFormIsVisible(false)}>Cancel</button> */}
                           </form>
                         </div>
                       </div>
@@ -203,7 +201,7 @@ export default function Subjects() {
         <button onClick={() => updateCourse(course._id)} >Edit</button> */}
         <div className='items_cards_list'>
           {
-            loading ? <Loader /> :
+            loading ? <Loader width={35} height={15} top={50} /> :
               <>
                 {
                   subjectDetails.length === 0 ? (
@@ -244,32 +242,52 @@ export default function Subjects() {
                   )
                 }
                 {selectedSubject && (
-                  <div className="course_form">
-                    <h3>Edit Course</h3>
-                    <input
-                      type="text"
-                      name="subjectname"
-                      value={subjectname}
-                      onChange={(e) => setSubjectname(e.target.value)}
-                      placeholder="Course Name"
-                    />
-                    <input
-                      name="description"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Course Description"
-                    ></input>
-                    <input
-                      name="keywords"
-                      value={keywords}
-                      onChange={(e) => setKeywords(e.target.value)}
-                      placeholder="Course Keywords"
-                    ></input>
-                    <button onClick={handleUpdate}>Update</button>
-                    <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
-                      Delete
-                    </button>
-                  </div>
+                  <>
+                    <div className="add_new_material">
+                      <div className="add_new_material_form">
+                        <form action="">
+                          <div className="add_new_material_form_header">
+                            <h2>Edit Subject Details</h2>
+                            <button type="button" onClick={() => setSelectedSubject(null)}>✕</button>
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="coursename">Edit Subject Name</label>
+                            <input
+                              type="text"
+                              name="subjectname"
+                              value={subjectname}
+                              onChange={(e) => setSubjectname(e.target.value)}
+                              placeholder="Course Name"
+                            />
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="coursename">Edit Description</label>
+                            <input
+                              type="text"
+                              name="description"
+                              value={description}
+                              onChange={(e) => setDescription(e.target.value)}
+                              placeholder="Course Description"
+                            />
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="keywords">Edit Keywords</label>
+                            <input
+                              type="text"
+                              name="keywords"
+                              value={keywords}
+                              onChange={(e) => setKeywords(e.target.value)}
+                              placeholder="Course Keywords"
+                            />
+                          </div>
+                          <div className="update_btns">
+                            <button onClick={handleUpdate}>Update</button>
+                            <button onClick={handleDelete}>Delete</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </>
                 )}
               </>
           }

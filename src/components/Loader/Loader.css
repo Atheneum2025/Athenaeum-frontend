@@ -8,8 +8,8 @@
 
 .dash {
   margin: 0 15px;
-  width: 35px;
-  height: 15px;
+  /* width: 35px;  
+  height: 15px; */
   border-radius: 8px;
   background: var(--secondary-color);
 }

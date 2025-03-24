@@ -20,12 +20,12 @@ type CourseType = {
     coursename: string;
     description: string;
     keywords: string;
-    ratings: number;
+    rating: number;
 };
 
 export default function Courses() {
 
-    const {theme} = useTheme();
+    const { theme } = useTheme();
     const { user, isAuthenticated } = getAuthenticatedUser();
     const navigate = useNavigate();
     const [courseDetail, setCourseDetail] = useState<CourseType[]>([]);
@@ -36,10 +36,10 @@ export default function Courses() {
     const [keywords, setKeywords] = useState<string>("");
     const [showFilters, setShowFilters] = useState<boolean>(false);
     const [selectedCourse, setSelectedCourse] = useState<CourseType | null>(null);
+    const [rateCourse, setRateCourse] = useState<CourseType | null>(null);
     let editCoursename = selectedCourse?.coursename;
     let editCoursedescription = selectedCourse?.description;
     let editCoursekeywords = selectedCourse?.keywords;
-    const [rateCourse, setRateCourse] = useState<boolean>(false);
     // const [upCoursename, setupCoursename] = useState<string>("");
     // const [upDescription, setupDescription] = useState<string>("");
     // const [upKeywords, setupKeywords] = useState<string>("");
@@ -66,11 +66,9 @@ export default function Courses() {
     useEffect(() => {
         fetchData();
     }, [page, sortBy, SortType]);
-    console.log(courseDetail)
 
     const sendData = (coursename: string) => {
         navigate(`/course/${coursename}/subject`, { state: { courseName: coursename } });
-        console.log(coursename)
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -89,9 +87,7 @@ export default function Courses() {
     }
     const handleUpdate = async () => {
         try {
-            console.log(selectedCourse?._id)
             const update = await axiosInstance.patch(`/course/${selectedCourse?.coursename}`, { coursename, description, keywords }, { withCredentials: true });
-            console.log(update.data)
             alert("Course updated successfully!");
             fetchData()
         } catch (error) {
@@ -141,14 +137,14 @@ export default function Courses() {
                                                     <form action="" onSubmit={handleSubmit}>
                                                         <div className="add_new_material_form_header">
                                                             <h2>Create New Course</h2>
-                                                            <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
+                                                            <button type="button" onClick={() => { setFormIsVisible(false); setCoursename(""); setDescription(""); setKeywords("") }}>✕</button>
                                                         </div>
                                                         <div className="form_field">
-                                                            <label htmlFor="file">Enter a Course Name</label>
+                                                            <label htmlFor="file">Enter Course Name</label>
                                                             <input type="text" id='file-name' value={coursename} onChange={(e) => setCoursename(e.target.value)} />
                                                         </div>
                                                         <div className="form_field">
-                                                            <label htmlFor="file">ENter Description</label>
+                                                            <label htmlFor="file">Enter Description</label>
                                                             <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
                                                         </div>
                                                         <div className="form_field">
@@ -156,7 +152,7 @@ export default function Courses() {
                                                             <input type="text" id="keywords" value={keywords} onChange={(e) => setKeywords(e.target.value)} />
                                                         </div>
                                                         <div className="upload_btns">
-                                                            <button type="button" onClick={() => setFormIsVisible(false)}>Cancel</button>
+                                                            <button type="button" onClick={() => { setFormIsVisible(false); setCoursename(""); setDescription(""); setKeywords("") }}>Cancel</button>
                                                             <button type="submit">Create Course</button>
                                                         </div>
                                                     </form>
@@ -192,7 +188,7 @@ export default function Courses() {
 
                 <div className="items_cards_list">
                     {
-                        loading ? <Loader /> :
+                        loading ? <Loader width={35} height={15} top={50} /> :
                             <>
 
                                 {courseDetail.length === 0 ? (
@@ -216,13 +212,14 @@ export default function Courses() {
                                                         <div className="item_options">
                                                             {
                                                                 user?.role === "admin" && (
-                                                                    <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >
+                                                                    <div className="option_images edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedCourse(course); e.stopPropagation() }} >
                                                                         <EditComponent />
                                                                     </div>
                                                                 )
                                                             }
-                                                            <div className="edit_image" onClick={() => { setRateCourse(!rateCourse) }} >
+                                                            <div className="option_images edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setRateCourse(course); e.stopPropagation() }} >
                                                                 <img src={theme === "light" ? RateStar_Light_Image : RateStar_Dark_Image} alt="" />
+                                                                {course.rating ? (<div>{course.rating}/5</div>) : (<div></div>)}
                                                             </div>
                                                         </div>
 
@@ -258,7 +255,7 @@ export default function Courses() {
                                                     <button type="button" onClick={() => { setSelectedCourse(null) }}>✕</button>
                                                 </div>
                                                 <div className="form_field">
-                                                    <label htmlFor="coursename">Enter a Course Name</label>
+                                                    <label htmlFor="coursename">Edit Course Name</label>
                                                     <input
                                                         id="coursename"
                                                         type="text"
@@ -270,7 +267,7 @@ export default function Courses() {
                                                     />
                                                 </div>
                                                 <div className="form_field">
-                                                    <label htmlFor="description">Enter a Course Name</label>
+                                                    <label htmlFor="description">Edit Description</label>
                                                     <input
                                                         id="description"
                                                         name="description"
@@ -280,7 +277,7 @@ export default function Courses() {
                                                     />
                                                 </div>
                                                 <div className="form_field">
-                                                    <label htmlFor="keywords">Enter a Course Name</label>
+                                                    <label htmlFor="keywords">Edit Keywords</label>
                                                     <input
                                                         id="keywords"
                                                         name="keywords"
@@ -289,10 +286,10 @@ export default function Courses() {
                                                         placeholder="Course Keywords"
                                                     />
                                                 </div>
-                                                <button onClick={handleUpdate}>Update</button>
-                                                <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
-                                                    Delete
-                                                </button>
+                                                <div className="update_btns">
+                                                    <button onClick={handleUpdate}>Update</button>
+                                                    <button onClick={handleDelete}>Delete</button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -302,10 +299,10 @@ export default function Courses() {
                                     <div className="add_new_material">
                                         <div className="add_new_material_form">
                                             <div className="add_new_material_form_header">
-                                                <h2>Rate Course</h2>
-                                                <button type="button" onClick={() => { setRateCourse(false) }}>✕</button>
+                                                <h2>Rate Course {rateCourse.coursename}</h2>
+                                                <button type="button" onClick={() => { setRateCourse(null) }}>✕</button>
                                             </div>
-                                            <RatingComponent/>
+                                            <RatingComponent course={rateCourse} />
                                         </div>
                                     </div>
                                 )}

@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import './Home.css'
+import styles from '../../components/FeaturedComponent/FeaturedComponent.module.css';
 import AllUsers from "../../components/AllUsers/AllUsers";
 import { getAuthenticatedUser } from "../../utils/authUtils";
 import HeroImage from "../../assets/athena.png";
@@ -105,7 +106,23 @@ export default function Home() {
         </div>
       </div> */}
       {/* <AllUsers role={"professors"} /> */}
-      <FeaturedComponent/>
+      <FeaturedComponent />
+      {/* <div className={styles.container}>
+        <div className={styles.box}>
+          <div className={styles.inner_box}>
+            <div className={styles.front}>BCA</div>
+            <div className={styles.back}>BAchelor in computer application</div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.container}>
+        <div className={styles.box}>
+          <div className={styles.inner_box}>
+            <div className={styles.front}>BCA</div>
+            <div className={styles.back}>BAchelor in computer application</div>
+          </div>
+        </div>
+      </div> */}
     </>
   )
 }

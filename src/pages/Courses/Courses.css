@@ -57,6 +57,7 @@
 .item_details{
     align-content: space-around;
     color: white;
+    cursor: pointer;
 }
 
 .item_details > div{

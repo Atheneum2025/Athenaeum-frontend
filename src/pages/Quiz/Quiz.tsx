@@ -213,7 +213,11 @@ export default function Quiz() {
                                                                 <div className="index">{index + 1}.</div>
                                                                 <div className="course_details">
                                                                     <div className='course_name'>Quiz Name: {quiz.quizName}</div>
-                                                                    <div className='course_description'>Subject :{quiz.selectedSubject}</div>
+                                                                    {
+                                                                        quiz.selectedSubject && (
+                                                                            <div className='course_description'>Subject :{quiz.selectedSubject}</div>
+                                                                        )
+                                                                    }
                                                                     <div className='course_description'>Quiz By :{quiz.author}</div>
                                                                 </div>
                                                             </div>

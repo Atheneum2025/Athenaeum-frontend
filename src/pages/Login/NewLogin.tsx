@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../utils/axios";
 import Cookies from "js-cookie"
 import styles from "./NewLogin.module.css";
 import OpenEye from "../../assets/openEye.png";
 import CloseEye from "../../assets/closeEye.png";
+import Loader from "../../components/Loader/Loader";
 
 const LoginPage = () => {
 
@@ -17,6 +18,8 @@ const LoginPage = () => {
     const [passwordError, setPasswordError] = useState<string>("")
     const [isActive, setIsActive] = useState(false);
     const [color, setColor] = useState("red");
+    const [loading, setLoading] = useState<boolean>(false)
+    const [signUpLoading, setSignUpLoading] = useState<boolean>(false)
     const navigate = useNavigate();
 
     const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
@@ -28,8 +31,10 @@ const LoginPage = () => {
 
     const handleSignIn = async (e: React.FormEvent) => {
         e.preventDefault();
+        setLoading(true)
         // Add authentication logic
         try {
+            await new Promise((resolve) => setTimeout(resolve, 2000));
             if (!(username && password)) {
                 setResMessage("Please fill in all the fields")
             }
@@ -41,18 +46,22 @@ const LoginPage = () => {
                 localStorage.setItem("authToken", JSON.stringify(response.data));
                 Cookies.set("authToken", response.data.accessToken)
             }
+            setLoading(false)
         }
         catch (error) {
             console.error(error);
             setResMessage("Invalid User Credentials");
         }
+        finally {
+            setLoading(false)
+        }
     };
 
     const handleSignUp = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        setSignUpLoading(true)
         try {
-
+            await new Promise((resolve) => setTimeout(resolve, 2000));
             if (!username || !password || !email) {
                 setSignupMessage("Please fill in all the fields");
                 return;
@@ -76,10 +85,14 @@ const LoginPage = () => {
             setConfirmPassword("")
             // setRole("")
             console.log(response.data)
+            setSignUpLoading(false)
 
         } catch (error: any) {
             console.error(error)
             setSignupMessage(error.reponse?.data?.message || "Email already exists");
+        }
+        finally {
+            setSignUpLoading(false)
         }
     }
 
@@ -171,14 +184,24 @@ const LoginPage = () => {
                                     onChange={handleConfirmPasswordChange}
                                 />
                             </fieldset>
-                            <button type="submit">Sign Up</button>
+                            <button type="submit" className={styles["submit_btn"]} disabled={signUpLoading}>{signUpLoading ? "Signing Up.." : "Sign Up"}</button>
                             <div className={styles["error_message"]}>
+                                {
+                                    signUpLoading ? (
+                                        <>
+                                            <Loader width={25} height={10} top={88} />
+                                        </>
+                                    ) : (
+                                        <>
+                                            {emailError && <pre>{emailError}</pre>}
+                                            {passwordError && <pre>{passwordError}</pre>}
+                                            {signupMessage && (
+                                                <pre style={{ color: "{color}" }} >{signupMessage}</pre>
+                                            )}
+                                        </>
+                                    )
+                                }
 
-                                {emailError && <pre>{emailError}</pre>}
-                                {passwordError && <pre>{passwordError}</pre>}
-                                {signupMessage && (
-                                    <pre style={{ color: "{color}" }} >{signupMessage}</pre>
-                                )}
                             </div>
                         </form>
 
@@ -218,11 +241,17 @@ const LoginPage = () => {
                                     }
                                 </div>
                             </fieldset>
-                            <button type="submit" className={styles["submit_btn"]}>Sign In</button>
+                            <button type="submit" className={styles["submit_btn"]} disabled={loading}>{loading ? "Signing In.." : "Sign In"}</button>
                             <div className={styles["error_message"]}>
-                                {loginMessage && (
-                                    <pre style={{ color: "{color}" }} >{loginMessage}</pre>
-                                )}
+                                {
+                                    loading ? (<div className={styles["loading"]}>
+                                        <Loader width={25} height={10} top={74} />
+                                    </div>) : (
+                                        loginMessage && (
+                                            <pre style={{ color: "{color}" }} >{loginMessage}</pre>
+                                        )
+                                    )
+                                }
                             </div>
                         </form>
 
