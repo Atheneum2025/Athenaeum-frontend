@@ -16,6 +16,7 @@ export default function CalendarSidebar() {
     const [loading, setLoading] = useState<boolean>(false);
 
     const [event, setEvent] = useState<EventType[]>([]);
+    const [height, setHeight] = useState("85vh");
     const current_date = new Date()
     console.log(current_date.getTime())
     const fetchData = async () => {
@@ -35,8 +36,18 @@ export default function CalendarSidebar() {
     }
     console.log(event)
 
+const handleScroll = () => {
+        if (window.scrollY > 400) { // Change height when scrolled 100px
+            setHeight("55vh");
+        } else {
+            setHeight("85vh");
+        }
+    };
+
     useEffect(() => {
         fetchData();
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, [])
 
     const removeFromEvents = async (_id: string) => {
@@ -53,10 +64,10 @@ export default function CalendarSidebar() {
         }
     };
     return (
-        <div id='sidebar' className="sidebar">
+        <div id='sidebar' className="sidebar" style={{height: `${height}`}}>
             <div className="viewLater_text">Events :</div>
             {
-                loading ? <Loader /> :
+                loading ? <Loader width={20} height={7} top={50} color={"grey"} /> :
                     <>
                         {
                             event.map((event: EventType, index) => (
@@ -64,7 +75,6 @@ export default function CalendarSidebar() {
                                     {
                                         
                                         event.date.replace('-', ' ') < current_date.toString().replace('-', ' ') && (
-                                            <>
                                                 <div key={index} className="viewLater_card" >
                                                     <div>
                                                         <div className='viewLater_name'>{event.date}</div>
@@ -75,7 +85,6 @@ export default function CalendarSidebar() {
                                                         {/* <img src={Delete_Dark_Image} alt="" /> */}
                                                     </div>
                                                 </div>
-                                            </>
                                         )
                                     }
                                 </>

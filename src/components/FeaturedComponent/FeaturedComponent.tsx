@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './FeaturedComponent.module.css';
 import axiosInstance from '../../utils/axios';
+import { useNavigate } from 'react-router-dom';
 
 type CourseType = {
     _id: string;
@@ -17,7 +18,7 @@ type MaterialType = {
     owner: string;
 };
 export default function FeaturedComponent() {
-
+    const navigate = useNavigate();
     const [courseDetails, setCourseDetails] = useState<CourseType[]>([]);
     const [materialDetails, setMaterialDetails] = useState<MaterialType[]>([]);
 
@@ -42,7 +43,7 @@ export default function FeaturedComponent() {
             <div className={styles.container}>
                 {
                     courseDetails.map((course: CourseType, index) => (
-                        <div className={styles.box} key={index}>
+                        <div className={styles.box} key={index} onClick={()=> navigate(`/course/${course.coursename}/subject/`)}>
                             <div className={styles.inner_box}>
                                 <div className={styles.front}>{course.coursename}</div>
                                 <div className={styles.back}>{course.description}</div>

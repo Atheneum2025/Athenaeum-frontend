@@ -11,8 +11,9 @@
 }
 .inner_box {
   position: relative;
-  width: 250px;
+  width: 4rem;
   height: 100px;
+  font-size: .4em;
   transition: transform 0.5s;
   transform-style: preserve-3d;
 }
@@ -23,16 +24,16 @@
 .front,
 .back {
   position: absolute;
-  width: 250px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   backface-visibility: hidden;
   box-shadow: 2px 5px rgba(0, 0, 0, 0.745);
 }
 
 .front {
-  background-color: red;
+  background-color: rgb(38, 38, 38);
 }
 .back {
-  background-color: blue;
+  background-color: rgb(55, 55, 55);
   transform: rotateY(180deg);
 }

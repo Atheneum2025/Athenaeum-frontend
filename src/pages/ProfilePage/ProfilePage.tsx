@@ -5,7 +5,7 @@ import { getAuthenticatedUser } from '../../utils/authUtils';
 
 export default function ProfilePage() {
 
-      const {user, isAuthenticated} = getAuthenticatedUser();
+    const {user, isAuthenticated} = getAuthenticatedUser();
     
     return (
         <>

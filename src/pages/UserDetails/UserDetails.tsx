@@ -59,8 +59,9 @@ export default function UserDetails() {
             console.error(error)
         }
     }
-
+    
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchUserData();
         fetchMaterialData();
     }, [])

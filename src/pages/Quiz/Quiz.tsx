@@ -24,6 +24,7 @@ export default function Quiz() {
     const [quizDetails, setQuizDetails] = useState<QuizType[]>([])
     const [formIsVisible, setFormIsVisible] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(false)
+    const [subject, setSubject] = useState<string>("")
     const [selectedSubject, setSelectedSubject] = useState<string>("");
     const [quizName, setQuizName] = useState<string>("");
     const [questionOne, setQuestionOne] = useState<string>("");
@@ -54,23 +55,20 @@ export default function Quiz() {
     }
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchData();
-    }, []);
-
-    useEffect(() => {
-
-        const fetchSubjects = async () => {
-            try {
-                const response = await axiosInstance.get(`/subject`);
-                setSubjects(response.data.subjects);
-            } catch (error) {
-                console.error("Error fetching subjects:", error);
-            }
-        }
-
         fetchSubjects();
     }, []);
-    console.log(quizDetails)
+
+    const fetchSubjects = async () => {
+        try {
+            const response = await axiosInstance.get(`/subject`);
+            setSubjects(response.data.subjects);
+        } catch (error) {
+            console.error("Error fetching subjects:", error);
+        }
+    }
+    
     function sendData(quizId: string) {
         navigate(`/quiz/${quizId}/questions`, { state: { quizId: quizId } });
     }
@@ -131,6 +129,7 @@ export default function Quiz() {
                                                                             ))
                                                                         }
                                                                     </select>
+                                                                    <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
                                                                 </div>
                                                                 <div className="question_form_field">
                                                                     <label htmlFor="quizName">Enter Quiz Name :</label>
@@ -199,7 +198,7 @@ export default function Quiz() {
                             </div>
                             <div className="items_cards_list">
                                 {
-                                    loading ? <Loader /> :
+                                    loading ? <Loader width={35} height={15} top={50} color={''} /> :
                                         <>
                                             {quizDetails.length === 0 ? (
                                                 <div className='not_available_text'>No Quizzes Available</div>

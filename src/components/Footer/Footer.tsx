@@ -20,32 +20,34 @@ export default function Footer() {
               <p>BCA Lab</p>
             </div>
           </div>
+          <div className="links">
+            <div className="footer_title">Links :</div>
+            <ul>
+              <li>
+                <a href="/home" >Home</a>
+              </li>
+              <li>
+                <a href="/about" >About Us</a>
+              </li>
+              <li>
+                <a href="/docs" >Docs</a>
+              </li>
+              <li>
+                <a href="/course" >Courses</a>
+              </li>
+              <li>
+                <a href="/contact" >Contact Us</a>
+              </li>
+            </ul>
+          </div>
           <div className="contact">
             <div className="footer_title">Contact :</div>
             <p>Phone Number: +zx xyz-xyz-zyxy</p>
             <p>Email: athenaeum2025@gmail.com</p>
           </div>
-          <div className="links">
-            <div className="footer_title">Links :</div>
-            <li>
-              <a href="/home" >Home</a>
-            </li>
-            <li>
-              <a href="/about" >About Us</a>
-            </li>
-            <li>
-              <a href="/docs" >Docs</a>
-            </li>
-            <li>
-              <a href="/course" >Courses</a>
-            </li>
-            <li>
-              <a href="/contact" >Contact Us</a>
-            </li>
-          </div>
           <div className="feedback_form">
             <div className="footer_title">Give Your Feedback :</div>
-            <input type="text" />
+            <textarea name="" id=""></textarea>
             <button>Send Feedback</button>
           </div>
         </div>

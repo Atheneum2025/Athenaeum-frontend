@@ -12,11 +12,11 @@ type SubjectType = {
   _id: string;
   subjectname: string;
   description: string;
+  keywords: string;
 };
 
 export default function Subjects() {
   const { user, isAuthenticated } = getAuthenticatedUser();
-
 
   const location = useLocation();
   const courseName = location.state?.courseName;
@@ -36,6 +36,9 @@ export default function Subjects() {
 
   const [confirmIsVisible, setconfirmIsVisible] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [editSubjectname, setEditSubjectname] = useState<string>("");
+  const [editSubjectdescription, setEditDescription] = useState<string>("");
+  const [editSubjectkeywords, setEditKeywords] = useState<string>("");
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -44,7 +47,7 @@ export default function Subjects() {
 
   // for url params
   let courseIdParameter;
-  courseId ? courseIdParameter = courseId.toUpperCase() : courseIdParameter = courseName;
+  courseId ? courseIdParameter = courseId : courseIdParameter = courseName;
 
   // for displaying all subjects
   const [subjectDetails, setSubjectDetails] = useState<SubjectType[]>([]);
@@ -58,8 +61,6 @@ export default function Subjects() {
       setSubjectDetails(subjectResponse.data.subjects);
       setLoading(false)
       setTotalPages(subjectResponse.data.totalPages);
-      console.log(totalPages)
-      console.log(sortBy)
     }
     catch (error) {
       console.error(error);
@@ -69,7 +70,14 @@ export default function Subjects() {
     window.scrollTo(0, 0);
     fetchData();
   }, [page, sortBy, SortType]);
-  console.log(subjectDetails)
+
+  useEffect(() => {
+    if (selectedSubject) {
+      setEditSubjectname(selectedSubject.subjectname || ""); // Ensure a fallback empty string
+      setEditDescription(selectedSubject.description || "");
+      setEditKeywords(selectedSubject.keywords || "");
+    }
+  }, [selectedSubject]);
 
   // function for creating a new subject in that course
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,7 +85,6 @@ export default function Subjects() {
 
     try {
       const response = await axiosInstance.post(`/course/${courseIdParameter}/subject`, { subjectname, description, keywords }, { withCredentials: true });
-      console.log("subject created", response.data);
       setFormIsVisible(false)
       fetchData();
     }
@@ -88,20 +95,19 @@ export default function Subjects() {
   }
 
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      console.log(selectedSubject?._id)
-      const update = await axiosInstance.patch(`/course/${courseId}/subject/${selectedSubject?.subjectname}`, { subjectname, description, keywords }, { withCredentials: true });
-      console.log(update.data)
-      alert("Subject updated successfully!");
+      await axiosInstance.patch(`/course/${courseId}/subject/${selectedSubject?.subjectname}`, { editSubjectname, editSubjectdescription, editSubjectkeywords }, { withCredentials: true });
       fetchData()
+      setSelectedSubject(null);
     } catch (error) {
       console.error(error);
-      alert("Failed to update course.");
+      setSelectedSubject(null);
     }
-    setSubjectname(" ");
-    setDescription(" ");
-    setKeywords(" ");
+    setEditSubjectname("");
+    setEditDescription("");
+    setEditKeywords("");
   };
 
   // Delete course
@@ -122,7 +128,6 @@ export default function Subjects() {
   // sending subjectName to unit component
   const sendData = (subjectname: string) => {
     navigate(`/course/${courseIdParameter}/subject/${subjectname}/unit`, { state: { courseName, subjectName: subjectname } });
-    // console.log(subjectname)
   }
   return (
 
@@ -154,7 +159,7 @@ export default function Subjects() {
                               <input type="text" id='file-name' value={subjectname} onChange={(e) => setSubjectname(e.target.value)} />
                             </div>
                             <div className="form_field">
-                              <label htmlFor="file">Enter Description</label>
+                              <label htmlFor="file">Enter Subject Code</label>
                               <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
                             </div>
                             <div className="form_field">
@@ -201,7 +206,7 @@ export default function Subjects() {
         <button onClick={() => updateCourse(course._id)} >Edit</button> */}
         <div className='items_cards_list'>
           {
-            loading ? <Loader width={35} height={15} top={50} /> :
+            loading ? <Loader width={35} height={15} top={50} color={"var(--secondary-color)"} /> :
               <>
                 {
                   subjectDetails.length === 0 ? (
@@ -251,33 +256,33 @@ export default function Subjects() {
                             <button type="button" onClick={() => setSelectedSubject(null)}>✕</button>
                           </div>
                           <div className="form_field">
-                            <label htmlFor="coursename">Edit Subject Name</label>
+                            <label htmlFor="subjectname">Edit Subject Name</label>
                             <input
+                              id="subjectname"
                               type="text"
                               name="subjectname"
-                              value={subjectname}
-                              onChange={(e) => setSubjectname(e.target.value)}
-                              placeholder="Course Name"
+                              value={editSubjectname}
+                              onChange={(e) => setEditSubjectname(e.target.value)}
                             />
                           </div>
                           <div className="form_field">
-                            <label htmlFor="coursename">Edit Description</label>
+                            <label htmlFor="description">Edit Subject Code</label>
                             <input
+                              id="description"
                               type="text"
                               name="description"
-                              value={description}
-                              onChange={(e) => setDescription(e.target.value)}
-                              placeholder="Course Description"
+                              value={editSubjectdescription}
+                              onChange={(e) => setEditDescription(e.target.value)}
                             />
                           </div>
                           <div className="form_field">
                             <label htmlFor="keywords">Edit Keywords</label>
                             <input
+                              id="keywords"
                               type="text"
                               name="keywords"
-                              value={keywords}
-                              onChange={(e) => setKeywords(e.target.value)}
-                              placeholder="Course Keywords"
+                              value={editSubjectkeywords}
+                              onChange={(e) => setEditKeywords(e.target.value)}
                             />
                           </div>
                           <div className="update_btns">

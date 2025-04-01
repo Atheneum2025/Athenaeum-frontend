@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SavedMaterials from "../../../components/SavedMaterials/SavedMaterials.tsx";
 import HistoryVideos from "../../../components/History/HistoryVideos";
 import MyMaterial from "../../../components/MyMaterial/MyMaterial.tsx"
@@ -10,6 +10,7 @@ import AddImage from '../../../assets/add.png';
 import User_Light_Image from '../../../assets/light_theme/user.png';
 import User_Dark_Image from '../../../assets/dark_theme/user.png';
 import { useTheme } from "../../../context/ThemeContext.tsx";
+import ProfessorAnalytics from "../../../components/Analytics/ProfessorAnalytics.tsx";
 interface AdminDashboardProps {
   user: {
     _id: string;
@@ -20,11 +21,15 @@ interface AdminDashboardProps {
 }
 function AdminsDashboard({ user }: AdminDashboardProps) {
 
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const [activePage, setActivePage] = useState<number>(1);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [materialname, setMaterialname] = useState<string>("")
   const [description, setDescription] = useState<string>("");
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const show = (id: number) => () => {
     setActivePage(id);
@@ -147,8 +152,9 @@ function AdminsDashboard({ user }: AdminDashboardProps) {
         <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Professors</div>
         <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Students</div>
         <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>My History</div>
-        <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>My Material</div>
-        <div className={`options ${activePage === 5 ? "active" : ""}`} onClick={show(5)}>Analytics</div>
+        <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Saved Materials</div>
+        <div className={`options ${activePage === 5 ? "active" : ""}`} onClick={show(5)}>My Material</div>
+        <div className={`options ${activePage === 6 ? "active" : ""}`} onClick={show(6)}>Analytics</div>
       </ul>
       <div className='user_profile_options_display'>
         <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
@@ -177,11 +183,15 @@ function AdminsDashboard({ user }: AdminDashboardProps) {
           <HistoryVideos />
         </div>
         <div id='4' className={`options_page ${activePage === 4 ? "active" : ""}`}>
-          <MyMaterial _id={user._id} />
+          {/* list of all materials */}
+          <SavedMaterials />
         </div>
         <div id='5' className={`options_page ${activePage === 5 ? "active" : ""}`}>
-          {/* <MyMaterial /> */}
-          <AdminAnalytics />
+          <MyMaterial _id={user._id} />
+        </div>
+        <div id='6' className={`options_page ${activePage === 6 ? "active" : ""}`}>
+          <AdminAnalytics />  
+          {/* <ProfessorAnalytics/> */}
         </div>
       </div>
     </>

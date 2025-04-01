@@ -4,9 +4,11 @@
 }
 .sidebar {
   background-color: rgb(26, 26, 26);
-  height: 85vh;
+  height: 80vh;
   width: 200px;
   position: fixed;
+  transition: height .4s ease-in-out;
+  overflow: hidden;
 }
 
 .viewLater_text{
@@ -42,4 +44,12 @@
 }
 .delete_viewLater img {
   width: 1.3rem;
+}
+
+.drag_n_drop{
+  border: 1px dashed grey;
+  font-size: small;
+  color: rgba(256, 256,256, .5);
+  position: absolute;
+  bottom: 0;
 }

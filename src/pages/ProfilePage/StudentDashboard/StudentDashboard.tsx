@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '../ProfilePage.css';
 import SavedMaterials from '../../../components/SavedMaterials/SavedMaterials.tsx';
 import HistoryVideos from '../../../components/History/HistoryVideos';
@@ -35,6 +35,10 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [materialname, setMaterialname] = useState<string>("")
     const [description, setDescription] = useState<string>("");
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

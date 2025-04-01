@@ -189,7 +189,7 @@ const LoginPage = () => {
                                 {
                                     signUpLoading ? (
                                         <>
-                                            <Loader width={25} height={10} top={88} />
+                                            <Loader width={25} height={10} top={88} color={"#434146"} />
                                         </>
                                     ) : (
                                         <>
@@ -245,7 +245,7 @@ const LoginPage = () => {
                             <div className={styles["error_message"]}>
                                 {
                                     loading ? (<div className={styles["loading"]}>
-                                        <Loader width={25} height={10} top={74} />
+                                        <Loader width={25} height={10} top={74} color={"#434146"} />
                                     </div>) : (
                                         loginMessage && (
                                             <pre style={{ color: "{color}" }} >{loginMessage}</pre>

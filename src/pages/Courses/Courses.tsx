@@ -37,13 +37,9 @@ export default function Courses() {
     const [showFilters, setShowFilters] = useState<boolean>(false);
     const [selectedCourse, setSelectedCourse] = useState<CourseType | null>(null);
     const [rateCourse, setRateCourse] = useState<CourseType | null>(null);
-    let editCoursename = selectedCourse?.coursename;
-    let editCoursedescription = selectedCourse?.description;
-    let editCoursekeywords = selectedCourse?.keywords;
-    // const [upCoursename, setupCoursename] = useState<string>("");
-    // const [upDescription, setupDescription] = useState<string>("");
-    // const [upKeywords, setupKeywords] = useState<string>("");
-
+    const [editCoursename, setEditCoursename] = useState<string>("");
+    const [editCoursedescription, setEditDescription] = useState<string>("");
+    const [editCoursekeywords, setEditKeywords] = useState<string>("");
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -64,8 +60,17 @@ export default function Courses() {
         }
     }
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchData();
     }, [page, sortBy, SortType]);
+
+    useEffect(() => {
+        if (selectedCourse) {
+            setEditCoursename(selectedCourse.coursename || ""); // Ensure a fallback empty string
+            setEditDescription(selectedCourse.description || "");
+            setEditKeywords(selectedCourse.keywords || "");
+        }
+    }, [selectedCourse]);
 
     const sendData = (coursename: string) => {
         navigate(`/course/${coursename}/subject`, { state: { courseName: coursename } });
@@ -85,18 +90,19 @@ export default function Courses() {
             setFormIsVisible(false)
         }
     }
-    const handleUpdate = async () => {
+    const handleUpdate = async (e: React.FormEvent) => {
+        e.preventDefault();
         try {
-            const update = await axiosInstance.patch(`/course/${selectedCourse?.coursename}`, { coursename, description, keywords }, { withCredentials: true });
-            alert("Course updated successfully!");
+            await axiosInstance.patch(`/course/${selectedCourse?.coursename}`, { editCoursename, editCoursedescription, editCoursekeywords }, { withCredentials: true });
             fetchData()
+            setSelectedCourse(null);
         } catch (error) {
             console.error(error);
-            alert("Failed to update course.");
+            setSelectedCourse(null);
         }
-        setCoursename(" ");
-        setDescription(" ");
-        setKeywords(" ");
+        setEditCoursename("")
+        setEditDescription(" ");
+        setEditKeywords(" ");
     };
 
     // Delete course
@@ -188,7 +194,7 @@ export default function Courses() {
 
                 <div className="items_cards_list">
                     {
-                        loading ? <Loader width={35} height={15} top={50} /> :
+                        loading ? <Loader width={35} height={15} top={50} color={"var(--secondary-color)"} /> :
                             <>
 
                                 {courseDetail.length === 0 ? (
@@ -202,7 +208,7 @@ export default function Courses() {
 
                                                     <div key={index} className="item_card">
                                                         {/* <div className="item_avatar" style={{ background: `linear-gradient(to right,  hsl(${index * 40}, 80%, 60%), hsl(${(index * 60) % 360}, 70%, 50%))` }}> */}
-                                                        <div className="item_avatar">
+                                                        <div className="item_avatar" onClick={() => sendData(course.coursename)}>
                                                             <div>{course.coursename}</div>
                                                         </div>
                                                         <div className="item_details" onClick={() => sendData(course.coursename)} >
@@ -261,9 +267,7 @@ export default function Courses() {
                                                         type="text"
                                                         name="coursename"
                                                         value={editCoursename}
-                                                        contentEditable="true"
-                                                        onChange={(e) => setCoursename(e.target.value)}
-                                                        placeholder="Course Name"
+                                                        onChange={(e) => setEditCoursename(e.target.value)}
                                                     />
                                                 </div>
                                                 <div className="form_field">
@@ -272,8 +276,7 @@ export default function Courses() {
                                                         id="description"
                                                         name="description"
                                                         value={editCoursedescription}
-                                                        onChange={(e) => setDescription(e.target.value)}
-                                                        placeholder="Course Description"
+                                                        onChange={(e) => setEditDescription(e.target.value)}
                                                     />
                                                 </div>
                                                 <div className="form_field">
@@ -282,13 +285,12 @@ export default function Courses() {
                                                         id="keywords"
                                                         name="keywords"
                                                         value={editCoursekeywords}
-                                                        onChange={(e) => setKeywords(e.target.value)}
-                                                        placeholder="Course Keywords"
+                                                        onChange={(e) => setEditKeywords(e.target.value)}
                                                     />
                                                 </div>
                                                 <div className="update_btns">
-                                                    <button onClick={handleUpdate}>Update</button>
-                                                    <button onClick={handleDelete}>Delete</button>
+                                                    <button type="button" onClick={handleUpdate}>Update</button>
+                                                    <button type="button" onClick={handleDelete}>Delete</button>
                                                 </div>
                                             </form>
                                         </div>

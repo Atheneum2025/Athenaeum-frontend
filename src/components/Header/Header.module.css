@@ -353,7 +353,7 @@
   }
 }
 
-@media screen and (max-width: 890px) {
+@media screen and (max-width: 500px) {
   .navigation_bar {
     display: none;
   }
@@ -370,6 +370,24 @@
   .menu {
     display: block;
   }
+
+  .search_bar{
+    width: 100%;
+  }
+  /* .search_bar input{
+    display: none;
+  }
+
+  .search_bar button{
+    border-radius: 30px;
+    padding: .2rem;
+    display: flex;
+    justify-content: center;
+  }
+
+  .search_bar button:hover, .search_bar input{
+    display: block;
+  } */
 }
 
 @media screen and (min-width: 890px) {

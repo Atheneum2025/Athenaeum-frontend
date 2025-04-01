@@ -52,6 +52,11 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
     const [keywords, setKeywords] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
 
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+    
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]); // Store the selected file in state
@@ -284,14 +289,14 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
 
             </div>
             <ul className='user_profile_options' id='demo'>
-                <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Analytics</div>
+                <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>My Material</div>
                 <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Saved Material</div>
                 <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>Your History</div>
-                <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>My Material</div>
+                <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Analytics</div>
             </ul>
             <div className='user_profile_options_display'>
                 <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
-                    <ProfessorAnalytics />
+                    <MyMaterial _id={user._id} />
                 </div>
                 <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
                     <SavedMaterials />
@@ -300,7 +305,7 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                     <HistoryVideos />
                 </div>
                 <div id='4' className={`options_page ${activePage === 4 ? "active" : ""}`}>
-                    <MyMaterial _id={user._id} />
+                    <ProfessorAnalytics />
                 </div>
             </div>
         </>

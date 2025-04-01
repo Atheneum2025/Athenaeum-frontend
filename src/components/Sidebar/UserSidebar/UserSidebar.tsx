@@ -23,15 +23,28 @@ type MaterialType = {
     unit: string;
     keywords: string;
 };
+
 export default function UserSidebar() {
 
     const { theme } = useTheme();
     const { user, isAuthenticated } = getAuthenticatedUser();
 
     const [viewLater, setViewLater] = useState<ViewLaterType[]>([]);
+    const [viewCount, setViewCount] = useState<Number | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
+    const [height, setHeight] = useState("80vh");
     // const navigate = useNavigate();
 
+    const fetchUserData = async () => {
+        try{
+            const person = await axiosInstance.get(`/users/c/${user._id}`, {withCredentials: true});
+            setViewCount(person.data.user.viewCount);
+            console.log(viewCount);
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
 
     const fetchData = async () => {
         setLoading(true)
@@ -44,21 +57,27 @@ export default function UserSidebar() {
             console.error(error);
         }
     }
+
+    const handleScroll = () => {
+        if (window.scrollY > 400) { // Change height when scrolled 100px
+            setHeight("50vh");
+        } else {
+            setHeight("80vh");
+        }
+    };
+    
     useEffect(() => {
-
         fetchData();
-
+        fetchUserData();
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
-    console.log(viewLater)
 
     const removeFromViewLater = async (materialId: string) => {
-        console.log(materialId);
-
         try {
             const response = await axiosInstance.delete(`/viewLater/${materialId}`, {
                 withCredentials: true,
             });
-            console.log(response);
             fetchData();
         } catch (error) {
             console.error("Error removing material", error);
@@ -73,10 +92,10 @@ export default function UserSidebar() {
         <>
             {
                 isAuthenticated && (
-                    <div id='sidebar' className="sidebar">
+                    <div id='sidebar' className="sidebar" style={{height: `${height}`}}>
                         <div className="viewLater_text">View Later :</div>
                         {
-                            loading ? <Loader /> :
+                            loading ? <Loader width={20} height={7} top={50} color={"grey"} /> :
                                 <>
                                     {viewLater.map((viewLater: ViewLaterType) => (
                                         <div key={viewLater._id} className="viewLater_card" >
@@ -91,7 +110,8 @@ export default function UserSidebar() {
                                         </div>
                                     ))}
 
-                                    {/* <div>Completed {user.viewCount} out of {viewLater.length}</div> */}
+                                    <div>Completed {viewCount !== null ? viewCount.toString() : 0} out of {viewLater.length}</div>
+                                    <div className='drag_n_drop' >Drag and drop material here</div>
                                 </>
                         }
                     </div>

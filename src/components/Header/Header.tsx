@@ -37,14 +37,14 @@ export default function Header() {
   return (
 
     <>
-      <header className={header.navigation_header} >
+      <header className={header.navigation_header}>
         <div className={header.logo}>
           {/* <img src={Logo_Light_Image} alt="" /> */}
           <img src={theme === "light" ? Logo_Light_Image : Logo_Dark_Image} alt="" />
           {/* logo */}
         </div>
         <div className={header.middle_navigation}>
-          <nav className={header.navigation_bar}  >
+          <nav className={header.navigation_bar}>
             <ul className={header.ul_lists}>
               <li>
                 <Link to={'/home'} className={`${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Home</Link>
@@ -66,19 +66,19 @@ export default function Header() {
           <nav className={sidebarIsVisible ? (header.navigation_bar_sidebar) : (header.hidden)}  >
             <ul className={header.ul_lists}>
               <li>
-                <Link to={'/home'}>Home</Link>
+                <Link to={'/home'} onClick={()=>setSidebarIsVisible(false)}>Home</Link>
               </li>
               <li>
-                <Link to={'/course'}>Courses</Link>
+                <Link to={'/course'} onClick={()=>setSidebarIsVisible(false)}>Courses</Link>
               </li>
               <li>
-                <Link to={'/quiz'}>Quiz</Link>
+                <Link to={'/quiz'} onClick={()=>setSidebarIsVisible(false)}>Quiz</Link>
               </li>
               <li>
-                <Link to={'/docs'}>Docs</Link>
+                <Link to={'/docs'} onClick={()=>setSidebarIsVisible(false)}>Docs</Link>
               </li>
               <li>
-                <Link to={'/about'}>About Us</Link>
+                <Link to={'/about'} onClick={()=>setSidebarIsVisible(false)}>About Us</Link>
               </li>
             </ul>
           </nav>
@@ -104,23 +104,23 @@ export default function Header() {
             <div className={header.profile_avatar_options} >
               <div>HELLO {user?.role.toUpperCase()}</div>
               <div>
-                <Link to={'/profile'}>Profile</Link>
+                <Link to={'/profile'} onClick={() => setProfileOptionsVisible(false)}>Profile</Link>
               </div>
               <div>
-                <Link to={'/settings'}>Settings</Link>
+                <Link to={'/settings'} onClick={() => setProfileOptionsVisible(false)}>Settings</Link>
 
               </div>
               {!isAuthenticated ? (
                 <div>
-                  <Link to={'/login'}>Login</Link>
+                  <Link to={'/login'} onClick={() => setProfileOptionsVisible(false)}>Login</Link>
                 </div>
               ) : (
                 <>
                   <div>
-                    <Link to={'/notifications'}>Notifications</Link>
+                    <Link to={'/notifications'} onClick={()=>setProfileOptionsVisible(false)}>Notifications</Link>
                   </div>
                   <div>
-                    <Link to={'/calendar'}>Calendar</Link>
+                    <Link to={'/calendar'} onClick={()=>setProfileOptionsVisible(false)}>Calendar</Link>
                   </div>
                   <div>
                     <Link onClick={logout} to={'/login'}>Logout</Link>
@@ -131,7 +131,7 @@ export default function Header() {
             </div>
           }
 
-          {/* </div> */}
+        {/* </div> */}
         </div>
         <div id="menu" className={header.menu} onClick={() => setSidebarIsVisible(!sidebarIsVisible)}>Menu</div>
       </header>

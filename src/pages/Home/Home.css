@@ -34,7 +34,7 @@ body{
 
   /* bottom: 200px; */
   left: 0;
-  translate: 100px;
+  translate: 86px;
   rotate: -14deg;
 }
 .hero {
@@ -118,7 +118,7 @@ body{
     top: 20%;
   }
   .hero_text_heading {
-    font-size: 50px;
+    font-size: 2rem;
     font-weight: 600;
   }
   .hero_text_para {
@@ -126,14 +126,27 @@ body{
     width: 50%;
   }
   .middle_hero {
-    width: 80%;
-    margin-top: 65%;
+    width: 60%;
+    margin-top: 45%;
     filter: opacity(1);
   }
   .hands {
     filter: none;
-    width: 40%;
+    /* width: 40%; */
     top: 88%;
     opacity: 0.7;
+  }
+  .left{
+    left: 0;
+    translate: 0px;
+    top: 65%;
+    rotate: -14deg;
+  }
+  .right{
+    top: 55%;
+    right:0;
+    /* background-color: green; */
+    translate: 50px;
+    rotate: -8deg;
   }
 }

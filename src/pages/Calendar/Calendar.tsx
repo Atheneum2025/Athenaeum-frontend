@@ -43,6 +43,7 @@ export default function Calendar() {
     console.log(event)
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         fetchData();
     }, [])
 
@@ -85,6 +86,21 @@ export default function Calendar() {
                         events={event}
                         dateClick={handleDateClick}
                     />
+                    <div>
+                    <div>Upcoming Events</div>
+                        {event.length === 0 ? (
+                            <p>No upcoming events</p>
+                        ) : (
+                            <ul>
+                                {event.map((event: EventType, index) => (
+                                    <li key={index}>
+                                        <strong>{event.title}</strong> - {(new Date()).toLocaleString()}
+                                        <div>{(event.date).toLocaleString()}</div>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
                     {
                         isVisible && (
                             <>

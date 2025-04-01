@@ -9,7 +9,6 @@ type NotificationType = {
     message: string;
     messageBy: string;
     material: string;
-    reply: string;
 };
 
 type MessagesType = {
@@ -17,30 +16,43 @@ type MessagesType = {
     message: string;
     sender: string;
     receiver: string;
+    reply: string;
 }
 export default function Notifications() {
 
     const { user, isAuthenticated } = getAuthenticatedUser();
-    const [courseDetail, setCourseDetail] = useState<NotificationType[]>([]);
+    const [notificationDetails, setNotificationDetails] = useState<NotificationType[]>([]);
     const [messageDetail, setMessageDetail] = useState<MessagesType[]>([]);
 
     // get all notifications
-    useEffect(() => {
-
-        const fetchMessageData = async () => {
-            try {
-                const Courseresponse = await axiosInstance.get("/contactUs", {withCredentials: true});
-                setMessageDetail(Courseresponse.data.messages);
-                // console.log(Courseresponse.data.messages)
-            }
-            catch (error) {
-                console.error(error);
-            }
+    const fetchMessageData = async () => {
+        try {
+            const Courseresponse = await axiosInstance.get("/contactUs", { withCredentials: true });
+            setMessageDetail(Courseresponse.data.messages);
+            // console.log(Courseresponse.data.messages)
         }
+        catch (error) {
+            console.error(error);
+        }
+    }
 
+    const fetchNotifications = async () => {
+        try {
+            const reponse = await axiosInstance.get("/users/notifications");
+            setNotificationDetails(reponse.data.notifications);
+            console.log(reponse)
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
         fetchMessageData();
+        fetchNotifications();
     }, []);
-    
+
     console.log(messageDetail)
 
     const handlePublish = async (notificationId: string) => {
@@ -51,7 +63,7 @@ export default function Notifications() {
             if (response.status === 200) {
                 console.log("Material publish status toggled successfully:", response.data);
 
-                setCourseDetail((prevNotifications) =>
+                setNotificationDetails((prevNotifications) =>
                     prevNotifications.filter((notification) => notification._id !== notificationId)
                 );
             }
@@ -67,10 +79,10 @@ export default function Notifications() {
     const [replyMessage, setReplyMessage] = useState<string>("");
     // const [selectedNotification, setSelectedNotification] = useState<NotificationType | null>(null)
 
-    const handleReply = async (e: React.FormEvent, notificationId: string) => {
+    const handleReply = async (e: React.FormEvent, messageId: string) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.post(`/contactUs/${notificationId}/`, { replyMessage }, { withCredentials: true })
+            const response = await axiosInstance.post(`/contactUs/${messageId}/`, { replyMessage }, { withCredentials: true })
             console.log(response);
         } catch (error) {
             console.error(error)
@@ -100,64 +112,87 @@ export default function Notifications() {
                         isAuthenticated && (
                             <>
                                 {
-                                    (user.role === "admin" || user.role === "student") && (
-                                        <>
-                                        <div className="notification_section">
-                                            <div className='notification'>Anouncements</div>
-                                            <div className='section'>
-                                                <div>Messages</div>
+                                    // (user.role === "admin" || user.role === "student") && (
+                                    <>
 
-                                                    {
-                                                        messageDetail.map((message: MessagesType, index) => (
-                                                            <div key={index}>
-                                                                <div>{message.sender}</div>
-                                                                <div>{message.message}</div>
-                                                            </div>
-                                                        ))
-                                                    }
-                                            </div>
-                                        </div>
-                                            
-                                            {courseDetail.map((notification: NotificationType) => (
-                                                <div key={notification._id} className="notification">
-                                                    <div>
-                                                        <div>{notification.messageBy}</div>
-                                                    </div>
-                                                    <div className="">
-                                                        <div className=''>Message: {notification.message}</div>
+                                        <div className="notification_section">
+                                            <div className='notification'>
+                                                <h2>Anouncements</h2>
+
+                                                {notificationDetails.map((notification: NotificationType, index) => (
+                                                    <div key={index} className="notification">
                                                         {
-                                                            (!notification.reply && user.role === "admin") ? (
-                                                                <div>
-                                                                    <form action="" onSubmit={(e: any) => handleReply(e, notification._id)}>
-                                                                        <label htmlFor="reply_text">Reply </label>
-                                                                        <input type="text" id="reply_text" value={replyMessage} onChange={(e: any) => setReplyMessage(e.target.value)} />
-                                                                        <button type='submit' >Send</button>
-                                                                    </form>
-                                                                </div>
-                                                            ) : (
-                                                                <div>Reply: {notification.reply}</div>
-                                                            )
-                                                        }
-                                                        {
-                                                            notification.material && (
+                                                           ( notification.messageBy && !(user.role == "student")) && (
                                                                 <>
-                                                                    <div>Material: {notification.material}</div>
-                                                                    <button className='' onClick={() => handlePublish(notification._id)} >Publish</button>
+                                                                    <div>
+                                                                        <div>{notification.messageBy}</div>
+                                                                    </div>
+                                                                    <div className="">
+                                                                        <div className=''>Message: {notification.message}</div>
+                                                                        {
+                                                                            notification.material && (
+                                                                                <>
+                                                                                    <div>Material: {notification.material}</div>
+                                                                                    <button className='' onClick={() => handlePublish(notification._id)} >Publish</button>
+                                                                                </>
+                                                                            )
+                                                                        }
+
+                                                                    </div>
                                                                 </>
                                                             )
                                                         }
-
+                                                        {
+                                                            (notification.message == "New Material Uploaded" && user.role == "student") && (
+                                                                    <div className="">
+                                                                        <div className=''>Message: {notification.message}</div>
+                                                                        <div>Material: {notification.material}</div>
+                                                                    </div>
+                                                            )
+                                                        }
                                                     </div>
-                                                </div>
-                                            ))}
-                                        </>
-                                    )
+                                                ))}
+                                            </div>
+                                            <div className='notification'>
+                                                <h2>Messages</h2>
+
+                                                {
+                                                    messageDetail.map((message: MessagesType, index) => (
+                                                        <div key={index}>
+                                                            {
+                                                                (message.sender == user.username || user.role == 'admin') && (
+                                                                    <>
+
+                                                                        <div>Sender : {message.sender}</div>
+                                                                        <div>Message : {message.message}</div>
+                                                                        {
+                                                                            !message.reply && (
+                                                                                <form action="" onSubmit={(e: any) => handleReply(e, message._id)}>
+                                                                                    <label htmlFor="reply_text">Reply </label>
+                                                                                    <input type="text" id="reply_text" value={replyMessage} onChange={(e: any) => setReplyMessage(e.target.value)} />
+                                                                                    <button type='submit' >Send</button>
+                                                                                </form>
+                                                                            )
+                                                                        }
+                                                                        <div>Reply : {message.reply}</div>
+
+                                                                    </>
+                                                                )
+                                                            }
+                                                        </div>
+                                                    ))
+                                                }
+                                            </div>
+                                        </div>
+
+                                    </>
+                                    // )
                                 }
 
-                                {
+                                {/* {
                                     user.role === "student" && (
                                         <>
-                                            {courseDetail.map((notification: NotificationType) => (
+                                            {notificationDetails.map((notification: NotificationType) => (
                                                 <div key={notification._id} className="notification">
                                                     {
                                                         !notification.messageBy && (
@@ -174,7 +209,7 @@ export default function Notifications() {
                                             ))}
                                         </>
                                     )
-                                }
+                                } */}
                             </>
                         )
                     }

@@ -2,7 +2,9 @@ footer{
     width: 100%;
     /* height: 400px; */
     bottom: 0;
-    background-image: url('../../assets/background3.png');
+    /* color: black;
+    background-color: grey; */
+    /* background-image: url('../../assets/background3.png'); */
     background-position: bottom;
     background-size: cover;
     /* background-size: 300px; */
@@ -14,6 +16,8 @@ footer{
     border-radius: 100px 100px 0 0;
     text-align: center;
     padding: 2rem;
+    font-size: .3em;
+    /* display: none; */
 }
 
 footer > div{
@@ -25,6 +29,22 @@ footer > div{
     text-align: left;
     padding-inline: 2rem;
 }
+
+.feedback_form{
+
+}
+.feedback_form textarea{
+    color: white;
+    background-color: transparent;
+    padding:.4rem;
+    width: 100%;
+}
+
+.feedback_form button{
+    display: block;
+    padding: .4rem;
+}
+
 
 .footer_title{
     font-size: 1.2rem;
@@ -48,6 +68,12 @@ footer .links li{
     list-style-type: none;
 }
 
+/* footer .links ul li a::after{
+    width: 40px;
+    height: 40px;
+    background-color: grey;
+} */
+
 footer .links li a{
     color: white;
     text-decoration: none;
@@ -59,4 +85,13 @@ footer .trademark{
     display: flex;
     justify-content: center;
     
+}
+
+@media screen and (max-width: 500px) {
+    footer > div{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        padding: 0;
+    }
 }

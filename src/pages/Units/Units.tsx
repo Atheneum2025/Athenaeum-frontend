@@ -11,6 +11,7 @@ type UnitType = {
   _id: string;
   unitname: string;
   description: string;
+  keywords: string;
 };
 
 export default function Units() {
@@ -32,10 +33,12 @@ export default function Units() {
   const [keywords, setKeywords] = useState<string>("");
   const [selectedUnit, setSelectedUnit] = useState<UnitType | null>(null);
   const [showFilters, setShowFilters] = useState<boolean>(false);
-
+  const [editUnitname, setEditUnitname] = useState<string>("");
+  const [editUnitdescription, setEditDescription] = useState<string>("");
+  const [editUnitkeywords, setEditKeywords] = useState<string>("");
   // for url params
   let courseIdParameter, subjectIdParameter;
-  courseId ? courseIdParameter = courseId.toUpperCase() : courseIdParameter = courseName;
+  courseId ? courseIdParameter = courseId : courseIdParameter = courseName;
   subjectId ? subjectIdParameter = subjectId : subjectIdParameter = subjectName;
 
   // for displaying all units
@@ -63,6 +66,14 @@ export default function Units() {
     fetchData();
   }, [page, sortBy, SortType]);
 
+  useEffect(() => {
+    if (selectedUnit) {
+      setEditUnitname(selectedUnit.unitname || ""); // Ensure a fallback empty string
+      setEditDescription(selectedUnit.description || "");
+      setEditKeywords(selectedUnit.keywords || "");
+    }
+  }, [selectedUnit]);
+
   // function for creating a new unit in that subject
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,20 +90,19 @@ export default function Units() {
     }
   }
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      console.log(selectedUnit?._id)
-      const update = await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { unitname, description, keywords }, { withCredentials: true });
-      console.log(update.data)
-      alert("Unit updated successfully!");
+      await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { unitname, description, keywords }, { withCredentials: true });
       fetchData()
+      setSelectedUnit(null);
     } catch (error) {
       console.error(error);
-      alert("Failed to update course.");
+      setSelectedUnit(null);
     }
-    setUnitname(" ");
-    setDescription(" ");
-    setKeywords(" ");
+    setEditUnitname("");
+    setEditDescription("");
+    setEditKeywords("");
   };
 
   // Delete course
@@ -190,7 +200,7 @@ export default function Units() {
         {/* Display all the units in a subject */}
         <div className="items_cards_list">
           {
-            loading ? <Loader /> :
+            loading ? <Loader width={35} height={15} top={50} color={"var(--secondary-color)"} /> :
               <>
                 {
                   UnitDetails.length === 0 ? (
@@ -199,7 +209,6 @@ export default function Units() {
                     <>
                       {
                         UnitDetails.map((unit: UnitType, index) => (
-                          <>
                             <div className="secondary_item_card" key={index} onClick={() => sendData(unit.unitname)}>
                               <div className="index">{index + 1}.</div>
                               <div className="item_details">
@@ -213,10 +222,7 @@ export default function Units() {
                                   </div>
                                 )
                               }
-                              {/* Pagination */}
                             </div>
-
-                          </>
                         ))
                       }
                       <div className='pagination'>
@@ -233,32 +239,52 @@ export default function Units() {
                 }
 
                 {selectedUnit && (
-                  <div className="course_form">
-                    <h3>Edit Course</h3>
-                    <input
-                      type="text"
-                      name="coursename"
-                      value={unitname}
-                      onChange={(e) => setUnitname(e.target.value)}
-                      placeholder="Course Name"
-                    />
-                    <input
-                      name="description"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      placeholder="Course Description"
-                    ></input>
-                    <input
-                      name="keywords"
-                      value={keywords}
-                      onChange={(e) => setKeywords(e.target.value)}
-                      placeholder="Course Keywords"
-                    ></input>
-                    <button onClick={handleUpdate}>Update</button>
-                    <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
-                      Delete
-                    </button>
-                  </div>
+                  <>
+                    <div className="add_new_material">
+                      <div className="add_new_material_form">
+                        <form action="">
+                          <div className="add_new_material_form_header">
+                            <h2>Edit Unit Details</h2>
+                            <button type="button" onClick={() => setSelectedUnit(null)}>✕</button>
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="unitname">Edit Subject Name</label>
+                            <input
+                              id="unitname"
+                              type="text"
+                              name="subjectname"
+                              value={editUnitname}
+                              onChange={(e) => setEditUnitname(e.target.value)}
+                            />
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="description">Edit Subject Name</label>
+                            <input
+                              id="description"
+                              type="text"
+                              name="subjectname"
+                              value={editUnitdescription}
+                              onChange={(e) => setEditUnitname(e.target.value)}
+                            />
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="keywords">Edit Keywords</label>
+                            <input
+                              id="keywords"
+                              type="text"
+                              name="keywords"
+                              value={editUnitkeywords}
+                              onChange={(e) => setEditKeywords(e.target.value)}
+                            />
+                          </div>
+                          <div className="update_btns">
+                            <button onClick={handleUpdate}>Update</button>
+                            <button onClick={handleDelete}>Delete</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </>
                 )}
               </>
           }

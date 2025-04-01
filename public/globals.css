@@ -15,7 +15,7 @@
 .materials_page{
     background-image: url(../src/assets/background2.png);
 }
-.items_cards_list {
+.items_cards_list, .settings_options{
   padding-block: 2rem;
   /* background-color: blue; */
 }
@@ -44,7 +44,7 @@ main {
   background-repeat: no-repeat; */
   /* background-blend-mode: color-burn; */
 }
-.items_display_header {
+.items_display_header, .settings_page_header {
   display: grid;
   grid-template-columns: 3fr auto auto;
   gap: 2rem;
@@ -58,6 +58,9 @@ main {
   place-items: center;
   place-content: center;
   position: relative;
+}
+
+.item_filters > div{
   cursor: pointer;
 }
 
@@ -199,7 +202,7 @@ button {
   color: purple;
 }
 
-.add_btn {
+.add_btn, .big_btn{
   width: 200px;
   height: 50px;
   display: flex;

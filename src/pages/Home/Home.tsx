@@ -36,6 +36,7 @@ export default function Home() {
   }
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     window.addEventListener('scroll', handleScroll);
 
     return () => {
@@ -90,38 +91,9 @@ export default function Home() {
           id="right" src={Right_Hand_Image} alt="" />
       </div>
 
-      {/* <div>
-        <div className="course_cards_list">
-          {professorDetails.map((user: User) => (
-            <div key={user._id} className="course_card">
-              <div className="course_avatar">
-                <div>{user.username}</div>
-              </div>
-              <div className="course_details">
-                <div className='course_name'>Course Name: {user.username}</div>
-                <div className='course_name'>Course Name: {user.role}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div> */}
-      {/* <AllUsers role={"professors"} /> */}
       <FeaturedComponent />
-      {/* <div className={styles.container}>
-        <div className={styles.box}>
-          <div className={styles.inner_box}>
-            <div className={styles.front}>BCA</div>
-            <div className={styles.back}>BAchelor in computer application</div>
-          </div>
-        </div>
-      </div>
-      <div className={styles.container}>
-        <div className={styles.box}>
-          <div className={styles.inner_box}>
-            <div className={styles.front}>BCA</div>
-            <div className={styles.back}>BAchelor in computer application</div>
-          </div>
-        </div>
+      {/* <div>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat dolore voluptatum ut sapiente fuga nesciunt quo beatae dignissimos voluptatibus aspernatur consectetur magni repudiandae cumque quod laborum, dicta doloremque nostrum sit reiciendis accusamus, rerum ullam. Quibusdam deleniti, dolor fuga magnam quod ad. Deserunt culpa veniam nobis.
       </div> */}
     </>
   )

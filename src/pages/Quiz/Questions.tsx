@@ -30,7 +30,7 @@ export default function Questions() {
 
 
     useEffect(() => {
-
+        window.scrollTo(0, 0);
         const fetchdata = async () => {
             try {
                 const questionsResponse = await axios.get<QuestionsType>(`http://localhost:3000/api/v1/quiz/${quizId}/`);

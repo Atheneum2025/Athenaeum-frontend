@@ -21,12 +21,13 @@ export default function RatingComponent({ course }: RatingComponentProps) {
     const [hover, setHover] = useState<number>(0);
     const [totalStars, setTotalStars] = useState(5);
 
-    const [averageRating, setAverageRating] = useState<number>(0);
-    const courseId = 2;
+    const [previousRating, setPreviousRating] = useState<number>(0);
+    const courseId = course._id;
     const fetchData = async () => {
         try {
-            const response = await axiosInstance.get(`course/${course._id}/rate/`);
-            setAverageRating(response.data.averageRating);
+            const response = await axiosInstance.get(`course/${courseId}/rate/`, {withCredentials: true});
+            setPreviousRating(response.data.ratings.rating);
+            console.log(response.data.ratings);
         } catch (error) {
             console.error("Error fetching ratings", error);
         }
@@ -43,7 +44,7 @@ export default function RatingComponent({ course }: RatingComponentProps) {
                 rating: newRating,
             }, { withCredentials: true });
             setRating(newRating);
-            fetchData();
+            // fetchData();
         } catch (error) {
             console.error("Error submitting rating", error);
         }
@@ -54,6 +55,7 @@ export default function RatingComponent({ course }: RatingComponentProps) {
         <>
             <form action="" onSubmit={(e) => { e.preventDefault(); submitRating(rating); }}>
                 <div className="ratings_section">
+                    <div>Your previous rating : {previousRating}</div>
                     {[...Array(totalStars)].map((star, index) => {
 
                         const currentRating = index + 1;

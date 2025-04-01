@@ -23,6 +23,7 @@ type MaterialType = {
   isPublished: boolean;
   fileType: string;
   owner: string;
+  keywords: string;
 };
 
 export default function Materials() {
@@ -50,9 +51,12 @@ export default function Materials() {
   const [isPopup, setIsPopup] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
+  const [editMaterialtname, setEditMaterialname] = useState<string>("");
+  const [editMaterialdescription, setEditDescription] = useState<string>("");
+  const [editMaterialkeywords, setEditKeywords] = useState<string>("");
   // for url params
   let courseIdParameter, subjectIdParameter, unitIdParameter;
-  courseId ? courseIdParameter = courseId.toUpperCase() : courseIdParameter = courseName;
+  courseId ? courseIdParameter = courseId : courseIdParameter = courseName;
   subjectId ? subjectIdParameter = subjectId : subjectIdParameter = subjectName;
   unitId ? unitIdParameter = unitId : unitIdParameter = unitName;
 
@@ -61,9 +65,6 @@ export default function Materials() {
   const [sidebarKey, setSidebarKey] = useState(0);
 
   // get all materials from a units and display
-  // console.log(courseIdParameter)
-  // console.log(subjectIdParameter)
-  // console.log(unitIdParameter)
 
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -87,7 +88,14 @@ export default function Materials() {
     window.scrollTo(0, 0);
     fetchData();
   }, [page, sortBy, SortType]);
-  // console.log(materialDetails)
+
+  useEffect(() => {
+    if (selectedMaterial) {
+      setEditMaterialname(selectedMaterial.materialname || ""); // Ensure a fallback empty string
+      setEditDescription(selectedMaterial.description || "");
+      setEditKeywords(selectedMaterial.keywords || "");
+    }
+  }, [selectedMaterial]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -128,7 +136,6 @@ export default function Materials() {
         withCredentials: true
       });
       setMessage("Upload successful!");
-      console.log("material created", response.data);
       setFormIsVisible(false);
       fetchData();
     }
@@ -139,20 +146,19 @@ export default function Materials() {
     }
   }
 
-  const handleUpdate = async () => {
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      console.log(selectedMaterial?._id)
-      const update = await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { materialname, description, keywords }, { withCredentials: true });
-      console.log(update.data)
-      alert("Unit updated successfully!");
+      await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { editMaterialtname, editMaterialdescription, editMaterialkeywords }, { withCredentials: true });
+      setSelectedMaterial(null);
       fetchData()
     } catch (error) {
+      setSelectedMaterial(null);
       console.error(error);
-      alert("Failed to update course.");
     }
-    setMaterialname(" ");
-    setDescription(" ");
-    setKeywords(" ");
+    setEditMaterialname("");
+    setEditDescription("");
+    setEditKeywords("");
   };
 
   // Delete course
@@ -172,7 +178,6 @@ export default function Materials() {
 
   const sendData = (materialname: string) => {
     navigate(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialname}`, { state: { courseName, subjectName, unitName, materialName: materialname } });
-    // console.log(material)
   }
 
   // drag feature
@@ -184,7 +189,6 @@ export default function Materials() {
     try {
       const response = await axiosInstance.post(`/viewLater/`, { vLMaterialName }, { withCredentials: true })
       setSidebarKey(prevKey => prevKey + 1);
-      console.log(response)
       // setDroppedItems((prev) => [...prev, droppedItem]);
     } catch (error: any) {
       console.error(error.status)
@@ -200,7 +204,6 @@ export default function Materials() {
     const droppedItem: MaterialType = JSON.parse(data);
     const vLMaterialName = droppedItem._id
     saveToViewLater(vLMaterialName);
-    // console.log(droppedItems)
   }
 
 
@@ -330,7 +333,7 @@ export default function Materials() {
 
           <div className="items_cards_list" >
             {
-              loading ? <Loader /> :
+              loading ? <Loader width={35} height={15} top={50} color={"var(--secondary-color)"} /> :
                 <>
                   {
                     materialDetails.length === 0 ? (
@@ -389,31 +392,49 @@ export default function Materials() {
                   }
 
                   {selectedMaterial && (
-                    <div className="course_form">
-                      <h3>Edit Course</h3>
-                      <input
-                        type="text"
-                        name="coursename"
-                        value={materialname}
-                        onChange={(e) => setMaterialname(e.target.value)}
-                        placeholder="Course Name"
-                      />
-                      <input
-                        name="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        placeholder="Course Description"
-                      ></input>
-                      <input
-                        name="keywords"
-                        value={keywords}
-                        onChange={(e) => setKeywords(e.target.value)}
-                        placeholder="Course Keywords"
-                      ></input>
-                      <button onClick={handleUpdate}>Update</button>
-                      <button onClick={handleDelete} style={{ backgroundColor: "red" }}>
-                        Delete
-                      </button>
+                    <div className="add_new_material">
+                      <div className="add_new_material_form">
+                        <form action="">
+                          <div className="add_new_material_form_header">
+                            <h2>Edit Material Details</h2>
+                            <button type="button" onClick={() => setSelectedMaterial(null)}>✕</button>
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="materialname">Edit Material Name</label>
+                            <input
+                              id="materialname"
+                              type="text"
+                              name="materialname"
+                              value={editMaterialtname}
+                              onChange={(e) => setEditMaterialname(e.target.value)}
+                            />
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="description">Edit Description</label>
+                            <input
+                              id="description"
+                              type="text"
+                              name="description"
+                              value={editMaterialdescription}
+                              onChange={(e) => setEditDescription(e.target.value)}
+                            />
+                          </div>
+                          <div className="form_field">
+                            <label htmlFor="keywords">Edit Keywords</label>
+                            <input
+                              id="keywords"
+                              type="text"
+                              name="keywords"
+                              value={editMaterialkeywords}
+                              onChange={(e) => setEditKeywords(e.target.value)}
+                            />
+                          </div>
+                          <div className="update_btns">
+                            <button onClick={handleUpdate}>Update</button>
+                            <button onClick={handleDelete}>Delete</button>
+                          </div>
+                        </form>
+                      </div>
                     </div>
                   )}
                 </>
@@ -428,9 +449,13 @@ export default function Materials() {
 
         {
           isPopup && (
-            <div className="popupMessage">
-              Allready added
-              <button onClick={() => setIsPopup(false)} >Close</button>
+            <div className='add_new_material'>
+              <div className='add_new_material_form'>
+                <div className="add_new_material_form_header">
+                  <h2>Allready added</h2>
+                  <button onClick={() => setIsPopup(false)} >✕</button>
+                </div>
+              </div>
             </div>
           )
         }

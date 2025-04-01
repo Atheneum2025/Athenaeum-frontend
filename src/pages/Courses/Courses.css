@@ -3,7 +3,7 @@
 
 .course_layout{
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto auto;
     gap: 2rem;
 }
 
@@ -45,6 +45,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .item_avatar > div{
