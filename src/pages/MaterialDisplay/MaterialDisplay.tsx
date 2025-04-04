@@ -16,8 +16,8 @@ type VideoType = {
 }
 const MaterialDisplay = () => {
     const { user, isAuthenticated } = getAuthenticatedUser();
-  // const apiKey = import.meta.env.VITE_APIKEY;
-  // const ttsUrl = import.meta.env.VITE_TTSURL
+  const apiKeyE = import.meta.env.VITE_APIKEY;
+  const ttsUrlE = import.meta.env.VITE_TTSURL
   const navigate = useNavigate();
   const location = useLocation();
   const subjectName = location.state?.subjectName;
@@ -154,6 +154,8 @@ const MaterialDisplay = () => {
 
   const sendToTTS = async (text: string) => {
 
+    const apiKey = apiKeyE;
+    const ttsUrl = ttsUrlE;
     const data = {
       input: { text },
       voice: {
