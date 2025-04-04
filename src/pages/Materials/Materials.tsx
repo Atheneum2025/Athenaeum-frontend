@@ -51,7 +51,7 @@ export default function Materials() {
   const [isPopup, setIsPopup] = useState<boolean>(false);
   const [showFilters, setShowFilters] = useState<boolean>(false);
 
-  const [editMaterialtname, setEditMaterialname] = useState<string>("");
+  const [editMaterialname, setEditMaterialname] = useState<string>("");
   const [editMaterialdescription, setEditDescription] = useState<string>("");
   const [editMaterialkeywords, setEditKeywords] = useState<string>("");
   // for url params
@@ -149,9 +149,10 @@ export default function Materials() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { editMaterialtname, editMaterialdescription, editMaterialkeywords }, { withCredentials: true });
+      await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${unitId}/material/${selectedMaterial?._id}`, { editMaterialname, editMaterialdescription, editMaterialkeywords }, { withCredentials: true });
       setSelectedMaterial(null);
       fetchData()
+      console.log(selectedMaterial?._id)
     } catch (error) {
       setSelectedMaterial(null);
       console.error(error);
@@ -212,7 +213,7 @@ export default function Materials() {
       <div className='title' onClick={() => { navigate(`/course/`) }}>Course Name : {courseIdParameter}</div>
       <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject`) }}>Subject Name : {subjectIdParameter}</div>
       <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit`) }}>Unit Name : {unitIdParameter}</div>
-      <div className='material_main_layout'>
+      <div className='material_main_layout' style={{ gridTemplateColumns: !user ? "1fr" : "3fr 200px"}} >
 
         <div className='items_display_page materials_page'>
           <div className="items_display_header">
@@ -220,7 +221,7 @@ export default function Materials() {
             {/* form for making a new material */}
             {
               isAuthenticated && (
-                user.role === "admin" && (
+                user?.role === "admin" && (
                   <>
                     <button className='add_btn' onClick={() => setFormIsVisible(true)}>
                       <img src={AddImage} alt="" />
@@ -364,11 +365,15 @@ export default function Materials() {
                                   <div className="item_description">Description: {material.description}</div>
                                   <div className="item_description">Professor: {material.owner}</div>
                                 </div>
-                                <div className='save_image' onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >
-                                  <img src={theme === "light" ? View_Light_Image : View_Dark_Image} alt="" />
-                                </div>
                                 {
-                                  user.role === "admin" && (
+                                  user && (
+                                    <div className='save_image' onClick={(e: React.MouseEvent<HTMLDivElement>) => { saveToViewLater(material._id); e.stopPropagation() }} >
+                                      <img src={theme === "light" ? View_Light_Image : View_Dark_Image} alt="" />
+                                    </div>
+                                  )
+                                }
+                                {
+                                  user?.role === "admin" && (
                                     <div className='edit_image' onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedMaterial(material); e.stopPropagation() }} >
                                       <EditComponent />
                                     </div>
@@ -405,7 +410,7 @@ export default function Materials() {
                               id="materialname"
                               type="text"
                               name="materialname"
-                              value={editMaterialtname}
+                              value={editMaterialname}
                               onChange={(e) => setEditMaterialname(e.target.value)}
                             />
                           </div>
@@ -441,18 +446,21 @@ export default function Materials() {
             }
           </div>
         </div>
-
-        <div className='viewLaterSidebar' onDragOver={(e) => e.preventDefault()}
-          onDrop={handleDrop}>
-          <UserSidebar key={sidebarKey} />
-        </div>
+        {
+          user && (
+            <div className='viewLaterSidebar' onDragOver={(e) => e.preventDefault()}
+              onDrop={handleDrop}>
+              <UserSidebar key={sidebarKey} />
+            </div>
+          )
+        }
 
         {
           isPopup && (
             <div className='add_new_material'>
               <div className='add_new_material_form'>
                 <div className="add_new_material_form_header">
-                  <h2>Allready added</h2>
+                  <h2>Material already added</h2>
                   <button onClick={() => setIsPopup(false)} >✕</button>
                 </div>
               </div>

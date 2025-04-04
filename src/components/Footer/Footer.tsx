@@ -1,62 +1,86 @@
-import "./Footer.css"
-import Logo_Light_Image from "../../assets/light_theme/logo.png";
-import Logo_Dark_Image from "../../assets/dark_theme/logo.png";;
+import React, { useState } from "react";
+import "./Footer.css"; // Create this CSS file for styling
+import { Link } from "react-router-dom";
+import axiosInstance from "../../utils/axios";
+import { getAuthenticatedUser } from "../../utils/authUtils";
 
-export default function Footer() {
+const Footer: React.FC = () => {
+
+    const { user, isAuthenticated } = getAuthenticatedUser();
+  const [message, setMessage] = useState<string>("");
+
+  const phoneNumber = import.meta.env.VITE_MY_NUMBER;
+
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try{
+      const response = await axiosInstance.post('/contactUs',{message}, {withCredentials: true});
+      console.log(response);
+    }
+    catch(error){
+      console.error(error);
+    }
+  }
   return (
-    <>
-      <footer>
-        <div>
-          <div className="company">
-            <div className="company_name">
-              <img src={Logo_Light_Image} alt="" />
-              {/* <img src={Logo_Dark_Image} alt="" /> */}
-              <p>ATHENAEUM</p>
-            </div>
-            <div>
-              <div className="footer_title">Institution :</div>
-              <p>St. Xavier's College</p>
-              <p>Mapusa 403517</p>
-              <p>BCA Lab</p>
-            </div>
-          </div>
-          <div className="links">
-            <div className="footer_title">Links :</div>
-            <ul>
-              <li>
-                <a href="/home" >Home</a>
-              </li>
-              <li>
-                <a href="/about" >About Us</a>
-              </li>
-              <li>
-                <a href="/docs" >Docs</a>
-              </li>
-              <li>
-                <a href="/course" >Courses</a>
-              </li>
-              <li>
-                <a href="/contact" >Contact Us</a>
-              </li>
-            </ul>
-          </div>
-          <div className="contact">
-            <div className="footer_title">Contact :</div>
-            <p>Phone Number: +zx xyz-xyz-zyxy</p>
-            <p>Email: athenaeum2025@gmail.com</p>
-          </div>
-          <div className="feedback_form">
-            <div className="footer_title">Give Your Feedback :</div>
-            <textarea name="" id=""></textarea>
-            <button>Send Feedback</button>
-          </div>
-        </div>
+    <footer className="footer">
 
-        {/* <div className="date">
-          <div>Date: {Date.now()}</div>
-        </div> */}
-        <div className="trademark" >Design @Athenaeum2025 all rights reserved.</div>
-      </footer>
-    </>
-  )
-}
+      <div className="divider"></div>
+
+      <div className="footer-section">
+        <div>Contact:</div>
+        <p>Phone No: +91 {phoneNumber}</p>
+        <p>Email:</p>
+        <p>athenaeum2025@gmail.com</p>
+      </div>
+
+      <div className="divider"></div>
+
+      <div className="footer-section">
+        <div>Links:</div>
+        <ul className="footer-links">
+          <li>
+            <Link to={"/home"}>Home</Link>
+          </li>
+          <li>
+            <a href="/course">Courses</a>
+          </li>
+          <li>
+            <a href="/quiz">Quiz</a>
+          </li>
+          <li>
+            <a href="/about">About Us</a>
+          </li>
+        </ul>
+      </div>
+
+      <div className="divider"></div>
+
+      <div className="footer-section">
+        <div>Give your feedback:</div>
+        <form onSubmit={sendMessage}>
+          <div className="feedback-input">
+            <input type="text" value={message} onChange={(e)=>setMessage(e.target.value)} />
+          </div>
+          {
+            !user &&(
+              <p>Please login</p>
+            )
+          }
+          <button className="feedback-button" type="submit">Send Feedback</button>
+        </form>
+      </div>
+
+      <div className="divider"></div>
+
+      <div className="copyright">
+        <p>
+          ---------------------------------------------------------Design
+          &copy;Athenaeum2025 all rights
+          reserved---------------------------------------------------------
+        </p>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

@@ -139,7 +139,7 @@ export default function Subjects() {
           {/* form for making a new subject */}
           {
             isAuthenticated && (
-              user.role === "admin" && (
+              user?.role === "admin" && (
                 <>
                   <button className='add_btn' onClick={() => setFormIsVisible(true)}>
                     <img src={AddImage} alt="" />
@@ -223,7 +223,7 @@ export default function Subjects() {
                               <div className='item_description'>Subject Code: {subject.description}</div>
                             </div>
                             {
-                              user.role === "admin" && (
+                              user?.role === "admin" && (
                                 <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedSubject(subject); e.stopPropagation() }} >
                                   <EditComponent />
                                 </div>

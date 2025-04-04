@@ -30,18 +30,18 @@ export default function UserSidebar() {
     const { user, isAuthenticated } = getAuthenticatedUser();
 
     const [viewLater, setViewLater] = useState<ViewLaterType[]>([]);
-    const [viewCount, setViewCount] = useState<Number | null>(null);
+    const [viewCount, setViewCount] = useState<number | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [height, setHeight] = useState("80vh");
     // const navigate = useNavigate();
 
     const fetchUserData = async () => {
-        try{
-            const person = await axiosInstance.get(`/users/c/${user._id}`, {withCredentials: true});
+        try {
+            const person = await axiosInstance.get(`/users/c/${user._id}`, { withCredentials: true });
             setViewCount(person.data.user.viewCount);
             console.log(viewCount);
         }
-        catch(error){
+        catch (error) {
             console.error(error);
         }
     }
@@ -59,13 +59,13 @@ export default function UserSidebar() {
     }
 
     const handleScroll = () => {
-        if (window.scrollY > 400) { // Change height when scrolled 100px
-            setHeight("50vh");
+        if (window.scrollY > 900) { // Change height when scrolled 100px
+            setHeight("0vh");
         } else {
             setHeight("80vh");
         }
     };
-    
+
     useEffect(() => {
         fetchData();
         fetchUserData();
@@ -75,7 +75,7 @@ export default function UserSidebar() {
 
     const removeFromViewLater = async (materialId: string) => {
         try {
-            const response = await axiosInstance.delete(`/viewLater/${materialId}`, {
+            await axiosInstance.delete(`/viewLater/remove/${materialId}`, {
                 withCredentials: true,
             });
             fetchData();
@@ -83,6 +83,18 @@ export default function UserSidebar() {
             console.error("Error removing material", error);
         }
     };
+
+    const removeAllViewLaters = async () => {
+        try {
+            const resp = await axiosInstance.delete(`/viewLater/deleteAll`, { withCredentials: true });
+            console.log(resp);
+            fetchData();
+            fetchUserData();
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
     // const sendData = (coursename: string) => {
     //     navigate(`/course/${coursename}/subject`, { state: { courseName: coursename } });
     //     console.log(coursename)
@@ -92,7 +104,7 @@ export default function UserSidebar() {
         <>
             {
                 isAuthenticated && (
-                    <div id='sidebar' className="sidebar" style={{height: `${height}`}}>
+                    <div id='sidebar' className="sidebar" style={{ height: `${height}` }}>
                         <div className="viewLater_text">View Later :</div>
                         {
                             loading ? <Loader width={20} height={7} top={50} color={"grey"} /> :
@@ -109,8 +121,16 @@ export default function UserSidebar() {
                                             </div>
                                         </div>
                                     ))}
-
-                                    <div>Completed {viewCount !== null ? viewCount.toString() : 0} out of {viewLater.length}</div>
+                                    {(!viewLater.length == false) && (
+                                        (viewCount !== null ? viewCount.toString() : 0) >= viewLater.length.toString() ? (
+                                            <>
+                                                <div>Completed All</div>
+                                                <button type="button" onClick={removeAllViewLaters}>Complete</button>
+                                            </>
+                                        ) : (
+                                            <div>Completed {viewCount !== null ? viewCount.toString() : 0} out of {viewLater.length}</div>
+                                        )
+                                    )}
                                     <div className='drag_n_drop' >Drag and drop material here</div>
                                 </>
                         }

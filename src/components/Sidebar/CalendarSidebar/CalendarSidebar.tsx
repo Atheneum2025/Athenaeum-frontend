@@ -3,7 +3,8 @@ import { getAuthenticatedUser } from '../../../utils/authUtils';
 import axiosInstance from '../../../utils/axios';
 import Loader from '../../Loader/Loader';
 import Delete_Light_Image from '../../../assets/light_theme/delete.png';
-import Delete_Dark_Image from '../../../assets/dark_theme/delete.png'
+import Delete_Dark_Image from '../../../assets/dark_theme/delete.png';
+import { useTheme } from '../../../context/ThemeContext';
 
 type EventType = {
     _id: string;
@@ -11,7 +12,12 @@ type EventType = {
     date: string;
 }
 
-export default function CalendarSidebar() {
+type CalendarSidebarProps = {
+    setRefreshCalendar: (value: boolean) => void;
+};
+
+export default function CalendarSidebar({ setRefreshCalendar }: CalendarSidebarProps) {
+    const { theme } = useTheme();
     const { user, isAuthenticated } = getAuthenticatedUser();
     const [loading, setLoading] = useState<boolean>(false);
 
@@ -29,6 +35,7 @@ export default function CalendarSidebar() {
                 date: event.date.split("T")[0],
             }));
             setEvent(formattedEvents);
+            // setRefreshCalendar(true);
         }
         catch (error) {
             console.error(error);
@@ -36,9 +43,9 @@ export default function CalendarSidebar() {
     }
     console.log(event)
 
-const handleScroll = () => {
+    const handleScroll = () => {
         if (window.scrollY > 400) { // Change height when scrolled 100px
-            setHeight("55vh");
+            setHeight("0vh");
         } else {
             setHeight("85vh");
         }
@@ -59,35 +66,34 @@ const handleScroll = () => {
             });
             console.log(response);
             fetchData();
+            setRefreshCalendar(false)
         } catch (error) {
             console.error("Error removing event", error);
         }
     };
     return (
-        <div id='sidebar' className="sidebar" style={{height: `${height}`}}>
+        <div id='sidebar' className="sidebar" style={{ height: `${height}` }}>
             <div className="viewLater_text">Events :</div>
             {
                 loading ? <Loader width={20} height={7} top={50} color={"grey"} /> :
                     <>
                         {
                             event.map((event: EventType, index) => (
-                                <>
+                                <div key = { index }>
                                     {
-                                        
                                         event.date.replace('-', ' ') < current_date.toString().replace('-', ' ') && (
-                                                <div key={index} className="viewLater_card" >
-                                                    <div>
-                                                        <div className='viewLater_name'>{event.date}</div>
-                                                        <div>{event.title}</div>
-                                                    </div>
-                                                    <div className='delete_viewLater' onClick={() => { removeFromEvents(event._id) }}>
-                                                        <img src={Delete_Light_Image} alt="" />
-                                                        {/* <img src={Delete_Dark_Image} alt="" /> */}
-                                                    </div>
+                                            <div className="viewLater_card" >
+                                                <div>
+                                                    <div className='viewLater_name'>{event.date}</div>
+                                                    <div>{event.title}</div>
                                                 </div>
+                                                <div className='delete_viewLater' onClick={() => { removeFromEvents(event._id) }}>
+                                                    <img src={theme === "light" ? Delete_Light_Image : Delete_Dark_Image} alt="" />
+                                                </div>
+                                            </div>
                                         )
                                     }
-                                </>
+                                </div>
                             ))
                         }
 

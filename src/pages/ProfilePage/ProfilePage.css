@@ -6,7 +6,7 @@
 
 .user_profile{
   padding: 2rem;
-  background-color: var(--secondary-color);
+  /* background-color: var(--secondary-color); */
   display: grid;
   grid-template-columns: repeat(3, 33%);
   place-items: center;
@@ -26,14 +26,18 @@
   padding: 10px;
   display: flex;
   justify-content: end;
+  background-color: rgba(0, 0, 0, 0);
+  /* background-color: red; */
 }
 
 .user_profile_options{
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-top: 10px;
     /* height: 1rem; */
     /* min-height: 100px; */
+    color: var(--font-color);
     border-top: 3px solid var(--secondary-color);
     background-color: var(--primary-color);
     place-items: center;
@@ -51,11 +55,12 @@
 } */
 
 .user_profile_options_display{
-    background-color: grey;
+    /* background-color: grey; */
     display: flex;
     flex-direction: row;
-    /* color: rgba(90, 0, 0, 0.96); */
-    color: var(--secondary-color);
+    /* color: grey; */
+    min-height: 50vh;
+    /* color: var(--secondary-color); */
     font-size: 1.4rem;
     /* font-family: cursive; */
     font-weight: 600;
@@ -91,7 +96,7 @@
 } */
 
 .option_material_card{
-  border-bottom: 1px solid black;
+  /* border-bottom: 1px solid black; */
   margin-block: 1rem;
 }
 
@@ -99,22 +104,31 @@
   display: grid;
   place-items: start ;
   grid-template-columns: repeat(3, 1fr);
+  color: var(--font-color);
   /* place-content: center; */
 }
 
+.option_material_details{
+  padding: 2px;
+  cursor: pointer;
+  &:hover{
+    background-color: rgba(82, 82, 82, .2);
+  }
+}
+
 .delete_history_btn{
-  color: black;
+  color: var(--font-color);
   padding: 10px;
   border:none;
-  background-color: transparent;
+  background-color: var(--secondary-color);
   display: flex;
   gap: 10px;
   align-items: center;
+  
   outline: 2px solid var(--secondary-color);
-
   &:hover{
-    background-color: var(--secondary-color);
-    outline: none;
+    background-color: transparent;
+    /* outline: none; */
     color: white;
   }
 }

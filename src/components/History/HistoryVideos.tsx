@@ -2,6 +2,7 @@ import axiosInstance from '../../utils/axios';
 import { useEffect, useState } from 'react'
 import Delete_Light_Image from '../../assets/light_theme/delete.png';
 import Delete_Dark_Image from '../../assets/dark_theme/delete.png';
+import { useTheme } from '../../context/ThemeContext';
 
 type HistoryType = {
   MaterialName: string;
@@ -12,6 +13,7 @@ type HistoryType = {
   _id: string;
 }
 export default function HistoryVideos() {
+    const { theme } = useTheme();
 
   const [history, setHistory] = useState<HistoryType[]>([])
   const fetchData = async () => {
@@ -40,11 +42,10 @@ export default function HistoryVideos() {
 
   return (
     <>
-      <div style={{display: "flex", justifyContent: "space-between"}}>
+      <div style={{display: "flex", justifyContent: "space-between", color: "var(--font-color)"}}>
         <div>User History</div>
         <button onClick={() => deleteHistory()} className="delete_history_btn" >
-          <img src={Delete_Light_Image} alt="" />
-          {/* <img src={Delete_Dark_Image} alt="" /> */}
+          <img src={theme === "light" ? Delete_Light_Image : Delete_Dark_Image} alt="" />
           <div>Delete History</div>
         </button>
       </div>

@@ -40,6 +40,7 @@ export default function Courses() {
     const [editCoursename, setEditCoursename] = useState<string>("");
     const [editCoursedescription, setEditDescription] = useState<string>("");
     const [editCoursekeywords, setEditKeywords] = useState<string>("");
+    const [refreshCourses, setRefreshCourses] = useState(false);
 
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -62,7 +63,7 @@ export default function Courses() {
     useEffect(() => {
         window.scrollTo(0, 0);
         fetchData();
-    }, [page, sortBy, SortType]);
+    }, [page, sortBy, SortType, refreshCourses]);
 
     useEffect(() => {
         if (selectedCourse) {
@@ -111,11 +112,11 @@ export default function Courses() {
         if (confirmDelete) {
             try {
                 await axiosInstance.delete(`/course/${selectedCourse?.coursename}`, { withCredentials: true });
-                alert("Course deleted successfully!");
+                // alert("Course deleted successfully!");
                 fetchData();
             } catch (error) {
                 console.error(error);
-                alert("Failed to delete course.");
+                // alert("Failed to delete course.");
             }
         }
     };
@@ -223,10 +224,14 @@ export default function Courses() {
                                                                     </div>
                                                                 )
                                                             }
-                                                            <div className="option_images edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setRateCourse(course); e.stopPropagation() }} >
-                                                                <img src={theme === "light" ? RateStar_Light_Image : RateStar_Dark_Image} alt="" />
-                                                                {course.rating ? (<div>{course.rating}/5</div>) : (<div></div>)}
-                                                            </div>
+                                                            {
+                                                                user && (
+                                                                    <div className="option_images edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setRateCourse(course); e.stopPropagation() }} >
+                                                                        <img src={theme === "light" ? RateStar_Light_Image : RateStar_Dark_Image} alt="" />
+                                                                        {course.rating ? (<div style={{marginLeft: "5px", marginTop: "5px"}}>{course.rating}</div>) : (<div></div>)}
+                                                                    </div>
+                                                                )
+                                                            }
                                                         </div>
 
                                                     </div>
@@ -304,7 +309,7 @@ export default function Courses() {
                                                 <h2>Rate Course {rateCourse.coursename}</h2>
                                                 <button type="button" onClick={() => { setRateCourse(null) }}>✕</button>
                                             </div>
-                                            <RatingComponent course={rateCourse} />
+                                            <RatingComponent course={rateCourse} setRateCourse={setRateCourse} setRefreshCourses={setRefreshCourses} />
                                         </div>
                                     </div>
                                 )}

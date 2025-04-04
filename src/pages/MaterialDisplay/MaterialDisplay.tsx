@@ -3,7 +3,9 @@ import axiosInstance from '../../utils/axios';
 import { useEffect, useRef, useState } from 'react'
 import ReactPlayer from 'react-player'
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-
+import "./MaterialDisplay.css";
+import Loader from '../../components/Loader/Loader';
+import { getAuthenticatedUser } from '../../utils/authUtils';
 
 type VideoType = {
   material: any;
@@ -13,18 +15,22 @@ type VideoType = {
   fileType: string;
 }
 const MaterialDisplay = () => {
+    const { user, isAuthenticated } = getAuthenticatedUser();
+  // const apiKey = import.meta.env.VITE_APIKEY;
+  // const ttsUrl = import.meta.env.VITE_TTSURL
   const navigate = useNavigate();
   const location = useLocation();
   const subjectName = location.state?.subjectName;
   const courseName = location.state?.courseName;
   const unitName = location.state?.unitName;
   const materialNamel = location.state?.materialName;
+  const [loading, setLoading] = useState<boolean>(false)
 
   const { courseId, subjectId, unitId, materialName } = useParams<{ courseId: string, subjectId: string, unitId: string, materialName: string }>();
   console.log(materialName)
   let courseIdParameter, subjectIdParameter, unitIdParameter, materialIdParameter;
-  courseId ? courseIdParameter = courseId.toUpperCase() : courseIdParameter = courseName;
-  subjectId ? subjectIdParameter = subjectId.toUpperCase() : subjectIdParameter = subjectName;
+  courseId ? courseIdParameter = courseId : courseIdParameter = courseName;
+  subjectId ? subjectIdParameter = subjectId : subjectIdParameter = subjectName;
   unitId ? unitIdParameter = unitId : unitIdParameter = unitName;
   materialName ? materialIdParameter = materialName : materialIdParameter = materialNamel;
 
@@ -33,9 +39,11 @@ const MaterialDisplay = () => {
   const [isSaved, setIsSaved] = useState<boolean>(false)
 
   const fetchdata = async () => {
+    setLoading(true)
     try {
       const url = await axiosInstance.get<VideoType>(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/${materialIdParameter}/`, { withCredentials: true });
       setMaterialUrl(url.data);
+      setLoading(false);
     }
     catch (error) {
       console.error(error);
@@ -57,7 +65,7 @@ const MaterialDisplay = () => {
   }
 
   const [isPaused, setIsPaused] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [textChunks, setTextChunks] = useState<string[]>([]);
   const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -87,7 +95,7 @@ const MaterialDisplay = () => {
       const chunks = splitTextIntoChunks(cleanedText, 1000);
       setTextChunks(chunks);
       setCurrentChunkIndex(0);
-      setLoading(false);
+      setPdfLoading(false);
 
       if (chunks.length > 0) {
         playChunksSequentially(chunks);
@@ -196,67 +204,92 @@ const MaterialDisplay = () => {
       <div className='title' onClick={() => { navigate(`/course/${courseIdParameter}/subject/${subjectIdParameter}/unit/${unitIdParameter}/material/`) }}>Material Name - {materialUrl?.material.materialname}</div>
 
       <div className="items_display_page" >
-        {
-          materialUrl?.material.fileType === 'raw' ? (
-            <>
-              <div>Material Name : {materialUrl?.material.materialname}</div>
-              <div>Description : {materialUrl?.material.description}</div>
-              <div>Uploaded By : {materialUrl?.material.owner}</div>
-              <div>{materialUrl?.material.fileType}</div>
-              {
-                isSaved ? (
-                  <button style={{ backgroundColor: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
-                ) : (
-                  <button style={{ backgroundColor: "green" }} onClick={() => saveMaterial()} >Save Material</button>
-                )
-              }
-              <div>
-                <h2>PDF to Speech</h2>
-                <button type="button" onClick={()=>handleFileUpload(materialUrl?.material.materialURL)} >Convert</button>
-                {/* <input type="file" accept="application/pdf" onChange={handleFileUpload} /> */}
-                {loading && <p>Processing PDF...</p>}
+        <div className="items_display_header">
+          <h1>{materialUrl?.material.materialname}</h1>
+        </div>
 
-
-                {textChunks.length > 0 && (
-                  <>
-                    <p>Playing chunk {currentChunkIndex + 1} of {textChunks.length}</p>
-                    <button onClick={toggleAudio}>{isPaused ? "Play" : "Pause"}</button>
-                  </>
-                )}
-              </div>
-              <div><a href={materialUrl?.material.materialURL} download >Download Material</a></div>
-              <iframe src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe>
-
-            </>
-
-          ) : (
-            <div>
-              <div>video player</div>
-              <div className='video-display' >
-                <ReactPlayer url={`${materialUrl?.material.materialURL}`}
-                  // width="1080px"
-                  // height="720px"
-                  width="600px"
-                  height="300px"
-                  controls={true}
-                />
-                <div>Material Name : {materialUrl?.material.materialname}</div>
-                <div>{materialUrl?.material._id}</div>
-                <div>Description : {materialUrl?.material.description}</div>
-                <div>Uploaded By : {materialUrl?.material.owner}</div>
-                <div>{materialUrl?.material.fileType}</div>
-
+        <div className="items_cards_list">
+          {
+            loading ? <Loader width={35} height={15} top={50} color={"var(--secondary-color)"} /> :
+              <>
                 {
-                  isSaved ? (
-                    <button style={{ backgroundColor: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
+                  materialUrl?.material.fileType === 'raw' ? (
+                    <>
+                      <div>Title : {materialUrl?.material.materialname}</div>
+                      <div>Description : {materialUrl?.material.description}</div>
+                      <div>Uploaded By : {materialUrl?.material.owner}</div>
+                      {/* <div>{materialUrl?.material.fileType}</div> */}
+                      {
+                        user && (   
+                          isSaved ? (
+                            <button style={{ backgroundColor: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
+                          ) : (
+                            <button style={{ backgroundColor: "green" }} onClick={() => saveMaterial()} >Save Material</button>
+                          )
+                        )
+                      }
+                      {
+                        user && (
+                          <div>
+                            <h2>PDF to Speech</h2>
+                            <button type="button" onClick={() => handleFileUpload(materialUrl?.material.materialURL)} >Convert</button>
+                            {/* <input type="file" accept="application/pdf" onChange={handleFileUpload} /> */}
+                            {pdfLoading && <p>Processing PDF...</p>}
+
+
+                            {textChunks.length > 0 && (
+                              <>
+                                <p>Playing chunk {currentChunkIndex + 1} of {textChunks.length}</p>
+                                <button onClick={toggleAudio}>{isPaused ? "Play" : "Pause"}</button>
+                              </>
+                            )}
+                            <div><a href={materialUrl?.material.materialURL} download >Download Material</a></div>
+                          </div>
+                        )
+                      }
+                      
+                      <iframe className="pdf_viewer" src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe>
+                    </>
+
                   ) : (
-                    <button style={{ backgroundColor: "green" }} onClick={() => saveMaterial()} >Save Material</button>
+                    <div>
+                      <div className="content">
+                        <div className="video-section">
+                          <ReactPlayer url={`${materialUrl?.material.materialURL}`}
+                            // width="1080px"
+                            // height="720px"
+                            width="700px"
+                            height="350px"
+                            controls={true}
+                          />
+                          <div>Material Name : {materialUrl?.material.materialname}</div>
+                          <div>{materialUrl?.material._id}</div>
+                          <div>Description : {materialUrl?.material.description}</div>
+                          <div>Uploaded By : {materialUrl?.material.owner}</div>
+                          <div>{materialUrl?.material.fileType}</div>
+                          {
+                            isSaved ? (
+                              <button style={{ backgroundColor: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
+                            ) : (
+                              <button style={{ backgroundColor: "green" }} onClick={() => saveMaterial()} >Save Material</button>
+                            )
+                          }
+                        </div>
+                        <div className="msidebar">
+                          <h3>View More Materials</h3>
+                          <div className="more-materials">
+                            <div className="material-box"><div className="material-holder">MAT 1</div></div>
+                            <div className="material-box"><div className="material-holder">MAT 2</div></div>
+                            <div className="material-box"><div className="material-holder">MAT 3</div></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   )
                 }
-              </div>
-            </div>
-          )
-        }
+              </>
+          }
+        </div>
       </div>
       <div>View More Material</div>
     </>

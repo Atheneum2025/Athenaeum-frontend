@@ -15,6 +15,9 @@
 .materials_page{
     background-image: url(../src/assets/background2.png);
 }
+.profile_page{
+  background-image: url(../src/assets/background2.png);
+}
 .items_cards_list, .settings_options{
   padding-block: 2rem;
   /* background-color: blue; */
@@ -419,4 +422,23 @@ svg {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+
+.user_info{
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  height: 100px;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 1.7rem;
+}
+
+.user_info button{
+  padding: .4rem;
+  background-color: white;
+  outline-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
 }

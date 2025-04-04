@@ -17,6 +17,9 @@ export default function SettingsPage() {
     const [oldPassword, setOldPassword] = useState<string>("");
     const [newPassword, setNewPassword] = useState<string>("");
     const [phoneNo, setPhoneNo] = useState<number>()
+    const [collegename, setCollegename] = useState<string>("");
+    const [collegenumber, setCollegenumber] = useState<number>();
+    const [prNo, setPrNo] = useState<number>();
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
 
@@ -41,7 +44,7 @@ export default function SettingsPage() {
     const changeRole = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axiosInstance.patch(`/users/c/${user._id}/role/`, { phoneNo }, { withCredentials: true });
+            const response = await axiosInstance.post(`/users/c/${user._id}/request/`, { phoneNo, collegename, collegenumber, prNo }, { withCredentials: true });
             console.log(response);
         } catch (error) {
             console.error(error)
@@ -69,7 +72,7 @@ export default function SettingsPage() {
         <>
             <div className="settings_page">
                 <div className="settings_page_header">
-                    <h1>Settings</h1>
+                    <h1>Settings :</h1>
                     {
                         user.role === 'student' && (
                             <button className='big_btn' type='button' onClick={() => setIsVisible(true)} >Become a Professor</button>
@@ -77,6 +80,21 @@ export default function SettingsPage() {
                     }
                 </div>
                 <div className="settings_options">
+                {
+                    !user.college && (
+                        <div>
+                            <h2>Complete Your Profile</h2>
+                            <div className="section">
+                                <form action="" className="edit_profile">
+                                    <div className='input_fields'>
+                                        <label htmlFor="college_name">Add Your College Name:</label>
+                                        <input type="text" id="college_name" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )
+                }
                     <h2>Update Personal Info</h2>
                     <div className="section" >
                         <form action="" className='edit_profile'>
@@ -96,6 +114,14 @@ export default function SettingsPage() {
                                 <label htmlFor="email">Edit Email:</label>
                                 <input type="text" id="email" />
                             </div>
+                            {
+                                user.college && (
+                                    <div className='input_fields'>
+                                        <label htmlFor="college_name">Edit College Name:</label>
+                                        <input type="text" id="college_name" />
+                                    </div>
+                                )
+                            }
                             <div className="setting_btns">
                                 <button type='submit' >Save Changes</button>
                             </div>
@@ -120,7 +146,7 @@ export default function SettingsPage() {
 
                     <h2>Site Appearance</h2>
                     <div className="section">
-                        <h3>Current theme: {theme}</h3>
+                        <h3 style={{marginBottom: '20px'}} >Current theme: {theme}</h3>
                         <div className="theme_options">
                             {
                                 Object.keys(themes).map((themeKey) => (
@@ -134,12 +160,10 @@ export default function SettingsPage() {
 
                     <h2>Clear Search Data</h2>
                     <div className="clear_data section">
-                        <p>This will clear your Recents Searches</p>
                         <button onClick={clearRecentSearch} >Clear Recents</button>
                     </div>
                     <h2>Delete User Account</h2>
                     <div className="delete_account section">
-                        <h3>This will delete your Account parmanently</h3>
                         <button onClick={() => setDeleteAccount(true)} >Delete Account</button>
                     </div>
 
@@ -157,6 +181,20 @@ export default function SettingsPage() {
                                             <div className="form_field">
                                                 <label htmlFor="event">Enter Your Phone Number:</label>
                                                 <input type="number" id="text" value={phoneNo} onChange={(e: any) => setPhoneNo(e.target.value)} />
+                                            </div>
+                                            {!user.college && (
+                                                <div className="form_field">
+                                                    <label htmlFor="event">Enter Your College Name:</label>
+                                                    <input type="text" id="text" value={collegename} onChange={(e: any) => setCollegename(e.target.value)} />
+                                                </div>
+                                            )}
+                                            <div className="form_field">
+                                                <label htmlFor="event">Enter Your College Phone Number:</label>
+                                                <input type="number" id="text" value={collegenumber} onChange={(e: any) => setCollegenumber(e.target.value)} />
+                                            </div>
+                                            <div className="form_field">
+                                                <label htmlFor="event">Enter Your Phone PR Number:</label>
+                                                <input type="number" id="text" value={prNo} onChange={(e: any) => setPrNo(e.target.value)} />
                                             </div>
                                             <div className="upload_btns">
                                                 <button type="button" onClick={() => setIsVisible(false)}>Cancel</button>

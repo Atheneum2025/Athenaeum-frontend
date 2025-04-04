@@ -23,6 +23,8 @@ export default function ProfilePage() {
                 ) : (
                     <div>
                         <div> Welcome Guest</div>
+                        <div>Explore Our Website Athenaeum By Signing Up to our Website</div>
+                        <button><a href="/login">Sign In</a></button>
                     </div>
                 )
             }

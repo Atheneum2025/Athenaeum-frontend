@@ -13,9 +13,14 @@ type CourseType = {
 }
 type RatingComponentProps = {
     course: CourseType;
+    setRateCourse: React.Dispatch<React.SetStateAction<CourseType | null>>;
+    setRefreshCourses: (value: boolean) => void;
 };
+// interface RatingFormProps {
+//     setRateCourse: (value: boolean) => void;
+// }
 
-export default function RatingComponent({ course }: RatingComponentProps) {
+export default function RatingComponent({ course, setRateCourse, setRefreshCourses }: RatingComponentProps) {
 
     const [rating, setRating] = useState<number>(0);
     const [hover, setHover] = useState<number>(0);
@@ -44,6 +49,8 @@ export default function RatingComponent({ course }: RatingComponentProps) {
                 rating: newRating,
             }, { withCredentials: true });
             setRating(newRating);
+            setRateCourse(null); // Close form
+            setRefreshCourses(!course.rating);
             // fetchData();
         } catch (error) {
             console.error("Error submitting rating", error);
@@ -54,8 +61,8 @@ export default function RatingComponent({ course }: RatingComponentProps) {
     return (
         <>
             <form action="" onSubmit={(e) => { e.preventDefault(); submitRating(rating); }}>
-                <div className="ratings_section">
-                    <div>Your previous rating : {previousRating}</div>
+                <div className="ratings_section" style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                    <div className='previous_rating' style={{marginBottom: "10px"}} >Your previous rating : {previousRating}</div>
                     {[...Array(totalStars)].map((star, index) => {
 
                         const currentRating = index + 1;
@@ -73,7 +80,7 @@ export default function RatingComponent({ course }: RatingComponentProps) {
                     })}
                 </div>
                 <div className="upload_btns">
-                    <button type="button">Cancel</button>
+                    <button type="button" onClick={()=>setRateCourse(null)} >Cancel</button>
                     <button type='submit'>Rate</button>
                 </div>
             </form>

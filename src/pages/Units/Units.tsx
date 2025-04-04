@@ -93,7 +93,7 @@ export default function Units() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { unitname, description, keywords }, { withCredentials: true });
+      await axiosInstance.patch(`/course/${courseId}/subject/${subjectId}/unit/${selectedUnit?.unitname}`, { editUnitname, editUnitdescription, editUnitkeywords }, { withCredentials: true });
       fetchData()
       setSelectedUnit(null);
     } catch (error) {
@@ -136,7 +136,7 @@ export default function Units() {
           {/* form for making a new unit */}
           {
             isAuthenticated && (
-              user.role === "admin" && (
+              user?.role === "admin" && (
                 <>
                   <button className='add_btn' onClick={() => setFormIsVisible(true)}>
                     <img src={AddImage} alt="" />
@@ -216,7 +216,7 @@ export default function Units() {
                                 <div className="item_description">Description: {unit.description}</div>
                               </div>
                               {
-                                user.role === "admin" && (
+                                user?.role === "admin" && (
                                   <div className="edit_image" onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedUnit(unit); e.stopPropagation() }} >
                                     <EditComponent />
                                   </div>
@@ -248,7 +248,7 @@ export default function Units() {
                             <button type="button" onClick={() => setSelectedUnit(null)}>✕</button>
                           </div>
                           <div className="form_field">
-                            <label htmlFor="unitname">Edit Subject Name</label>
+                            <label htmlFor="unitname">Edit Unit Name</label>
                             <input
                               id="unitname"
                               type="text"
@@ -258,7 +258,7 @@ export default function Units() {
                             />
                           </div>
                           <div className="form_field">
-                            <label htmlFor="description">Edit Subject Name</label>
+                            <label htmlFor="description">Edit Unit Description</label>
                             <input
                               id="description"
                               type="text"

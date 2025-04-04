@@ -6,6 +6,7 @@ import { getAuthenticatedUser } from '../../utils/authUtils';
 import AddImage from '../../assets/add.png';
 import Loader from '../../components/Loader/Loader';
 import axiosInstance from '../../utils/axios';
+import ErrorPage from '../ErrorPage/ErrorPage';
 
 type QuizType = {
     _id: string;
@@ -26,6 +27,7 @@ export default function Quiz() {
     const [loading, setLoading] = useState<boolean>(false)
     const [subject, setSubject] = useState<string>("")
     const [selectedSubject, setSelectedSubject] = useState<string>("");
+    const [subjectToSend, setSubjectToSend] = useState<string>("");
     const [quizName, setQuizName] = useState<string>("");
     const [questionOne, setQuestionOne] = useState<string>("");
     const [questionTwo, setQuestionTwo] = useState<string>("");
@@ -58,7 +60,20 @@ export default function Quiz() {
         window.scrollTo(0, 0);
         fetchData();
         fetchSubjects();
+        
     }, []);
+
+    useEffect(()=>{
+        if (selectedSubject) {
+            setSubject("");
+            setSubjectToSend(selectedSubject);
+        }
+
+        if (subject.length > 0) {
+            setSelectedSubject("");
+            setSubjectToSend(subject);
+        }
+    }, [selectedSubject, subject])
 
     const fetchSubjects = async () => {
         try {
@@ -79,8 +94,9 @@ export default function Quiz() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        
         try {
-            const response = await axiosInstance.post('/quiz/', { selectedSubject, quizName, questionOne, answerOne, questionTwo, answerTwo, questionThree, answerThree, questionFour, answerFour, questionFive, answerFive }, { withCredentials: true });
+            const response = await axiosInstance.post('/quiz/', { selectedSubject: subjectToSend, quizName, questionOne, answerOne, questionTwo, answerTwo, questionThree, answerThree, questionFour, answerFour, questionFive, answerFive }, { withCredentials: true });
             console.log("course created", response.data);
             fetchData();
             setFormIsVisible(false)
@@ -120,7 +136,7 @@ export default function Quiz() {
                                                                     <label>Subject</label>
                                                                     <select
                                                                         value={selectedSubject}
-                                                                        onChange={(e) => setSelectedSubject(e.target.value)}
+                                                                        onChange={(e) => {setSelectedSubject(e.target.value)}}
                                                                     >
                                                                         <option value="">Select Subject</option>
                                                                         {
@@ -129,6 +145,7 @@ export default function Quiz() {
                                                                             ))
                                                                         }
                                                                     </select>
+                                                                    OR
                                                                     <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)} />
                                                                 </div>
                                                                 <div className="question_form_field">
@@ -233,7 +250,10 @@ export default function Quiz() {
                         </div>
                     </>
                 ) : (
-                    <div>please login </div>
+                    <>
+                        <div>Please Login to access Quiz</div>
+                        <button><a href="/login">Login</a></button>
+                    </>
                 )
             }
 

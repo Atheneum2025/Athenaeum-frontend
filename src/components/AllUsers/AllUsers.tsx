@@ -12,6 +12,7 @@ type User = {
     role: string;
     college: string;
     isActive: boolean;
+    phoneNo: string;
 }
 
 export default function AllUsers({ role }: UserRole) {
@@ -50,8 +51,8 @@ export default function AllUsers({ role }: UserRole) {
                         <div className="option_material_card" key={index} onClick={() => sendData(user._id)}>
                             <div className="option_material_details">
                                 <div className="liked_material_name">{user.username}</div>
-                                <div className='uploaded_by'>{user.role}</div>
-                                <div>{JSON.stringify(user.isActive)}</div>
+                                <div className="liked_material_name">{user.phoneNo}</div>
+                                <div>{JSON.stringify(user.isActive) == "true" ? <>Active</> : <>Not Active</>}</div>
                             </div>
                         </div>
                     ))

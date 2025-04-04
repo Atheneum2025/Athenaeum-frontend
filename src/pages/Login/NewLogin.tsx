@@ -16,6 +16,8 @@ const LoginPage = () => {
     const [email, setEmail] = useState<string>("");
     const [emailError, setEmailError] = useState<string>("");
     const [passwordError, setPasswordError] = useState<string>("")
+    const [isPasswordValid, setIsPasswordValid] = useState(false);
+
     const [isActive, setIsActive] = useState(false);
     const [color, setColor] = useState("red");
     const [loading, setLoading] = useState<boolean>(false)
@@ -74,6 +76,10 @@ const LoginPage = () => {
                 setPasswordError("Passwords do not match");
                 return;
             }
+            if (!validatePassword(password)) {
+            setSignUpLoading(false);
+            return;
+        }
             const response = await axiosInstance.post('/auth/signup', { username, password, email });
             setSignupMessage("Registration Successful")
             setColor("green");
@@ -102,18 +108,46 @@ const LoginPage = () => {
         return emailRegex.test(email);
     }
 
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(e.target.value);
-        setConfirmPassword("")
-        if ((password.length + 1) < 5) {
-            setPasswordError(`password must be atleast 5 characters`)
-            return true
+    // const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).+$/;
+    //     setPassword(e.target.value);
+    //     setConfirmPassword("")
+    //     if ((password.length + 1) < 5) {
+    //         setPasswordError(`password must be atleast 5 characters`)
+    //         setIsPasswordValid(false);
+
+    //         return true
+    //     }
+    //     else if(!passwordRegex.test(password)){
+    //         setPasswordError(`at least one letter and one number. `)
+    //         setIsPasswordValid(false);
+
+    //         return true
+    //     }
+    //     else {
+    //         setPasswordError("");
+    //         setIsPasswordValid(true);
+
+    //         return false
+    //     }
+    // }
+
+    const validatePassword = (pwd: string): boolean => {
+        if (pwd.length < 5) {
+            setPasswordError("Password must be at least 5 characters long.");
+            return false;
         }
-        else {
-            setPasswordError("");
-            return false
+        const hasLetter = /[A-Za-z]/.test(pwd);
+        const hasNumber = /\d/.test(pwd);
+
+        if (!hasLetter || !hasNumber) {
+            setPasswordError("At least one letter and one number.");
+            return false;
         }
-    }
+
+        setPasswordError("");
+        return true;
+    };
 
 
     const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +202,7 @@ const LoginPage = () => {
                                     name="password"
                                     placeholder="Password"
                                     value={password}
-                                    onChange={handlePasswordChange}
+                                    onChange={(e) => {setPassword(e.target.value); setConfirmPassword("")}}
                                 />
                                 <div className="hide_password" onMouseOver={() => setIsPasswordVisible((prev) => !prev)} onMouseOut={() => setIsPasswordVisible((prev) => !prev)} ></div>
                             </fieldset>
@@ -196,7 +230,7 @@ const LoginPage = () => {
                                             {emailError && <pre>{emailError}</pre>}
                                             {passwordError && <pre>{passwordError}</pre>}
                                             {signupMessage && (
-                                                <pre style={{ color: "{color}" }} >{signupMessage}</pre>
+                                                <pre style={{ color: "{color}", height: "20px" }} >{signupMessage}</pre>
                                             )}
                                         </>
                                     )

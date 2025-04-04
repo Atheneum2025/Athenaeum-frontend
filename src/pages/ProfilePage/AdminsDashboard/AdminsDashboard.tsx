@@ -53,6 +53,7 @@ function AdminsDashboard({ user }: AdminDashboardProps) {
   }
   return (
     <>
+    <div className="profile_page">
       <div className="user_profile">
         <h1>Welcome {user.role}</h1>
         <div className='user_avatar'>
@@ -153,8 +154,7 @@ function AdminsDashboard({ user }: AdminDashboardProps) {
         <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Students</div>
         <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>My History</div>
         <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Saved Materials</div>
-        <div className={`options ${activePage === 5 ? "active" : ""}`} onClick={show(5)}>My Material</div>
-        <div className={`options ${activePage === 6 ? "active" : ""}`} onClick={show(6)}>Analytics</div>
+        <div className={`options ${activePage === 5 ? "active" : ""}`} onClick={show(5)}>Analytics</div>
       </ul>
       <div className='user_profile_options_display'>
         <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
@@ -162,7 +162,7 @@ function AdminsDashboard({ user }: AdminDashboardProps) {
           <div>All Professors</div>
           <div className="option_material_header">
             <div>Name</div>
-            <div>Role</div>
+            <div>Phone Number</div>
             <div>Status</div>
           </div>
           <AllUsers role={"professors"} />
@@ -172,7 +172,7 @@ function AdminsDashboard({ user }: AdminDashboardProps) {
           <div>All Students</div>
           <div className="option_material_header">
             <div>Name</div>
-            <div>Role</div>
+            <div>Email</div>
             <div>Status</div>
           </div>
           <AllUsers role={"students"} />
@@ -187,13 +187,11 @@ function AdminsDashboard({ user }: AdminDashboardProps) {
           <SavedMaterials />
         </div>
         <div id='5' className={`options_page ${activePage === 5 ? "active" : ""}`}>
-          <MyMaterial _id={user._id} />
-        </div>
-        <div id='6' className={`options_page ${activePage === 6 ? "active" : ""}`}>
           <AdminAnalytics />  
           {/* <ProfessorAnalytics/> */}
         </div>
       </div>
+    </div>
     </>
   );
 }

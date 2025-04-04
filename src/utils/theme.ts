@@ -16,7 +16,8 @@ export const themes = {
   black: {
     background: "black",
     primary: "black",
-    secondary: "#111f28",
+    // secondary: "#111f28",
+    secondary: "rgb(58, 58, 58)",
     color: "beige",
     contrast: "3",
   },

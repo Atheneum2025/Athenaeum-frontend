@@ -15,13 +15,27 @@ export default function ProfessorAnalytics() {
 
     const [material, setMaterial] = useState<MaterialType[]>([]);
 
+    let totalPublished, totalUnpublished;
     const fetchMaterialData = async () => {
         const response = await axiosInstance.get(`/material/${user._id}`, {withCredentials: true});
         setMaterial(response.data.materials)
     }
 
+    const fetchMaterialStats = async () => {
+        try{
+
+            const materialData = await axiosInstance.get('/materials/stats', {withCredentials: true});
+            totalPublished = materialData.data.totalPublished;
+            totalUnpublished = materialData.data.totalUnpublished;
+        }
+        catch(error){
+            console.error(error);
+        }
+    }
+
     useEffect(()=>{
         fetchMaterialData();
+        fetchMaterialStats();
     }, [])
 
     const data = {
@@ -42,7 +56,7 @@ export default function ProfessorAnalytics() {
         labels: ["Documents", "Videos"],
         datasets: [
             {
-                data: [3, 7], // Number of views
+                data: [totalPublished, totalUnpublished], // Number of views
                 backgroundColor: ["#36A2EB", "#FFCE56"], // Colors for sections
                 hoverBackgroundColor: ["#2B90D9", "#E6B800"],
             },

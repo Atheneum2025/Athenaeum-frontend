@@ -18,7 +18,8 @@ type EventType = {
 export default function Calendar() {
 
     const { user, isAuthenticated } = getAuthenticatedUser();
-
+    const [refreshCalendar, setRefreshCalendar] = useState(false);
+    
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [event, setEvent] = useState<EventType[]>([]);
     const [title, setTitle] = useState<string>("")
@@ -45,7 +46,7 @@ export default function Calendar() {
     useEffect(() => {
         window.scrollTo(0, 0);
         fetchData();
-    }, [])
+    }, [refreshCalendar])
 
     const handleDateClick = (info: any) => {
         setIsVisible(true);
@@ -81,13 +82,12 @@ export default function Calendar() {
                     <FullCalendar
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"
-                        editable={true}
                         selectable={true}
                         events={event}
                         dateClick={handleDateClick}
                     />
                     <div>
-                    <div>Upcoming Events</div>
+                        {/* <div>Upcoming Events</div>
                         {event.length === 0 ? (
                             <p>No upcoming events</p>
                         ) : (
@@ -99,7 +99,7 @@ export default function Calendar() {
                                     </li>
                                 ))}
                             </ul>
-                        )}
+                        )} */}
                     </div>
                     {
                         isVisible && (
@@ -128,7 +128,7 @@ export default function Calendar() {
                     }
                 </div>
                 <div className="viewLaterSidebar">
-                    <CalendarSidebar />
+                    <CalendarSidebar setRefreshCalendar={setRefreshCalendar} />
                 </div>
             </div>
         </>

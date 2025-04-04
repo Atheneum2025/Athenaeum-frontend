@@ -22,6 +22,8 @@ import ErrorPage from "./pages/ErrorPage/ErrorPage.tsx";
 import RegisterUser from "./pages/Register/RegisterUser";
 import AboutUsPage from "./pages/AboutUsPage/AboutUsPage.tsx";
 import DocsPage from "./pages/DocsPage/DocsPage.tsx";
+import MyMaterial from "./components/MyMaterial/MyMaterial.tsx";
+import MissedPage from "./pages/MissedPage/MissedPage.tsx";
 function App() {
   return (
     <>
@@ -38,7 +40,9 @@ function App() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/contact" element={<ContactUs />} />
+            <Route path="/missed" element={<MissedPage />} />
             <Route path="/user/:userId" element={<UserDetails />} />
+            <Route path="/my_material" element={<MyMaterial _id={""} />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/quiz/:quizId/questions" element={<Questions />} />
             <Route path="/quiz/:quizId/leaderboard" element={<Leaderboard />} />

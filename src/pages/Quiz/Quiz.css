@@ -1,5 +1,76 @@
 
 
+.question {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 1;
+    background-color: rgb(99, 99, 99);
+}
+
+.question:hover{
+    background-color: grey;
+    
+}
+
+.question p {
+    margin: 0;
+}
+/* 
+label {
+    display: block;
+    margin-top: 5px;
+} */
+/* 
+label :hover{
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.829);
+} */
+
+/* .buttons {
+    float: right;
+    display: flex;
+    justify-content: space-between;
+} */
+
+.buttons {
+    display: flex; /* Use flexbox for layout */
+    justify-content: flex-end; /* Align buttons to the right */
+    gap: 10px; /* Optional: Add space between buttons */
+    margin-top: 20px; /* Optional: Add some space above the buttons */
+}
+
+.leave, .submit {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.leave {
+    
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+.submit {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+}
+
+
+.submit:hover{
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.829);
+}
+
+.leave:hover{
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.829);
+}
+
+
+
+
+/* questions */
 .question{
     display: grid;
     grid-template-columns: 1fr 100px 100px;
@@ -27,7 +98,7 @@
 
 }
 
-.question > button {
+.question button {
     width: 100%;
     background-color: #374151;
     color: white;
@@ -37,8 +108,12 @@
     padding: 6px;
 }
 
-.question > button:active{
-    background-color: red;
+.question button:active{
+    background-color: #2a5395;
+}
+.question button:visited{
+    background-color: #2a5395;
+
 }
 
 .quiz_layout > input{

@@ -81,11 +81,17 @@
     grid-column-start: 2;
     grid-column-end: 2;
     width: 50%;
+    position: relative;
+    margin-bottom: 20px;
 }
 .file_input input{
     display: none;
 }
 .file_input label{
+    position: absolute;
+    width: min-content;
+    top: 10px;
+    left: 29%;
 }
 
 .input_fields{
@@ -127,5 +133,5 @@
 
 .clear_data, .delete_account {
     display: grid;
-    grid-template-columns: 1fr auto ;
+    grid-template-columns: 1fr 3fr ;
 }
