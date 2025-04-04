@@ -153,8 +153,6 @@ const MaterialDisplay = () => {
   };
 
   const sendToTTS = async (text: string) => {
-    const apiKey = "AIzaSyBa4W1GJQhFoAiU_idhSLYSWHOhzc5P4AU";
-    const ttsUrl = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
 
     const data = {
       input: { text },
