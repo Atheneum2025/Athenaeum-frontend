@@ -55,6 +55,10 @@ main {
   padding-bottom: 10px;
 }
 
+.items_display_header h1{
+  color: goldenrod;
+}
+
 .item_filters {
   display: grid;
   align-content: space-between;
@@ -182,8 +186,6 @@ main {
 }
 /* button */
 
-button {
-}
 
 .edit_image, .option_images {
   cursor: pointer;

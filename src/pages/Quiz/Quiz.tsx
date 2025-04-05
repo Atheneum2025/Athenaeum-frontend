@@ -237,7 +237,7 @@ export default function Quiz() {
                                                                     <div className='course_description'>Quiz By :{quiz.author}</div>
                                                                 </div>
                                                             </div>
-                                                            <button onClick={() => { showLeaderboard(quiz._id) }} className='add_btn'>Check Leaderboard</button>
+                                                            <button onClick={() => { showLeaderboard(quiz._id,) }} className='add_btn'>Check Leaderboard</button>
                                                         </div>
                                                     ))}
                                                 </>

@@ -1,8 +1,9 @@
-
-.highlight {
-  color: gold;
-  font-weight: bold;
+.content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
 }
+
 .save-button {
   background: gold;
   color: black;
@@ -11,6 +12,11 @@
   font-size: 16px;
   cursor: pointer;
   border-radius: 5px;
+  outline: 1px solid gold;
+
+  &:hover {
+    box-shadow: 0 0 20px black;
+  }
 }
 .pdf_viewer {
   display: flex;
@@ -27,30 +33,29 @@
   height: 100%;
 }
 
-
 /* video */
 
 .video-section {
-    flex: 3;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 10px;
+  flex: 3;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
 }
 
 .video-section video {
-    width: 100%;
-    border-radius: 5px;
+  width: 100%;
+  border-radius: 5px;
 }
 
 .video-details button {
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    margin-right: 10px;
-    border-radius: 5px;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 
-.save {
+/* .save {
     float: right;
     background: white;
     color: black;
@@ -58,51 +63,110 @@
 .save:hover{
     box-shadow: 0 0 25px rgba(255, 255, 255, 0.829);
     cursor: pointer;
+} */
+
+.material_user_buttons {
+  width: 400px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 
-.download {
-    float: right;
-    background: rgb(255, 255, 255);
-    color: rgb(0, 0, 0);
-    border: 1px solid white;
+.download-button {
+  background-color: green;
+  color: white;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  outline: 1px solid green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    box-shadow: 0 0 20px black;
+  }
 }
 
-.download:hover{
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.829);
-    cursor: pointer;
+.download-button a {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+.download-button a:link {
+  color: white;
+}
+.download-button a:active {
+  color: white;
+}
+.download-button a:hover {
+  text-decoration: underline;
+  text-decoration-color: white;
+  text-decoration-style: solid;
+  text-decoration-thickness: 2px;
+  /* box-shadow: 0 0 25px rgba(255, 255, 255, 0.829); */
+}
+
+.play_section {
+  padding-block: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  /* background-color: red; */
+}
+
+.play_n_pause_btn {
+  padding: 5px 5px;
+  border-radius: 5px;
+  border: none;
+  outline-color: transparent;
+  width: min-content;
+
+  &:hover {
+    background-color: rgb(174, 174, 174);
+  }
 }
 
 /* Msidebar Section */
 .msidebar {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 15px;
-    border-radius: 10px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
 }
 
-.msidebar h3 {
-    text-align: center;
+.msidebar h2 {
+  text-align: center;
 }
 
 .more-materials .material-box {
-    background: gray;
-    height: 50px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    padding: 10px;
-    justify-content: center;
+  background: gray;
+  /* height: 50px; */
+  margin-bottom: 10px;
+  border-radius: 5px;
+  padding: 10px;
+  justify-content: center;
 }
 
 .material-holder {
-    background-color: rgb(72, 72, 68);
-    height: 35px;
-    width: 300px;
-    align-items: right;
-    text-align: center;
-    padding-top: 8px;
+  background-color: rgb(72, 72, 68);
+  height: 35px;
+  width: 300px;
+  align-items: right;
+  text-align: center;
+  padding-top: 8px;
 }
 
-.material-holder:hover{
-    box-shadow: 0 0 25px rgba(255, 255, 255, 0.829);
-    cursor: pointer;
+.material_options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+iframe,
+.video_display {
+  box-shadow: 0 0 25px rgb(0, 0, 0);
+  margin-bottom: 10px;
 }

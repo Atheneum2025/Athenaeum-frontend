@@ -61,6 +61,16 @@ export default function Home() {
 
   const [professorDetails, setProfessorDetails] = useState<User[]>([]);
 
+  
+  let r = (Math.random()*256).toFixed(0);
+  let g = (Math.random()*256).toFixed(0);
+  let b = (Math.random()*256).toFixed(0);
+  
+  // console.log(r,',',g,',',b);
+  let rgbColorA = `rgb(${r},${g},${b})`;
+  let rgbColorB = `rgb(${g},${b},${r})`;
+  let rgbColorC = `rgb(${b},${r},${g})`;
+
   // useEffect(() => {
   //   const fetchdata = async () => {
   //     try {
@@ -121,7 +131,7 @@ export default function Home() {
       <br></br>
       <div className="new-section">
         {/* First Box */}
-        <div className={`new-box ${visibleBoxes[0] ? "visible" : ""}`}>
+        <div className={`new-box ${visibleBoxes[0] ? "visible" : ""}`} style={{backgroundColor: `${rgbColorA}`}}>
           <h3>
             Free Study
             <br />
@@ -133,7 +143,7 @@ export default function Home() {
         </div>
 
         {/* Second Box */}
-        <div className={`new-box ${visibleBoxes[1] ? "visible" : ""}`}>
+        <div className={`new-box ${visibleBoxes[1] ? "visible" : ""}`} style={{ backgroundColor: `${rgbColorB}` }}>
           <h3>
             Create Your
             <br />
@@ -145,7 +155,7 @@ export default function Home() {
         </div>
 
         {/* Third Box */}
-        <div className={`new-box ${visibleBoxes[2] ? "visible" : ""}`}>
+        <div className={`new-box ${visibleBoxes[2] ? "visible" : ""}`} style={{backgroundColor: `${rgbColorC}`}}>
           <h3>
             Curated By
             <br />

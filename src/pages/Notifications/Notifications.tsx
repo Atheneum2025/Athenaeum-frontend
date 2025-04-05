@@ -99,6 +99,16 @@ export default function Notifications() {
     }
   };
 
+  const handleRequest = async (messageBy: string) => {
+    try {
+      const reqResponse = await axiosInstance.patch(`/users/c/${messageBy}/role/`, {withCredentials: true});
+      console.log(reqResponse);
+    }
+    catch(error){
+      console.error(error)
+    }
+  }
+
   const handleClosePopup = () => {
     setSelectedMessage(null);
     setReplyMessage("");
@@ -135,31 +145,58 @@ export default function Notifications() {
                   <div className="notification">
                     {/* <h2>Announcements</h2> */}
                     {notificationDetails.map((notification: NotificationType, index) => (
-                      <div key={index} className="notification">
-                        {notification.messageBy && !(user.role == "student") && (
-                          <div className="notification-content">
-                            <div className="sender-name">
-                              {notification.messageBy}
+                      <>
+                        <div key={index} className="notification">
+                          {notification.messageBy && !(user.role == "student") && (
+                            <div className="notification-content">
+                              <div className="sender-name">
+                                {notification.messageBy}
+                              </div>
+                              <div className="message-text">
+                                Message: {notification.message}
+                              </div>
+                              {notification.material && (
+                                <>
+                                  <div className="material-text">
+                                    Material: {notification.material}
+                                  </div>
+                                  {user.role == "admin" ? (
+                                    <button className="publish-button" onClick={() => handlePublish(notification._id)}>Publish</button>
+                                  ) : (
+                                    <div>Published</div>
+                                  )}
+                                </>
+                              )}
                             </div>
+                          )}
+                          {notification.message == "New Material Uploaded" && user.role == "student" && (
+                          <div className="notification-content">
                             <div className="message-text">
                               Message: {notification.message}
                             </div>
-                            {notification.material && (
-                              <>
-                                <div className="material-text">
-                                  Material: {notification.material}
-                                </div>
-                                {user.role == "admin" ? (
-                                  <button className="publish-button" onClick={() => handlePublish(notification._id)}>Publish</button>
-                                ) : (
-                                  <div>Published</div>
-                                )}
-                              </>
-                            )}
+                            <div className="material-text">
+                              Material: {notification.material}
+                            </div>
+                            <div className="material-text">
+                              Uploaded By : {notification.messageBy}
+                            </div>
                           </div>
                         )}
-                        
-                      </div>
+                        {
+                          notification.message.startsWith('A user with') && user.role == "admin" && (
+                            <div className="notification-content">
+                              <div className="message-text">
+                                Message: {notification.message}
+                              </div>
+                              <div className="material-text">
+                                Professor : {notification.messageBy}
+                              </div>
+                              <button className="publish-button" onClick={()=>handleRequest(notification.messageBy)}>Approve</button>
+                            </div>
+                          )
+                        }
+                        </div>
+                      </>
                     )
                     )}
                   </div>
@@ -170,29 +207,27 @@ export default function Notifications() {
                   <div className="messages-container">
                     <div className="messages-list">
                       {messageDetail.map((message: MessagesType) => (
-                        <div
-                          key={message._id}
-                          className="message-item"
-                          onClick={() => setSelectedMessage(message)}
-                        >
-                          <div className="message-avatar">
-                            <img
-                              src="/default-avatar.png"
-                              alt={message.sender}
-                            />
-                          </div>
-                          <div className="message-preview">
-                            <div className="message-header">
-                              <div className="message-sender">
-                                {message.sender}
+                        message.sender == user.username && (
+                          <div key={message._id} className="message-item" onClick={() => setSelectedMessage(message)}>
+                            <div className="message-avatar">
+                              <img
+                                src="/default-avatar.png"
+                                alt={message.sender}
+                              />
+                            </div>
+                            <div className="message-preview">
+                              <div className="message-header">
+                                <div className="message-sender">
+                                  {message.sender}
+                                </div>
+                                <div className="message-date">Today</div>
                               </div>
-                              <div className="message-date">Today</div>
-                            </div>
-                            <div className="message-excerpt">
-                              {message.message}
+                              <div className="message-excerpt">
+                                {message.message}
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        )
                       ))}
                     </div>
                   </div>

@@ -8,7 +8,7 @@
 .question_list{
     width: 50%;
     padding: 2rem;
-    background-color: var(--secondary-color);
+    /* background-color: var(--secondary-color); */
 }
 
 .question_answer button{

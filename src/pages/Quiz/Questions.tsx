@@ -30,6 +30,7 @@ export default function Questions() {
     const [question, setQuestionsDetails] = useState<QuestionsType>()
     const { quizId } = useParams<{ quizId: string }>();
 
+    const [selectAnswerOne, setSelectAnswerOne] = useState<boolean>(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -96,7 +97,7 @@ export default function Questions() {
                                     {
                                         question ? (
                                             <>
-                                                <div key={question._id} className={questions.question_list} >
+                                                <div key={question._id} className='question_list' >
 
                                                     <div className="main-div">
                                                         <div className='question'>
@@ -104,37 +105,38 @@ export default function Questions() {
                                                             {/* <div className='course_description'>Answer{question.answerOne.toString()}</div> */}
                                                             <button onClick={() => handleAnswer(1, true)}>True</button>
                                                             <button onClick={() => handleAnswer(1, false)}>False</button>
+                                                            {answers[1] != null && (answers[1] ? (<div>Your Answer : True</div>) : (<div>Your Answer : False</div>))}
                                                         </div>
                                                         <div className='question'>
-
                                                             <div className='course_name'>Q 2. {question.questionTwo}</div>
                                                             {/* <div className='course_description'>Answer{question.answerTwo.toString()}</div> */}
                                                             <button onClick={() => handleAnswer(2, true)}>True</button>
                                                             <button onClick={() => handleAnswer(2, false)}>False</button>
+                                                            {answers[2] != null && (answers[2] ? (<div>Your Answer : True</div>) : (<div>Your Answer : False</div>))}
                                                         </div>
                                                         <div className='question'>
-
                                                             <div className='course_name'>Q 3. {question.questionThree}</div>
                                                             {/* <div className='course_description'>Answer{question.answerThree.toString()}</div> */}
                                                             <button onClick={() => handleAnswer(3, true)}>True</button>
                                                             <button onClick={() => handleAnswer(3, false)}>False</button>
+                                                            {answers[3] != null && (answers[3] ? (<div>Your Answer : True</div>) : (<div>Your Answer : False</div>))}
                                                         </div>
                                                         <div className='question'>
-
                                                             <div className='course_name'>Q 4. {question.questionFour}</div>
                                                             {/* <div className='course_description'>Answer{question.answerFour.toString()}</div> */}
                                                             <button onClick={() => handleAnswer(4, true)}>True</button>
                                                             <button onClick={() => handleAnswer(4, false)}>False</button>
+                                                            {answers[4] != null && (answers[4] ? (<div>Your Answer : True</div>) : (<div>Your Answer : False</div>))}
                                                         </div>
                                                         <div className='question'>
-
                                                             <div className='course_name'>Q 5. {question.questionFive}</div>
                                                             {/* <div className='course_description'>Answer{question.answerFive.toString()}</div> */}
                                                             <button onClick={() => handleAnswer(5, true)}>True</button>
                                                             <button onClick={() => handleAnswer(5, false)}>False</button>
+                                                            {answers[5] != null && (answers[5] ? (<div>Your Answer : True</div>) : (<div>Your Answer : False</div>))}
                                                         </div>
                                                     </div>
-                                                    <button onClick={calculateScore}>Submit Quiz</button>
+                                                    <button className='save-button' onClick={calculateScore}>Submit Quiz</button>
                                                 </div>
                                             </>
                                         ) : (

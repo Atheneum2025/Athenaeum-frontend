@@ -31,7 +31,7 @@ type UnitType = {
 }
 export default function ProfessorDashboard({ user }: StudentDashboardProps) {
 
-    const {theme} = useTheme();
+    const { theme } = useTheme();
     const [activePage, setActivePage] = useState<number>(1);
     const [isVisible, setIsVisible] = useState<boolean>(false)
 
@@ -56,7 +56,7 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
     useEffect(() => {
         window.scrollTo(0, 0);
     }, []);
-    
+
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]); // Store the selected file in state
@@ -147,165 +147,167 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
     return (
 
         <>
-            <div className="user_profile">
-                <h1>Welcome {user.role}</h1>
-                <div className='user_avatar'>
-                    <img src={theme === "light" ? User_Light_Image : User_Dark_Image} alt="" />
-                    {/* <img src={User_Dark_Image} alt="" /> */}
-                    <div>{user.username}</div>
+            <div className="profile_page">
+                <div className="user_profile">
+                    <h1>Welcome {user.role}</h1>
+                    <div className='user_avatar'>
+                        <img src={theme === "light" ? User_Light_Image : User_Dark_Image} alt="" />
+                        {/* <img src={User_Dark_Image} alt="" /> */}
+                        <div>{user.username}</div>
+                    </div>
+                    <div className="user_details">
+                        <div>student email : {user.email}</div>
+                        <div>college info : {user.college}</div>
+                    </div>
                 </div>
-                <div className="user_details">
-                    <div>student email : {user.email}</div>
-                    <div>college info : {user.college}</div>
-                </div>
-            </div>
 
-            <div className="user_profile_middle_section">
-                <button className='add_btn' id='btn' onClick={() => setIsVisible(true)}>
-                    <img src={AddImage} alt="" />
-                    <div>Add New Material</div>
-                </button>
-                {
-                    isVisible && (
-                        <>
-                            <div className="add_new_material">
-                                <div className="add_new_material_form">
-                                    <form className="">
-                                        <div className="add_new_material_form_header">
-                                            <h2>Upload New Material</h2>
-                                            <button type="button" onClick={() => { setIsVisible(false) }}>✕</button>
-                                        </div>
-
-                                        <div className="form_field">
-                                            <label>Course</label>
-                                            <select
-                                                value={selectedCourse}
-                                                onChange={(e) => setSelectedCourse(e.target.value)}
-                                            >
-                                                <option value="">Select Course</option>
-                                                {
-                                                    courses.map((course, index) => (
-                                                        <option value={course.coursename} key={index} >{course.coursename}</option>
-                                                    ))
-                                                }
-                                            </select>
-                                        </div>
-
-                                        <div className="form_field">
-                                            <label>Subject</label>
-                                            <select
-                                                value={selectedSubject}
-                                                onChange={(e) => setSelectedSubject(e.target.value)}
-                                            >
-                                                <option value="">Select Subject</option>
-                                                {
-                                                    subjects.map((subject, index) => (
-                                                        <option value={subject.subjectname} key={index}>{subject.subjectname}</option>
-                                                    ))
-                                                }
-                                            </select>
-                                        </div>
-
-                                        <div className="form_field">
-                                            <label>Unit</label>
-                                            <select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)} >
-                                                <option value="">Select Unit</option>
-                                                {
-                                                    units.map((unit, index) => (
-                                                        <option value={unit.unitname} key={index}>{unit.unitname}</option>
-                                                    ))
-                                                }
-                                            </select>
-                                        </div>
-
-                                        <div className="form_field">
-                                            <label >Material Name</label>
-                                            <input
-                                                type="text"
-                                                value={materialname}
-                                                onChange={(e) => setMaterialname(e.target.value)}
-                                                className=""
-                                                placeholder="Enter material name"
-                                            />
-                                        </div>
-
-                                        <div className="form_field">
-                                            <label>Description</label>
-                                            <textarea
-                                                value={description}
-                                                onChange={(e) => setDescription(e.target.value)}
-                                                placeholder="Add description..."
-                                                rows={3}
-                                            />
-                                        </div>
-
-                                        <div className="upload_section">
-                                            <label>Upload File</label>
-                                            <div className="">
-                                                <label className="">
-                                                    <span className="text-gray-400 mb-2">
-                                                        <svg
-                                                            className="w-8 h-8"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                                                            />
-                                                        </svg>
-                                                    </span>
-                                                    <span>Click to upload or drag and drop</span>
-                                                    <input
-                                                        type="file"
-                                                        className="hidden"
-                                                    // onChange={(e) => console.log(e.target.files[0])}
-                                                    />
-                                                </label>
+                <div className="user_profile_middle_section">
+                    <button className='add_btn' id='btn' onClick={() => setIsVisible(true)}>
+                        <img src={AddImage} alt="" />
+                        <div>Add New Material</div>
+                    </button>
+                    {
+                        isVisible && (
+                            <>
+                                <div className="add_new_material">
+                                    <div className="add_new_material_form">
+                                        <form className="">
+                                            <div className="add_new_material_form_header">
+                                                <h2>Upload New Material</h2>
+                                                <button type="button" onClick={() => { setIsVisible(false) }}>✕</button>
                                             </div>
-                                        </div>
-                                        <div className="form_field">
-                                            <label>Keywords</label>
-                                            <input
-                                                type="text"
-                                                value={keywords}
-                                                onChange={(e) => setKeywords(e.target.value)}
-                                                placeholder="Add keywords..."
-                                            />
-                                        </div>
-                                        <div className="upload_btns">
-                                            <button type="button" onClick={() => setIsVisible(false)}>Cancel</button>
-                                            <button type="submit">Upload Material</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </>
-                    )
-                }
 
-            </div>
-            <ul className='user_profile_options' id='demo'>
-                <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>My Material</div>
-                <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Saved Material</div>
-                <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>Your History</div>
-                <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Analytics</div>
-            </ul>
-            <div className='user_profile_options_display'>
-                <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
-                    <MyMaterial _id={user._id} />
+                                            <div className="form_field">
+                                                <label>Course</label>
+                                                <select
+                                                    value={selectedCourse}
+                                                    onChange={(e) => setSelectedCourse(e.target.value)}
+                                                >
+                                                    <option value="">Select Course</option>
+                                                    {
+                                                        courses.map((course, index) => (
+                                                            <option value={course.coursename} key={index} >{course.coursename}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+
+                                            <div className="form_field">
+                                                <label>Subject</label>
+                                                <select
+                                                    value={selectedSubject}
+                                                    onChange={(e) => setSelectedSubject(e.target.value)}
+                                                >
+                                                    <option value="">Select Subject</option>
+                                                    {
+                                                        subjects.map((subject, index) => (
+                                                            <option value={subject.subjectname} key={index}>{subject.subjectname}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+
+                                            <div className="form_field">
+                                                <label>Unit</label>
+                                                <select value={selectedUnit} onChange={(e) => setSelectedUnit(e.target.value)} >
+                                                    <option value="">Select Unit</option>
+                                                    {
+                                                        units.map((unit, index) => (
+                                                            <option value={unit.unitname} key={index}>{unit.unitname}</option>
+                                                        ))
+                                                    }
+                                                </select>
+                                            </div>
+
+                                            <div className="form_field">
+                                                <label >Material Name</label>
+                                                <input
+                                                    type="text"
+                                                    value={materialname}
+                                                    onChange={(e) => setMaterialname(e.target.value)}
+                                                    className=""
+                                                    placeholder="Enter material name"
+                                                />
+                                            </div>
+
+                                            <div className="form_field">
+                                                <label>Description</label>
+                                                <textarea
+                                                    value={description}
+                                                    onChange={(e) => setDescription(e.target.value)}
+                                                    placeholder="Add description..."
+                                                    rows={3}
+                                                />
+                                            </div>
+
+                                            <div className="upload_section">
+                                                <label>Upload File</label>
+                                                <div className="">
+                                                    <label className="">
+                                                        <span className="text-gray-400 mb-2">
+                                                            <svg
+                                                                className="w-8 h-8"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth={2}
+                                                                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                                                                />
+                                                            </svg>
+                                                        </span>
+                                                        <span>Click to upload or drag and drop</span>
+                                                        <input
+                                                            type="file"
+                                                            className="hidden"
+                                                        // onChange={(e) => console.log(e.target.files[0])}
+                                                        />
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div className="form_field">
+                                                <label>Keywords</label>
+                                                <input
+                                                    type="text"
+                                                    value={keywords}
+                                                    onChange={(e) => setKeywords(e.target.value)}
+                                                    placeholder="Add keywords..."
+                                                />
+                                            </div>
+                                            <div className="upload_btns">
+                                                <button type="button" onClick={() => setIsVisible(false)}>Cancel</button>
+                                                <button type="submit">Upload Material</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </>
+                        )
+                    }
+
                 </div>
-                <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
-                    <SavedMaterials />
-                </div>
-                <div id='3' className={`options_page ${activePage === 3 ? "active" : ""}`}>
-                    <HistoryVideos />
-                </div>
-                <div id='4' className={`options_page ${activePage === 4 ? "active" : ""}`}>
-                    <ProfessorAnalytics />
+                <ul className='user_profile_options' id='demo'>
+                    <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>My Material</div>
+                    <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Saved Material</div>
+                    <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>Your History</div>
+                    <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Analytics</div>
+                </ul>
+                <div className='user_profile_options_display'>
+                    <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
+                        <MyMaterial _id={user._id} />
+                    </div>
+                    <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
+                        <SavedMaterials />
+                    </div>
+                    <div id='3' className={`options_page ${activePage === 3 ? "active" : ""}`}>
+                        <HistoryVideos />
+                    </div>
+                    <div id='4' className={`options_page ${activePage === 4 ? "active" : ""}`}>
+                        <ProfessorAnalytics />
+                    </div>
                 </div>
             </div>
         </>

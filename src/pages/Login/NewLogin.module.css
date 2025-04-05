@@ -210,6 +210,10 @@
   transition: all 0.6s ease-in-out;
 }
 
+.toggle_panel h1{
+  color: white;
+}
+
 .toggle_left {
   transform: translateX(-200%);
 }

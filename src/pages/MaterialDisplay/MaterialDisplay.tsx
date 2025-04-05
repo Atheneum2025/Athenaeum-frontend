@@ -14,8 +14,14 @@ type VideoType = {
   url: string;
   fileType: string;
 }
+
+type MaterialType = {
+  materialname: string;
+  isPublished: boolean;
+  owner: string;
+};
 const MaterialDisplay = () => {
-    const { user, isAuthenticated } = getAuthenticatedUser();
+  const { user, isAuthenticated } = getAuthenticatedUser();
   const apiKeyE = import.meta.env.VITE_APIKEY;
   const ttsUrlE = import.meta.env.VITE_TTSURL
   const navigate = useNavigate();
@@ -25,6 +31,7 @@ const MaterialDisplay = () => {
   const unitName = location.state?.unitName;
   const materialNamel = location.state?.materialName;
   const [loading, setLoading] = useState<boolean>(false)
+  const [viewMoreMaterials, setViewMoreMaterials] = useState<MaterialType[]>([]);
 
   const { courseId, subjectId, unitId, materialName } = useParams<{ courseId: string, subjectId: string, unitId: string, materialName: string }>();
   console.log(materialName)
@@ -50,9 +57,21 @@ const MaterialDisplay = () => {
     }
   }
 
+  const fetchViewMoreMaterials = async () => {
+    try {
+      const moreMaterials = await axiosInstance.get('/material');
+      setViewMoreMaterials(moreMaterials.data.materials);
+      console.log(moreMaterials)
+    }
+    catch (error) {
+      console.error(error)
+    }
+  }
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchdata();
+    fetchViewMoreMaterials();
   }, []);
 
   const saveMaterial = async () => {
@@ -74,7 +93,7 @@ const MaterialDisplay = () => {
     // const file = event.target.files?.[0];
     // if (!file) return;
 
-    setLoading(true);
+    // setLoading(true);
 
     const response = await fetch(url);
     const file = await response.blob();
@@ -215,40 +234,68 @@ const MaterialDisplay = () => {
                 {
                   materialUrl?.material.fileType === 'raw' ? (
                     <>
-                      <div>Title : {materialUrl?.material.materialname}</div>
-                      <div>Description : {materialUrl?.material.description}</div>
-                      <div>Uploaded By : {materialUrl?.material.owner}</div>
-                      {/* <div>{materialUrl?.material.fileType}</div> */}
-                      {
-                        user && (   
-                          isSaved ? (
-                            <button style={{ backgroundColor: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
-                          ) : (
-                            <button style={{ backgroundColor: "green" }} onClick={() => saveMaterial()} >Save Material</button>
-                          )
-                        )
-                      }
-                      {
-                        user && (
-                          <div>
-                            <h2>PDF to Speech</h2>
-                            <button type="button" onClick={() => handleFileUpload(materialUrl?.material.materialURL)} >Convert</button>
-                            {/* <input type="file" accept="application/pdf" onChange={handleFileUpload} /> */}
-                            {pdfLoading && <p>Processing PDF...</p>}
+                      <div className="video-section">
+                        <div className="material_options">
+                          <div className='material_info'>
+                            <div>Material Title : {materialUrl?.material.materialname}</div>
+                            <div>Description : {materialUrl?.material.description}</div>
+                            <div>Uploaded By : {materialUrl?.material.owner}</div>
+                            {/* <div>{materialUrl?.material.fileType}</div> */}
+                            {
+                              user && (
+                                <div className="material_user_buttons">{
 
+                                  isSaved ? (
+                                    <button className="save-button" style={{ backgroundColor: "transparent", color: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
+                                  ) : (
+                                    <button className="save-button" style={{ backgroundColor: "gold" }} onClick={() => saveMaterial()} >Save Material</button>
+                                  )
+                                }
+                                  <div className="download-button" ><a href={materialUrl?.material.materialURL} download >Download Material</a></div>
 
-                            {textChunks.length > 0 && (
-                              <>
-                                <p>Playing chunk {currentChunkIndex + 1} of {textChunks.length}</p>
-                                <button onClick={toggleAudio}>{isPaused ? "Play" : "Pause"}</button>
-                              </>
-                            )}
-                            <div><a href={materialUrl?.material.materialURL} download >Download Material</a></div>
+                                </div>
+                              )
+                            }
                           </div>
-                        )
-                      }
-                      
-                      <iframe className="pdf_viewer" src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe>
+                          {
+                            user && (
+                              <div>
+                                <h2>Convert Text to Speech</h2>
+                                <button className="save-button" type="button" onClick={() => handleFileUpload(materialUrl?.material.materialURL)} >Convert</button>
+                                {/* <input type="file" accept="application/pdf" onChange={handleFileUpload} /> */}
+                                {pdfLoading && <p>Processing PDF...</p>}
+
+
+                                {textChunks.length > 0 && (
+                                  <div className='play_section'>
+                                    <p>Playing chunk {currentChunkIndex + 1} of {textChunks.length}</p>
+                                    <button className='play_n_pause_btn' onClick={toggleAudio}>{isPaused ? "Play" : "Pause"}</button>
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          }
+                        </div>
+
+                        <iframe className="pdf_viewer" src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe>
+                      </div>
+                      <h2 style={{marginTop: "20px"}}>View More Material</h2>
+                      <div className="more-materials" style={{display: "grid", gridTemplateColumns:"1fr 1fr", gap: "20px", marginTop: "20px"}}>
+                        {
+                          viewMoreMaterials.map((material: MaterialType, index) => (
+                            <div className="material-box" key={index}>
+                              {
+                                material.isPublished == true && (
+                                  <div>
+                                    <p className="material-holder">{material.materialname}</p>
+                                    <p className="material-holder">{material.owner}</p>
+                                  </div>
+                                )
+                              }
+                            </div>
+                          ))
+                        }
+                      </div>
                     </>
 
                   ) : (
@@ -258,29 +305,47 @@ const MaterialDisplay = () => {
                           <ReactPlayer url={`${materialUrl?.material.materialURL}`}
                             // width="1080px"
                             // height="720px"
+                            className="video_display"
                             width="700px"
                             height="350px"
                             controls={true}
                           />
-                          <div>Material Name : {materialUrl?.material.materialname}</div>
-                          <div>{materialUrl?.material._id}</div>
+                          <div>Material Title : {materialUrl?.material.materialname}</div>
                           <div>Description : {materialUrl?.material.description}</div>
                           <div>Uploaded By : {materialUrl?.material.owner}</div>
-                          <div>{materialUrl?.material.fileType}</div>
                           {
-                            isSaved ? (
-                              <button style={{ backgroundColor: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
-                            ) : (
-                              <button style={{ backgroundColor: "green" }} onClick={() => saveMaterial()} >Save Material</button>
+                            user && (
+                              <div className="material_user_buttons">{
+
+                                isSaved ? (
+                                  <button className="save-button" style={{ backgroundColor: "transparent", color: "white" }} onClick={() => saveMaterial()} >Unsave Material</button>
+                                ) : (
+                                  <button className="save-button" style={{ backgroundColor: "gold" }} onClick={() => saveMaterial()} >Save Material</button>
+                                )
+                              }
+                                <div className="download-button" ><a href={materialUrl?.material.materialURL} download >Download Material</a></div>
+
+                              </div>
                             )
                           }
                         </div>
                         <div className="msidebar">
-                          <h3>View More Materials</h3>
+                          <h2>View More Materials</h2>
                           <div className="more-materials">
-                            <div className="material-box"><div className="material-holder">MAT 1</div></div>
-                            <div className="material-box"><div className="material-holder">MAT 2</div></div>
-                            <div className="material-box"><div className="material-holder">MAT 3</div></div>
+                            {
+                              viewMoreMaterials.map((material: MaterialType, index) => (
+                                <div className="material-box" key={index}>
+                                  {
+                                    material.isPublished == true && (
+                                      <div>
+                                        <p className="material-holder">{material.materialname}</p>
+                                        <p className="material-holder">{material.owner}</p>
+                                      </div>
+                                    )
+                                  }
+                                </div>
+                              ))
+                            }
                           </div>
                         </div>
                       </div>
@@ -290,8 +355,7 @@ const MaterialDisplay = () => {
               </>
           }
         </div>
-      </div>
-      <div>View More Material</div>
+      </div >
     </>
   );
 };

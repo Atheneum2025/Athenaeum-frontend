@@ -16,6 +16,47 @@ type CourseType = {
 
 export default function AdminAnalytics() {
     const [courseData, setCourseData] = useState<CourseType[]>([]);
+    const [courseCount, setCourseCount] = useState<number>();
+    const [subjectCount, setSubjectCount] = useState<number>();
+    const [unitCount, setUnitCount] = useState<number>();
+    const [materialCount, setMaterialCount] = useState<number>();
+    const [userCount, setUserCount] = useState<number>();
+    const [publishedMCount, setPublishedMCount] = useState<number>();
+    const [notPublishedMCount, setNotPublishedMCount] = useState<number>();
+
+    
+
+    const fetchCourseData = async () => {
+        try {
+            const courseResponse = await axiosInstance.get('/course/c', { withCredentials: true });
+            setCourseData(courseResponse.data.courses);
+        } catch (error) {
+            console.error("Failed to fetch course data", error);
+        }
+    };
+    const fetchAllCountsStats = async () => {
+        try {
+            const countResponse = await axiosInstance.get('/users/materials/count', { withCredentials: true });
+            setCourseCount(countResponse.data.courseCount);
+            setSubjectCount(countResponse.data.subjectCount);
+            setUnitCount(countResponse.data.unitCount);
+            setMaterialCount(countResponse.data.materialCount);
+            setUserCount(countResponse.data.userCount);
+            setPublishedMCount(countResponse.data.publishedCount);
+            setNotPublishedMCount(countResponse.data.notPublishedCount);
+            console.log(countResponse);
+            console.log(publishedMCount);
+            console.log(notPublishedMCount);
+
+        } catch (error) {
+            console.error("Failed to fetch course data", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCourseData();
+        fetchAllCountsStats();
+    }, []);
 
     const data = {
         labels: courseData.map(course => course.coursename),
@@ -31,35 +72,29 @@ export default function AdminAnalytics() {
     };
 
     const pieData = {
-        labels: ["Watched", "Not Watched"],
+        labels: ["Published", "Not Published"],
         datasets: [
             {
-                data: [4500, 1500],
+                data: [3, 4],
                 backgroundColor: ["#36A2EB", "#FFCE56"],
                 hoverBackgroundColor: ["#2B90D9", "#E6B800"],
             },
         ],
     };
 
-    const fetchCourseData = async () => {
-        try {
-            const courseResponse = await axiosInstance.get('/course/c', { withCredentials: true });
-            setCourseData(courseResponse.data.courses);
-        } catch (error) {
-            console.error("Failed to fetch course data", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchCourseData();
-    }, []);
-
     return (
         <div className="admin-analytics">
             <h2>Admin Analytics Dashboard</h2>
             <div className="summary-boxes">
+                <div className="summary-box">Total Courses: {courseCount}</div>
+                <div className="summary-box">Total Subjects: {subjectCount}</div>
+                <div className="summary-box">Total Units: {unitCount}</div>
+                <div className="summary-box">Total Materials: {materialCount}</div>
+                <div className="summary-box">Total Users: {userCount}</div>
+
+
                 <div className="summary-box">Total Ratings: {courseData.reduce((acc, cur) => acc + cur.rating, 0).toFixed(1)}</div>
-                <div className="summary-box">Number of Courses: {courseData.length}</div>
+                
                 <div className="summary-box">Average Rating: {(courseData.reduce((acc, cur) => acc + cur.rating, 0) / courseData.length || 0).toFixed(2)}</div>
                 <div className="summary-box">Likes on Materials: 1200</div>
                 <div className="summary-box">Active Users Today: 320</div>
@@ -70,7 +105,7 @@ export default function AdminAnalytics() {
                     <Bar data={data} />
                 </div>
                 <div className="chart-container">
-                    <h3>Course Watch Status</h3>
+                    <h3>Material Publish Status</h3>
                     <Pie data={pieData} />
                 </div>
             </div>

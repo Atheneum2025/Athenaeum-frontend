@@ -16,6 +16,7 @@ const Footer: React.FC = () => {
     try{
       const response = await axiosInstance.post('/contactUs',{message}, {withCredentials: true});
       console.log(response);
+      setMessage("")
     }
     catch(error){
       console.error(error);

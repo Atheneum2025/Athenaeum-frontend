@@ -11,7 +11,7 @@ export default function Landing() {
         </div>
         <div className="hero-section">
           <div>
-            <h1 className="head-title">ATHENAEUM</h1>
+            <h1 className="head-title" style={{color: "white"}}>ATHENAEUM</h1>
             <div className="para">
               <p className="">"Athenaeum - where knowledge meets wisdom".</p>
             </div>

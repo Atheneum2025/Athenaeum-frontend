@@ -27,17 +27,16 @@ export default function FeaturedComponent() {
 
     const fetchData = async () => {
         try {
-            const courseResponse = await axiosInstance.get("/course", {
+            const courseResponse = await axiosInstance.get("/course/highest-ratings", {
                 withCredentials: true,
-                params: { limit: 4 },
             });
             const materialResponse = await axiosInstance.get("/material", {
                 withCredentials: true,
                 params: { limit: 4 },
             });
-            setCourseDetails(courseResponse.data.courses);
+            console.log(courseResponse)
+            setCourseDetails(courseResponse.data.topFourCourses);
             setMaterialDetails(materialResponse.data.materials);
-            console.log(materialResponse);
         } catch (error) {
             console.error(error);
         }

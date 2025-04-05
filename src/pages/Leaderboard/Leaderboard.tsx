@@ -41,23 +41,28 @@ export default function Leaderboard() {
       {
         isAuthenticated ? (
           <>
-            <div>Leaderboard</div>
-            {/* <div>{ }</div> */}
-            <div className='leaderboard'>
-              <div className='leaderboard_grid header'>
-                <div>Rank</div>
-                <div>Student</div>
-                <div>Score</div>
+            <div className="items_display_page">
+              <div className="items_display_header">
+                <h1>Leaderboard</h1>
               </div>
-              {
-                sortedLeaderboard.map((leaderboard: LeaderboardType, index) => (
-                  <div className='leaderboard_grid score' key={leaderboard._id}>
-                    <div>{index + 1}</div>
-                    <div>{leaderboard.studentname}</div>
-                    <div>{leaderboard.score}</div>
+              <div className='items_cards_list'>
+                <div className='leaderboard'>
+                  <div className='leaderboard_grid header'>
+                    <div>Rank</div>
+                    <div>Student</div>
+                    <div>Score</div>
                   </div>
-                ))
-              }
+                  {
+                    sortedLeaderboard.map((leaderboard: LeaderboardType, index) => (
+                      <div className='leaderboard_grid score' key={leaderboard._id}>
+                        <div>{index + 1}</div>
+                        <div>{leaderboard.studentname}</div>
+                        <div>{leaderboard.score}</div>
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
             </div>
           </>
         ) : (

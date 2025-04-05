@@ -373,7 +373,7 @@ export default function Materials() {
                                   )
                                 }
                                 {
-                                  user?.role === "admin" && (
+                                  ((user?.role === "admin") || (user?.role === "professor")) && (
                                     <div className='edit_image' onClick={(e: React.MouseEvent<HTMLDivElement>) => { setSelectedMaterial(material); e.stopPropagation() }} >
                                       <EditComponent />
                                     </div>
