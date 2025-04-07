@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import AuthContext from "../../context/AuthContext";
 import "./Home.css";
 import styles from "../../components/FeaturedComponent/FeaturedComponent.module.css";
@@ -8,6 +8,7 @@ import HeroImage from "../../assets/athena.png";
 import Left_Hand_Image from "../../assets/left_hand.png";
 import Right_Hand_Image from "../../assets/right_hand.png";
 import FeaturedComponent from "../../components/FeaturedComponent/FeaturedComponent";
+import axiosInstance from "../../utils/axios";
 
 // import Header from "../../components/Header/Header";
 // let right = document.getElementById('right');
@@ -25,6 +26,7 @@ type User = {
   username: string;
   role: string;
 };
+
 export default function Home() {
   // const {isAuthenticated, logout} = useContext(AuthContext);
   const { isAuthenticated } = getAuthenticatedUser();
@@ -35,6 +37,8 @@ export default function Home() {
     false,
     false,
   ]);
+
+
 
   const handleScroll = () => {
     setScrollY(window.scrollY);
@@ -61,15 +65,15 @@ export default function Home() {
 
   const [professorDetails, setProfessorDetails] = useState<User[]>([]);
 
-  
-  let r = (Math.random()*256).toFixed(0);
-  let g = (Math.random()*256).toFixed(0);
-  let b = (Math.random()*256).toFixed(0);
-  
+
+  // let r = (Math.random()*256).toFixed(0);
+  // let g = (Math.random()*256).toFixed(0);
+  // let b = (Math.random()*256).toFixed(0);
+
   // console.log(r,',',g,',',b);
-  let rgbColorA = `rgb(${r},${g},${b})`;
-  let rgbColorB = `rgb(${g},${b},${r})`;
-  let rgbColorC = `rgb(${b},${r},${g})`;
+  // let rgbColorA = `rgb(${r},${g},${b})`;
+  // let rgbColorB = `rgb(${g},${b},${r})`;
+  // let rgbColorC = `rgb(${b},${r},${g})`;
 
   // useEffect(() => {
   //   const fetchdata = async () => {
@@ -131,7 +135,7 @@ export default function Home() {
       <br></br>
       <div className="new-section">
         {/* First Box */}
-        <div className={`new-box ${visibleBoxes[0] ? "visible" : ""}`} style={{backgroundColor: `${rgbColorA}`}}>
+        <div className={`new-box ${visibleBoxes[0] ? "visible" : ""}`}>
           <h3>
             Free Study
             <br />
@@ -143,7 +147,7 @@ export default function Home() {
         </div>
 
         {/* Second Box */}
-        <div className={`new-box ${visibleBoxes[1] ? "visible" : ""}`} style={{ backgroundColor: `${rgbColorB}` }}>
+        <div className={`new-box ${visibleBoxes[1] ? "visible" : ""}`}>
           <h3>
             Create Your
             <br />
@@ -155,7 +159,7 @@ export default function Home() {
         </div>
 
         {/* Third Box */}
-        <div className={`new-box ${visibleBoxes[2] ? "visible" : ""}`} style={{backgroundColor: `${rgbColorC}`}}>
+        <div className={`new-box ${visibleBoxes[2] ? "visible" : ""}`}>
           <h3>
             Curated By
             <br />

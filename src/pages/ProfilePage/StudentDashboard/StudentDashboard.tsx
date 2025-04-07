@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, DragEvent } from 'react'
 import '../ProfilePage.css';
 import SavedMaterials from '../../../components/SavedMaterials/SavedMaterials.tsx';
 import HistoryVideos from '../../../components/History/HistoryVideos';
@@ -23,7 +23,7 @@ interface StudentDashboardProps {
 }
 export default function StudentDashboard({ user }: StudentDashboardProps) {
 
-    const {theme} = useTheme();
+    const { theme } = useTheme();
     // const { user, isAuthenticated } = getAuthenticatedUser();
     const [activePage, setActivePage] = useState<number>(1);
 
@@ -35,6 +35,8 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [materialname, setMaterialname] = useState<string>("")
     const [description, setDescription] = useState<string>("");
+    const [filename, setFilename] = useState<string | null>(null);
+    const [dragActive, setDragActive] = useState<boolean>(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -50,6 +52,24 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
         catch (err) {
             console.error("failed:", err);
         }
+    }
+
+    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setDragActive(false);
+        const files = e.dataTransfer.files;
+        if (files && files.length > 0) {
+            setFilename(files[0].name);
+        }
+    }
+
+    const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setDragActive(true);
+    }
+
+    const handleDragLeave = () => {
+        setDragActive(false);
     }
     return (
         <>
@@ -100,7 +120,7 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
                                                 rows={3}
                                             />
                                         </div>
-                                        <div className="upload_section">
+                                        <div className="upload_section" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
                                             <label>Upload File</label>
                                             <div className="">
                                                 <label className="">
@@ -119,7 +139,7 @@ export default function StudentDashboard({ user }: StudentDashboardProps) {
                                                             />
                                                         </svg>
                                                     </span>
-                                                    <span>Click to upload or drag and drop</span>
+                                                    <span>{filename ? `File selected: ${filename}` : "Click to upload or drag and drop"}</span>
                                                     <input
                                                         type="file"
                                                         className="hidden"

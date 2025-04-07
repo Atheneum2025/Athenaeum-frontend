@@ -157,3 +157,8 @@ label :hover{
     }
 }
 
+.quiz_footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

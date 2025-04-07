@@ -91,13 +91,6 @@ export default function AdminAnalytics() {
                 <div className="summary-box">Total Units: {unitCount}</div>
                 <div className="summary-box">Total Materials: {materialCount}</div>
                 <div className="summary-box">Total Users: {userCount}</div>
-
-
-                <div className="summary-box">Total Ratings: {courseData.reduce((acc, cur) => acc + cur.rating, 0).toFixed(1)}</div>
-                
-                <div className="summary-box">Average Rating: {(courseData.reduce((acc, cur) => acc + cur.rating, 0) / courseData.length || 0).toFixed(2)}</div>
-                <div className="summary-box">Likes on Materials: 1200</div>
-                <div className="summary-box">Active Users Today: 320</div>
             </div>
             <div className="charts">
                 <div className="chart-container">
@@ -106,7 +99,7 @@ export default function AdminAnalytics() {
                 </div>
                 <div className="chart-container">
                     <h3>Material Publish Status</h3>
-                    <Pie data={pieData} />
+                    <Pie data={pieData} style={{height: "400px", width: "400px"}} />
                 </div>
             </div>
         </div>

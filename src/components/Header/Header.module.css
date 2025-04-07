@@ -301,6 +301,30 @@
   height: 100%;
 }
 
+.badge{
+  background-color: gold;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 99;
+  border-radius: 10px;
+}
+
+.option_badge{
+  background-color: gold;
+  color: black;
+  text-align: right;
+  font-size: 12px;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 15px;
+  left:10px;
+  z-index: 99;
+  border-radius: 10px;
+}
 .profile_avatar {
   width: 2.5rem;
   height: 2.5rem;

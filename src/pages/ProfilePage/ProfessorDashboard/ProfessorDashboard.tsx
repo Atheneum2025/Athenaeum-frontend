@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, DragEvent } from 'react'
 import SavedMaterials from '../../../components/SavedMaterials/SavedMaterials.tsx';
 import HistoryVideos from '../../../components/History/HistoryVideos.tsx';
 import MyMaterial from '../../../components/MyMaterial/MyMaterial.tsx';
@@ -51,7 +51,8 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
     const [description, setDescription] = useState<string>("");
     const [keywords, setKeywords] = useState<string>("");
     const [file, setFile] = useState<File | null>(null);
-
+    const [filename, setFilename] = useState<string | null>(null);
+    const [dragActive, setDragActive] = useState<boolean>(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -143,6 +144,24 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
 
         fetchUnits();
     }, [selectedSubject]);
+
+    const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setDragActive(false);
+        const files = e.dataTransfer.files;
+        if(files && files.length > 0){
+            setFilename(files[0].name);
+        }
+    }
+
+    const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        setDragActive(true);
+    }
+
+    const handleDragLeave = () => {
+        setDragActive(false);
+    }
 
     return (
 
@@ -242,7 +261,7 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
 
                                             <div className="upload_section">
                                                 <label>Upload File</label>
-                                                <div className="">
+                                                <div className="" onDrop={handleDrop} onDragOver={handleDragOver} onDragLeave={handleDragLeave}>
                                                     <label className="">
                                                         <span className="text-gray-400 mb-2">
                                                             <svg
@@ -259,7 +278,7 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
                                                                 />
                                                             </svg>
                                                         </span>
-                                                        <span>Click to upload or drag and drop</span>
+                                                        <span>{filename ? `File selected: ${filename}` : "Click to upload or drag and drop"}</span>
                                                         <input
                                                             type="file"
                                                             className="hidden"
@@ -290,22 +309,18 @@ export default function ProfessorDashboard({ user }: StudentDashboardProps) {
 
                 </div>
                 <ul className='user_profile_options' id='demo'>
-                    <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>My Material</div>
-                    <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Saved Material</div>
-                    <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>Your History</div>
-                    <div className={`options ${activePage === 4 ? "active" : ""}`} onClick={show(4)}>Analytics</div>
+                    <div className={`options ${activePage === 1 ? "active" : ""}`} onClick={show(1)}>Saved Material</div>
+                    <div className={`options ${activePage === 2 ? "active" : ""}`} onClick={show(2)}>Your History</div>
+                    <div className={`options ${activePage === 3 ? "active" : ""}`} onClick={show(3)}>Analytics</div>
                 </ul>
                 <div className='user_profile_options_display'>
                     <div id='1' className={`options_page ${activePage === 1 ? "active" : ""}`}>
-                        <MyMaterial _id={user._id} />
-                    </div>
-                    <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
                         <SavedMaterials />
                     </div>
-                    <div id='3' className={`options_page ${activePage === 3 ? "active" : ""}`}>
+                    <div id='2' className={`options_page ${activePage === 2 ? "active" : ""}`}>
                         <HistoryVideos />
                     </div>
-                    <div id='4' className={`options_page ${activePage === 4 ? "active" : ""}`}>
+                    <div id='3' className={`options_page ${activePage === 3 ? "active" : ""}`}>
                         <ProfessorAnalytics />
                     </div>
                 </div>

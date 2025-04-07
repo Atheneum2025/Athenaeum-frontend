@@ -22,10 +22,42 @@ export default function SettingsPage() {
     const [prNo, setPrNo] = useState<number>();
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [deleteAccount, setDeleteAccount] = useState<boolean>(false);
+    const [avatarFile, setAvatarFile] = useState<File | null>(null);
+    const [uploadStatus, setUploadStatus] = useState('');
 
     useEffect(()=>{
         window.scrollTo(0, 0);
     }, [])
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setAvatarFile(e.target.files[0]);
+    }
+  };
+
+  const handleUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!avatarFile) {
+      setUploadStatus("Please select a file first.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("avatar", avatarFile);
+
+    try {
+      const response = await axiosInstance.post("/users/avatar", formData, {
+        withCredentials: true
+      });
+
+      setUploadStatus("Upload successful!");
+      console.log("Uploaded avatar:", response.data);
+    } catch (error) {
+      setUploadStatus("Upload failed!");
+      console.error("Upload error:", error);
+    }
+  };
+
     const changePassword = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -46,6 +78,7 @@ export default function SettingsPage() {
         try {
             const response = await axiosInstance.post(`/users/c/${user._id}/request/`, { phoneNo, collegename, collegenumber, prNo }, { withCredentials: true });
             console.log(response);
+            setIsVisible(false);
         } catch (error) {
             console.error(error)
         }
@@ -103,8 +136,10 @@ export default function SettingsPage() {
                                 <div><img src="" alt="" /></div>
                                 <div className="file_input">
                                     <label htmlFor="file">Browse</label>
-                                    <input type="file" id="file" />
+                                    <input type="file" id="file" accept="image/*" onChange={handleFileChange} />
                                 </div>
+                                <button onClick={handleUpload}>Upload</button>
+      <p>{uploadStatus}</p>
                             </div>
                             <div className='input_fields'>
                                 <label htmlFor="username">Edit Username:</label>

@@ -88,6 +88,9 @@ export default function Units() {
       console.error("failed:", err);
       setFormIsVisible(false);
     }
+    setUnitname("");
+    setDescription("");
+    setKeywords("");
   }
 
   const handleUpdate = async (e: React.FormEvent) => {
@@ -153,11 +156,11 @@ export default function Units() {
                               <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
                             </div>
                             <div className="form_field">
-                              <label htmlFor="file">ENter a Unit Name</label>
+                              <label htmlFor="file">Enter Unit Name</label>
                               <input type="text" id='file-name' value={unitname} onChange={(e) => setUnitname(e.target.value)} />
                             </div>
                             <div className="form_field">
-                              <label htmlFor="file">ENter Description</label>
+                              <label htmlFor="file">Enter Description</label>
                               <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
                             </div>
                             <div className="form_field">
@@ -185,7 +188,7 @@ export default function Units() {
               showFilters && (
                 <div className='filters'>
                   <select onChange={(e) => setSortBy(e.target.value)}>
-                    <option value="createdAt">Newest First</option>
+                    <option value="createdAt">Date Created</option>
                     <option value="unitname">Unit Name</option>
                   </select>
                   <select onChange={(e) => setSortType(e.target.value)}>

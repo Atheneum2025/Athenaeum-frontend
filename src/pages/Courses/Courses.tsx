@@ -90,6 +90,9 @@ export default function Courses() {
             console.error("failed:", err);
             setFormIsVisible(false)
         }
+        setCoursename("");
+        setDescription("");
+        setKeywords("");
     }
     const handleUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -177,7 +180,7 @@ export default function Courses() {
                             showFilters && (
                                 <div className='filters'>
                                     <select onChange={(e) => setSortBy(e.target.value)}>
-                                        <option value="createdAt">Newest First</option>
+                                        <option value="createdAt">Date Created</option>
                                         <option value="coursename">Course Name</option>
                                     </select>
                                     <select onChange={(e) => setSortType(e.target.value)}>

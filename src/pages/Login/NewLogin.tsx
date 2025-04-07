@@ -230,7 +230,7 @@ const LoginPage = () => {
                                             {emailError && <pre>{emailError}</pre>}
                                             {passwordError && <pre>{passwordError}</pre>}
                                             {signupMessage && (
-                                                <pre style={{ color: "{color}", height: "20px" }} >{signupMessage}</pre>
+                                                <pre style={{ color: `${color}`, height: "20px" }} >{signupMessage}</pre>
                                             )}
                                         </>
                                     )

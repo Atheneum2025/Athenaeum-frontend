@@ -1,7 +1,7 @@
 import header from "./Header.module.css";
 import AuthContext from "../../context/AuthContext.tsx";
 import { getAuthenticatedUser } from "../../utils/authUtils.ts";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import SearchBar from "../SearchComponent/SearchBar.tsx";
 import { Link } from "react-router-dom";
 import User_Dark_Image from "../../assets/dark_theme/user.png";
@@ -10,15 +10,31 @@ import Logo_Light_Image from "../../assets/light_theme/logo_with_text.png";
 import Logo_Dark_Image from "../../assets/dark_theme/logo_with_text.png";
 import { ThemeContext } from "../../context/ThemeContext.tsx";
 import { useTheme } from "../../context/ThemeContext.tsx";
+import axiosInstance from "../../utils/axios.ts";
 
 // type User = {
 //   user: string;
 // }
+
+
+type NotificationType = {
+  _id: string;
+  message: string;
+  messageBy: string;
+  material: string;
+};
+
+type MessagesType = {
+  _id: string;
+  message: string;
+  sender: string;
+  receiver: string;
+  reply: string;
+};
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
   const { logout } = useContext(AuthContext);
   const { user, isAuthenticated } = getAuthenticatedUser();
-
   const [sidebarIsVisible, setSidebarIsVisible] = useState<boolean>(false);
   const [profileOptionsVisible, setProfileOptionsVisible] =
     useState<boolean>(false);
@@ -34,6 +50,64 @@ export default function Header() {
   //     setProfileOptionsVisible(!profileOptionsVisible);
   //   }
   // })
+
+  const [messageDetail, setMessageDetail] = useState<MessagesType[]>([]);
+  const [notificationDetails, setNotificationDetails] = useState<NotificationType[]>([]);
+  const [showBadge, setShowBadge] = useState<boolean>(false);
+  const [badgeNumber, setBadgeNumber] = useState<number>();
+  const prevTotalCountRef = useRef<number>(0)
+
+
+  const fetchMessageData = async () => {
+    try {
+      const [notifRes, msgRes] = await Promise.all([
+        axiosInstance.get('/users/notifications', { withCredentials: true }),
+        axiosInstance.get('/contactUs/', { withCredentials: true }),
+      ])
+      // const Courseresponse = await axiosInstance.get("/contactUs", {
+      //   withCredentials: true,
+      // });
+      // const NotificationResponse = await axiosInstance.get("/users/notifications");
+      // setNotificationDetails(NotificationResponse.data.notifications)
+      // setMessageDetail(Courseresponse.data.messages);
+
+      const newNotifications = notifRes.data.notifications;
+      const newMessages = msgRes.data.messages;
+      // console.log(newNotifications)
+      // console.log(newMessages)
+      const newTotal = newNotifications.length + newMessages.length;
+      const prevTotal = prevTotalCountRef.current;
+
+      console.log('newtoal', newTotal, prevTotal)
+      if (newTotal > prevTotal) {
+        setShowBadge(true);
+      }
+      setBadgeNumber((newTotal - prevTotal));
+      prevTotalCountRef.current = newTotal;
+      localStorage.setItem("prevTotal", newTotal.toString())
+      setNotificationDetails(newNotifications);
+      setMessageDetail(newMessages);
+      console.log(prevTotalCountRef);
+      
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    const savedCount = localStorage.getItem("prevTotal");
+    if(savedCount !== null){
+      prevTotalCountRef.current = parseInt(savedCount, 10)
+    }
+    fetchMessageData();
+    const interval = setInterval(fetchMessageData, 30000);
+    return () => clearInterval(interval)
+  }, []);
+
+  const handleClick = () => {
+    setShowBadge(false);
+  }
   return (
     <>
       <header className={header.navigation_header}>
@@ -135,7 +209,11 @@ export default function Header() {
           <div
             className={header.profile_avatar}
             onClick={() => setProfileOptionsVisible(!profileOptionsVisible)}
-          >
+          >{
+              showBadge && (
+                <div className={header.badge}></div>
+              )
+            }
             <img
               src={theme === "light" ? User_Light_Image : User_Dark_Image}
               alt="user_avatar"
@@ -165,8 +243,14 @@ export default function Header() {
                   <div onClick={() => setProfileOptionsVisible(false)}>
                     <Link to={"/my_material"}>My Material</Link>
                   </div>
-                  <div onClick={() => setProfileOptionsVisible(false)}>
-                    <Link to={"/notifications"}>Notifications</Link>
+                  <div onClick={() => setProfileOptionsVisible(false)} style={{ position: "relative" }}>
+                    <Link to={"/notifications"} onClick={handleClick}>
+                      {
+                        showBadge && (
+                          <div className={header.option_badge}></div>
+                        )
+                      }
+                      Notifications</Link>
                   </div>
                   <div onClick={() => setProfileOptionsVisible(false)}>
                     <Link to={"/calendar"}>Calendar</Link>

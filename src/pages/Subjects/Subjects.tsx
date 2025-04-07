@@ -92,6 +92,9 @@ export default function Subjects() {
       console.error("failed:", err);
       setFormIsVisible(false)
     }
+    setSubjectname("");
+    setDescription("");
+    setKeywords("");
   }
 
 
@@ -185,7 +188,7 @@ export default function Subjects() {
               showFilters && (
                 <div className="filters" >
                   <select onChange={(e) => setSortBy(e.target.value)}>
-                    <option value="createdAt">Newest First</option>
+                    <option value="createdAt">Date Created</option>
                     <option value="subjectname">Subject Name</option>
                   </select>
                   <select onChange={(e) => setSortType(e.target.value)}>

@@ -22,11 +22,6 @@
     font-weight: bold;
     padding: 5px;
     border-radius: 5px;
-    cursor: pointer;
-}
-
-.fc-daygrid-day{
-    cursor: pointer;
 }
 
 .fc-daygrid-day:hover {
@@ -55,4 +50,36 @@
 
 .fc-view-harness{
 
+}
+
+
+.goto_date_input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--background-color);
+    color: var(--font-color);
+}
+
+.goto_date_button {
+    padding: 8px 16px;
+    background-color: #2C3E50; /* Default FullCalendar button color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.goto_date_button:hover {
+    background-color: #1a252f; /* Darker shade for hover effect */
+}
+
+.goto_date_input {
+    /* ... your existing styles ... */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 16px;
 }

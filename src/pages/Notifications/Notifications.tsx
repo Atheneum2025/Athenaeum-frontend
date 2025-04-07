@@ -25,6 +25,7 @@ interface Message {
   senderAvatar?: string;
   content: string;
   date: string;
+  
 }
 
 export default function Notifications() {
@@ -190,6 +191,16 @@ export default function Notifications() {
                               </div>
                               <div className="material-text">
                                 Professor : {notification.messageBy}
+                              </div>
+                              <button className="publish-button" onClick={()=>handleRequest(notification.messageBy)}>Approve</button>
+                            </div>
+                          )
+                        }
+                        {
+                          notification.message.startsWith('The event') && user.role == "admin" && (
+                            <div className="notification-content">
+                              <div className="message-text">
+                                Message: {notification.message}
                               </div>
                               <button className="publish-button" onClick={()=>handleRequest(notification.messageBy)}>Approve</button>
                             </div>

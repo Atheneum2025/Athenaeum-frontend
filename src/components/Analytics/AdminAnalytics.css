@@ -26,8 +26,10 @@ h2 {
 
 .charts {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     gap: 2rem;
+    height: 500px;
+
 }
 
 .chart-container {

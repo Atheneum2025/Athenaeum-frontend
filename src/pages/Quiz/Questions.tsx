@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getAuthenticatedUser } from '../../utils/authUtils';
 import questions from "./Questions.module.css";
 
@@ -23,7 +23,7 @@ type QuestionsType = {
 export default function Questions() {
 
     const { user, isAuthenticated } = getAuthenticatedUser();
-
+    const navigate = useNavigate();
 
     const [answers, setAnswers] = useState<Record<number, boolean>>({})
     const [score, setScore] = useState<number>(0);
@@ -82,6 +82,10 @@ export default function Questions() {
     };
     // console.log(score)
 
+    function showLeaderboard(quizId: string) {
+        navigate(`/quiz/${quizId}/leaderboard`);
+    }
+
     return (
         <>
             {
@@ -136,7 +140,18 @@ export default function Questions() {
                                                             {answers[5] != null && (answers[5] ? (<div>Your Answer : True</div>) : (<div>Your Answer : False</div>))}
                                                         </div>
                                                     </div>
-                                                    <button className='save-button' onClick={calculateScore}>Submit Quiz</button>
+                                                    <div className="quiz_footer">
+                                                        <button className='save-button' onClick={calculateScore}>Submit Quiz</button>
+                                                        {
+                                                            score ? (
+                                                                <div>Your Score : {score}</div>
+                                                            ) : (
+                                                                <div></div>
+                                                            )
+                                                        }
+                                                        <button onClick={() => { showLeaderboard(question._id,) }} className='add_btn'>Check Leaderboard</button>
+                                                    </div>
+
                                                 </div>
                                             </>
                                         ) : (

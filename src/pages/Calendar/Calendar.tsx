@@ -4,6 +4,7 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import { useState } from "react";
+import { useRef } from "react";
 import axiosInstance from "../../utils/axios";
 import "./Calendar.css";
 import { getAuthenticatedUser } from "../../utils/authUtils";
@@ -19,12 +20,16 @@ export default function Calendar() {
 
     const { user, isAuthenticated } = getAuthenticatedUser();
     const [refreshCalendar, setRefreshCalendar] = useState(false);
-    
     const [isVisible, setIsVisible] = useState<boolean>(false);
     const [event, setEvent] = useState<EventType[]>([]);
     const [title, setTitle] = useState<string>("")
     const [date, setDate] = useState<Date>()
     const day = date?.toString();
+
+    const calendarRef = useRef<FullCalendar | null>(null);
+    const [selectedDate, setSelectedDate] = useState<string>("");
+
+
 
     const fetchData = async () => {
         try {
@@ -44,9 +49,8 @@ export default function Calendar() {
     console.log(event)
 
     useEffect(() => {
-        window.scrollTo(0, 0);
         fetchData();
-    }, [refreshCalendar])
+    }, [])
 
     const handleDateClick = (info: any) => {
         setIsVisible(true);
@@ -56,6 +60,18 @@ export default function Calendar() {
         //     setEvents([...events, { title, date: info.dateStr }]);
         // }
     };
+
+
+
+    const handleGoToDate = () => {
+        if (calendarRef.current && selectedDate) {
+            const calendarApi = calendarRef.current.getApi();
+            calendarApi.gotoDate(selectedDate); // accepts string or Date object
+        }
+    };
+
+
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -79,28 +95,29 @@ export default function Calendar() {
                         <img src={Calendar_Light_Image} alt="" />
                         {/* <img src={Calendar_Dark_Image} alt="" /> */}
                     </div>
+
+                    <div className="goto_date_container" style={{ marginBottom: "1rem" }}>
+                        <input
+                            type="date"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                            className="goto_date_input"
+                        />
+                        <button onClick={handleGoToDate} className="goto_date_button">
+                            Go To Date
+                        </button>
+                    </div>
+
+
                     <FullCalendar
+                        ref={calendarRef} // 👈 Add this line
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"
+                        editable={true}
                         selectable={true}
                         events={event}
                         dateClick={handleDateClick}
                     />
-                    <div>
-                        {/* <div>Upcoming Events</div>
-                        {event.length === 0 ? (
-                            <p>No upcoming events</p>
-                        ) : (
-                            <ul>
-                                {event.map((event: EventType, index) => (
-                                    <li key={index}>
-                                        <strong>{event.title}</strong> - {(new Date()).toLocaleString()}
-                                        <div>{(event.date).toLocaleString()}</div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )} */}
-                    </div>
                     {
                         isVisible && (
                             <>
@@ -133,4 +150,9 @@ export default function Calendar() {
             </div>
         </>
     );
+
+
+
+
+
 }

@@ -16,6 +16,8 @@ export default function Leaderboard() {
 
   const { quizId } = useParams<{ quizId: string }>();
   const [leaderboard, setLeaderboard] = useState<LeaderboardType[]>([])
+
+  const userColor = "skyblue"
   // const [sortedLeaderboard, setSortedLeaderboard] = useState<LeaderboardType[]>([])
 
 
@@ -55,9 +57,21 @@ export default function Leaderboard() {
                   {
                     sortedLeaderboard.map((leaderboard: LeaderboardType, index) => (
                       <div className='leaderboard_grid score' key={leaderboard._id}>
-                        <div>{index + 1}</div>
-                        <div>{leaderboard.studentname}</div>
-                        <div>{leaderboard.score}</div>
+                        {
+                          leaderboard.studentname == user.username ? (
+                            <>
+                              <div style={{backgroundColor: `${userColor}`}}>{leaderboard.studentname}</div>
+                              <div style={{ backgroundColor: `${userColor}` }}>{index + 1}</div>
+                              <div style={{backgroundColor: `${userColor}`}}>{leaderboard.score}</div>
+                            </>
+                          ) : (
+                            <>
+                              <div>{leaderboard.studentname}</div>
+                              <div>{index + 1}</div>
+                              <div>{leaderboard.score}</div>
+                            </>
+                          )
+                        }
                       </div>
                     ))
                   }

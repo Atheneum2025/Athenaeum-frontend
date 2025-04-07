@@ -221,7 +221,7 @@ export default function Materials() {
             {/* form for making a new material */}
             {
               isAuthenticated && (
-                user?.role === "admin" && (
+                user?.role !== "student" && (
                   <>
                     <button className='add_btn' onClick={() => setFormIsVisible(true)}>
                       <img src={AddImage} alt="" />
@@ -237,11 +237,11 @@ export default function Materials() {
                                 <button type="button" onClick={() => { setFormIsVisible(false) }}>✕</button>
                               </div>
                               <div className="form_field">
-                                <label htmlFor="file">ENter a Material Name</label>
+                                <label htmlFor="file">Enter a Material Name</label>
                                 <input type="text" id='file-name' value={materialname} onChange={(e) => setMaterialname(e.target.value)} />
                               </div>
                               <div className="form_field">
-                                <label htmlFor="file">ENter Description</label>
+                                <label htmlFor="file">Enter Description</label>
                                 <input type="text" id='file-name' value={description} onChange={(e) => setDescription(e.target.value)} />
                               </div>
                               {/* <select name="" id="">
@@ -317,9 +317,10 @@ export default function Materials() {
                 showFilters && (
                   <div className='filters'>
                     <select onChange={(e) => setSortBy(e.target.value)}>
-                      <option value="createdAt">Newest First</option>
+                      <option value="createdAt">Date Created</option>
                       <option value="materialname">Material Name</option>
                       <option value="professorname">Professor's Name</option>
+                      <option value="materialtype">Material Type</option>
                     </select>
                     <select onChange={(e) => setSortType(e.target.value)}>
                       <option value="-1">Descending</option>

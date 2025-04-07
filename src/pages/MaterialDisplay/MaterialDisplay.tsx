@@ -19,6 +19,7 @@ type MaterialType = {
   materialname: string;
   isPublished: boolean;
   owner: string;
+  views: number;
 };
 const MaterialDisplay = () => {
   const { user, isAuthenticated } = getAuthenticatedUser();
@@ -214,6 +215,30 @@ const MaterialDisplay = () => {
     });
   };
 
+  // const handleDownload = (fileUrl: string) => {
+  //   const link = document.createElement('a');
+  //   link.href = fileUrl;
+  //   link.download = "athenaeum.pdf";
+  //   link.target = '_blank';
+  //   link.click();
+  // };
+  const downloadVideo = async (url: string, fileName: string) => {
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/pdf",
+    }
+  }
+  );
+  const blob = await response.blob();
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
   // console.log(materialUrl)
   return (
     <>
@@ -224,7 +249,7 @@ const MaterialDisplay = () => {
 
       <div className="items_display_page" >
         <div className="items_display_header">
-          <h1>{materialUrl?.material.materialname}</h1>
+          <h1>{materialUrl?.material.materialname} - {materialUrl?.material.owner}</h1>
         </div>
 
         <div className="items_cards_list">
@@ -237,9 +262,10 @@ const MaterialDisplay = () => {
                       <div className="video-section">
                         <div className="material_options">
                           <div className='material_info'>
-                            <div>Material Title : {materialUrl?.material.materialname}</div>
+                            <div>Material Title : {materialUrl?.material.materialname} - by {materialUrl?.material.owner}</div>
                             <div>Description : {materialUrl?.material.description}</div>
-                            <div>Uploaded By : {materialUrl?.material.owner}</div>
+                            {/* <div>Uploaded By : {materialUrl?.material.owner}</div> */}
+                            <div>Views : {materialUrl?.material.views}</div>
                             {/* <div>{materialUrl?.material.fileType}</div> */}
                             {
                               user && (
@@ -251,7 +277,8 @@ const MaterialDisplay = () => {
                                     <button className="save-button" style={{ backgroundColor: "gold" }} onClick={() => saveMaterial()} >Save Material</button>
                                   )
                                 }
-                                  <div className="download-button" ><a href={materialUrl?.material.materialURL} download >Download Material</a></div>
+                                  {/* <div className="download-button"><a href={materialUrl?.material.url} download>Download Material</a></div> */}
+                                  <div className="download-button" onClick={() => downloadVideo(materialUrl?.material.url, "my-video.pdf")} >Download</div>
 
                                 </div>
                               )
@@ -276,11 +303,12 @@ const MaterialDisplay = () => {
                             )
                           }
                         </div>
-
-                        <iframe className="pdf_viewer" src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe>
+                        <div className='pdf-viewer'>
+                          <iframe className="pdf_viewer" src={`${materialUrl?.material.materialURL}`} width="100%" height="600px"></iframe>
+                        </div>
                       </div>
-                      <h2 style={{marginTop: "20px"}}>View More Material</h2>
-                      <div className="more-materials" style={{display: "grid", gridTemplateColumns:"1fr 1fr", gap: "20px", marginTop: "20px"}}>
+                      <h2 style={{ marginTop: "20px" }}>View More Material</h2>
+                      <div className="more-materials" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginTop: "20px" }}>
                         {
                           viewMoreMaterials.map((material: MaterialType, index) => (
                             <div className="material-box" key={index}>
@@ -313,6 +341,7 @@ const MaterialDisplay = () => {
                           <div>Material Title : {materialUrl?.material.materialname}</div>
                           <div>Description : {materialUrl?.material.description}</div>
                           <div>Uploaded By : {materialUrl?.material.owner}</div>
+                          <div>Views : {materialUrl?.material.views}</div>
                           {
                             user && (
                               <div className="material_user_buttons">{
